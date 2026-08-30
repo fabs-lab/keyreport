@@ -58,6 +58,9 @@ body::before {
   padding:.2rem .55rem; font-size:.78rem; font-weight:600;
 }
 .pill.verify { border-color:rgba(180,83,9,.35); color:#92400e; background:rgba(180,83,9,.1); }
+tr.rise td { background:rgba(159,18,57,.06); }
+tr.rise td:first-child { font-weight:600; }
+.util-year-block + .util-year-block { margin-top:.25rem; }
 .chart-wrap { position:relative; height:320px; }
 .chart-wrap.tall { height:380px; }
 .chart-caption { margin:.65rem 0 0; color:var(--ink-soft); font-size:.88rem; }
@@ -124,6 +127,7 @@ th, td { padding:.7rem .85rem; text-align:left; border-bottom:1px solid var(--li
 th { color:var(--ink-soft); background:rgba(213,224,232,.45); }
 tr:last-child td { border-bottom:0; }
 .num { text-align:right; font-variant-numeric:tabular-nums; }
+.basis { color:var(--ink-soft); font-size:.82em; font-variant-numeric:normal; }
 tr.neg td.num { color:var(--danger); }
 tr.neg td.num:last-child { color:var(--danger); }
 .grid-2 { display:grid; grid-template-columns:1.1fr .9fr; gap:1rem; }
@@ -175,7 +179,28 @@ tr.neg td.num:last-child { color:var(--danger); }
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Largest recent expense categories</h3>
+    <h3>Regular fees did not cover regular costs in most years</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <p>The Income section of these statements includes reserve draws and special assessments, which are money brought in to cover costs rather than regular fee revenue. Setting those aside, and also removing reimbursement pairs (insurance proceeds against claim repairs, loan collections against loan charges) from both sides, recurring costs exceeded recurring fees in: 2021 −$46,488, 2022 −$201,618, 2023 −$499,872, 2024 −$341,473, 2025 −$272,965. The largest gap is 2023, where recurring fees of $1,468,291 met recurring costs of $1,968,163, drawing $313,945 of funding inflows — Transfers from reserves $222,478; Special assessments $91,467. Reported totals look positive in 2021, 2025 only because those funding inflows are counted as income. Confirm which draws the board approved and for what purpose.</p>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Budget-vs-actual comparisons are not reliable in every year</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <p>Many statement rows carry an actual amount with no budget figure, so an unadjusted comparison against budget understates the denominator and looks like an overrun. 2023: 80.7% of expense dollars have a budget figure ($394,256 without one); 2024: 69.9% of expense dollars have a budget figure ($624,295 without one); 2025: 94.2% of expense dollars have a budget figure ($147,512 without one); 2026: 69.7% of expense dollars have a budget figure ($369,624 without one). Percent-of-budget is therefore reported only for 2021, 2022, where coverage is at least 95%. Earlier apparent overruns in the low-coverage years should not be read as spending above an approved budget without checking the source statements.</p>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Some large charges are account-to-account reclassifications, not new costs</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <p>1 charge of $5,000 or more is offset by an equal credit on another account in the same month, so the net cost is $0. Largest: $142,250 in 2024-01, debited to Boiler Repairs &amp; Replacement (7615) and credited from Boiler Repairs (7610). These are excluded from the unusually-large-charge table. Confirm the reason for each move, but do not read them as additional spending.</p>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Largest expense categories in 2025</h3>
     <span class="pill">From the statements</span>
   </div>
   <p>Contracts / personnel: $800,237; Insurance: $500,977; Electricity: $312,837</p>
@@ -185,7 +210,7 @@ tr.neg td.num:last-child { color:var(--danger); }
     <h3>Unusually large single-month expenses need review</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Largest example: Boiler Repairs &amp; Replacement (2024-01) at $142,250.</p>
+  <p>Largest example: Insurance Claim Repairs (2025-06) at $111,000.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
@@ -211,166 +236,346 @@ tr.neg td.num:last-child { color:var(--danger); }
     <h3>Reserve contributions ran below budget over this period</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Reserve contributions recorded $798,657 actual versus $1,407,045 budget (shortfall $608,389). In 2025, actual $134,823 vs budget $311,690; 2026 year-to-date shows $0 actual vs $166,192 budget. Requires board or management explanation of funding policy and recording.</p>
+  <p>Reserve contributions recorded $798,657 actual versus $1,407,045 budget (shortfall $608,389). In 2025, actual $134,823 vs budget $311,690; 2026 year-to-date shows no contributions recorded on the statements versus $166,192 budget. Requires board or management explanation of funding policy and recording.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
     <h3>Large transfers from reserves into operating results</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Transfers from reserves total $822,802 across this report (largest year 2023: $222,478). Verify whether each transfer funded approved capital work versus covering operating shortfalls.</p>
+  <p>Transfers from reserves total $822,802 across this report (largest year 2023: $222,478). That total combines every transfer account across both chart-of-accounts eras — 4850 Transfer from Reserves $515,899; 3-46000 Transfer from Reserve $207,637; 1-46000 Transfer from Reserve $99,267 — so a single-code figure will be lower. Verify whether each transfer funded approved capital work versus covering operating shortfalls.</p>
 </article>
-<article class="finding">
+<article class="finding" id="finding-utilities-pattern">
   <div class="finding-top">
-    <h3>Electricity: building cost changes vs DC-area published rates</h3>
+    <h3>Utility bills show repeated year-over-year increases, not a one-year spike</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Electricity bill totals by year — 2023: $217,771 (-8.5% vs prior year; DC-area published change about +9.3%); 2025: $312,837 (+33.6% vs prior year). Benchmark: BLS CPI-U electricity, Washington–Arlington–Alexandria annual average.</p>
-  <p class="chart-caption">Building change vs published DC-area rate/price change for the same years.</p>
+  <p>Across the years in this report, several utility bills rose repeatedly — Electricity rose in 2025 (from $220,277 in 2021 to $312,837 in 2025); 2026 year-to-date is already +146.0% vs the same months a year earlier; Gas rose in 2022, 2024, 2025 (from $51,399 in 2021 to $123,382 in 2025); 2026 year-to-date is already +266.7% vs the same months a year earlier; Water &amp; sewer rose in 2022, 2024 (from $213,410 in 2021 to $312,771 in 2025); 2026 year-to-date is already +4.0% vs the same months a year earlier. Compare each year with published DC-area rate/price changes in the table below; building cost growth that outpaces those benchmarks points to usage, rate mix, or billing changes beyond general area inflation.</p>
+  <div class="chart-wrap" style="height:260px;margin-top:.85rem">
+    <canvas id="utilityPatternChart"></canvas>
+  </div>
+  <p class="chart-caption">Annual utility bill totals ($ thousands). Partial years are marked with *.</p>
+  <div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Gas
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 3 full years: 2022, 2024, 2025
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$51,399</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="rise">
+  <td>2022</td>
+  <td class="num">$61,575</td>
+  <td class="num">+19.8%</td>
+  <td class="num">+21.0%</td>
+  <td class="num">-1.2 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$63,985</td>
+  <td class="num">+9.3%</td>
+  <td class="num">-13.1%</td>
+  <td class="num">+22.4 pp</td>
+</tr>
+<tr class="rise">
+  <td>2024</td>
+  <td class="num">$81,121</td>
+  <td class="num">+26.8%</td>
+  <td class="num">-3.8%</td>
+  <td class="num">+30.6 pp</td>
+</tr>
+<tr class="rise">
+  <td>2025</td>
+  <td class="num">$123,382</td>
+  <td class="num">+52.1%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$187,785</td>
+  <td class="num">+266.7%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div><div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Electricity
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 1 full year: 2025
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$220,277</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2022</td>
+  <td class="num">$238,017</td>
+  <td class="num">+8.1%</td>
+  <td class="num">+11.2%</td>
+  <td class="num">-3.1 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$217,771</td>
+  <td class="num">+1.9%</td>
+  <td class="num">+9.3%</td>
+  <td class="num">-7.4 pp</td>
+</tr>
+<tr class="">
+  <td>2024</td>
+  <td class="num">$234,246</td>
+  <td class="num">-4.9%</td>
+  <td class="num">+2.4%</td>
+  <td class="num">-7.3 pp</td>
+</tr>
+<tr class="rise">
+  <td>2025</td>
+  <td class="num">$312,837</td>
+  <td class="num">+33.6%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$210,187</td>
+  <td class="num">+146.0%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div><div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Water &amp; sewer
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 2 full years: 2022, 2024
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$213,410</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="rise">
+  <td>2022</td>
+  <td class="num">$258,374</td>
+  <td class="num">+21.1%</td>
+  <td class="num">+7.8%</td>
+  <td class="num">+13.3 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$167,651</td>
+  <td class="num">-28.7%</td>
+  <td class="num">+9.5%</td>
+  <td class="num">-38.2 pp</td>
+</tr>
+<tr class="rise">
+  <td>2024</td>
+  <td class="num">$343,650</td>
+  <td class="num">+86.6%</td>
+  <td class="num">+3.2%</td>
+  <td class="num">+83.3 pp</td>
+</tr>
+<tr class="">
+  <td>2025</td>
+  <td class="num">$312,771</td>
+  <td class="num">-9.0%</td>
+  <td class="num">+8.0%</td>
+  <td class="num">-17.0 pp</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$148,485</td>
+  <td class="num">+4.0%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+  <p class="chart-caption" style="margin-top:.65rem">
+    Highlighted rows are full years with building cost up ≥15%. “DC published” is area rate/price change, not usage.
+    Partial years compare the same months of the prior year.
+  </p>
+  <p><a href="#expenses-quarterly">See quarterly expense chart →</a></p>
 </article>
-<article class="finding">
+<article class="finding" id="finding-ytd-pattern">
   <div class="finding-top">
-    <h3>Gas: building cost changes vs DC-area published rates</h3>
+    <h3>Large cost increases that often repeat across years — not only in 2026</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Gas bill totals by year — 2022: $61,575 (+19.8% vs prior year; DC-area published change about +21.0%); 2023: $63,985 (+3.9% vs prior year; DC-area published change about -13.1%); 2024: $81,121 (+26.8% vs prior year; DC-area published change about -3.8%); 2025: $123,382 (+52.1% vs prior year). Benchmark: BLS CPI-U utility (piped) gas, Washington–Arlington–Alexandria annual average.</p>
-  <p class="chart-caption">Building change vs published DC-area rate/price change for the same years.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>Water &amp; sewer: building cost changes vs DC-area published rates</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Water &amp; sewer bill totals by year — 2022: $258,374 (+21.1% vs prior year; DC-area published change about +7.8%); 2023: $167,651 (-35.1% vs prior year; DC-area published change about +9.5%); 2024: $343,650 (+105.0% vs prior year; DC-area published change about +3.2%); 2025: $312,771 (-9.0% vs prior year; DC-area published change about +8.0%). Benchmark: DC Water retail water &amp; sewer volumetric rate increase (fiscal year).</p>
-  <p class="chart-caption">Building change vs published DC-area rate/price change for the same years.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>Large year-to-date cost changes vs prior year and budget (through 2026-06)</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Jan–Jun 2026 compared with the same months a year earlier.</p>
+  <p>
+    Jan–Jun 2026 vs the same months a year earlier.
+    2 of these accounts also rose ≥15% in multiple full calendar years —
+    so the latest jump is often a continuation, not a one-off.
+  </p>
   <div class="table-wrap" style="margin-top:.75rem">
     <table>
       <thead>
         <tr>
           <th>Account</th>
-          <th class="num">This year</th>
-          <th class="num">Prior year</th>
-          <th class="num">Change</th>
+          <th class="num">YTD this year</th>
+          <th class="num">YTD change</th>
+          <th>Earlier full-year rises (≥15%)</th>
           <th class="num">Over budget</th>
         </tr>
       </thead>
       <tbody><tr>
   <td>Electrical Repairs and maintenance</td>
   <td class="num">$44,887</td>
-  <td class="num">$5,127</td>
   <td class="num">+775.5%</td>
+  <td>2025</td>
   <td class="num">$41,137</td>
 </tr>
 <tr>
   <td>Legal Fees</td>
   <td class="num">$8,782</td>
-  <td class="num">$-1,791</td>
   <td class="num">+590.5%</td>
+  <td>2024</td>
   <td class="num">$2,865</td>
 </tr>
 <tr>
   <td>Elevator Repairs and maintenance</td>
   <td class="num">$8,654</td>
-  <td class="num">$1,434</td>
   <td class="num">+503.5%</td>
+  <td>2025</td>
   <td class="num">$2,579</td>
 </tr>
 <tr>
   <td>Gas</td>
   <td class="num">$187,785</td>
-  <td class="num">$51,210</td>
   <td class="num">+266.7%</td>
+  <td>2022, 2024, 2025</td>
   <td class="num">$165,451</td>
 </tr>
 <tr>
   <td>Building Insurance</td>
   <td class="num">$60,964</td>
-  <td class="num">$20,217</td>
   <td class="num">+201.6%</td>
+  <td>2025</td>
   <td class="num">$-5,236</td>
 </tr>
 <tr>
   <td>General Repairs and maintenance</td>
   <td class="num">$12,032</td>
-  <td class="num">$4,069</td>
   <td class="num">+195.7%</td>
+  <td>2025</td>
   <td class="num">$2,320</td>
 </tr>
 <tr>
   <td>Fire Protection Repairs and maintenance</td>
   <td class="num">$10,077</td>
-  <td class="num">$3,504</td>
   <td class="num">+187.6%</td>
+  <td>2024</td>
   <td class="num">$8,243</td>
 </tr>
 <tr>
   <td>Electricity</td>
   <td class="num">$210,187</td>
-  <td class="num">$85,456</td>
   <td class="num">+146.0%</td>
+  <td>2025</td>
   <td class="num">$65,187</td>
 </tr>
 <tr>
   <td>Legal Fees - Collections</td>
   <td class="num">$10,169</td>
-  <td class="num">$4,719</td>
   <td class="num">+115.5%</td>
+  <td>2025</td>
   <td class="num">$-2,415</td>
 </tr>
 <tr>
   <td>Front Desk Personnel - Non Contract</td>
   <td class="num">$33,350</td>
-  <td class="num">$16,674</td>
   <td class="num">+100.0%</td>
+  <td>2024, 2025</td>
   <td class="num">$-668</td>
 </tr>
 <tr>
   <td>Garage Door / Gate Repairs and maintenance</td>
   <td class="num">$19,837</td>
-  <td class="num">$10,652</td>
   <td class="num">+86.2%</td>
+  <td>2024</td>
   <td class="num">$12,504</td>
 </tr>
 <tr>
   <td>Maintenance Personnel - Contract</td>
   <td class="num">$39,100</td>
-  <td class="num">$24,711</td>
   <td class="num">+58.2%</td>
+  <td>2025</td>
   <td class="num">$16,434</td>
 </tr>
 <tr>
   <td>HVAC Repairs and maintenance</td>
   <td class="num">$26,958</td>
-  <td class="num">$17,663</td>
   <td class="num">+52.6%</td>
+  <td>—</td>
   <td class="num">$20,291</td>
 </tr>
 <tr>
   <td>Office Personnel - Contract</td>
   <td class="num">$58,741</td>
-  <td class="num">$44,468</td>
   <td class="num">+32.1%</td>
+  <td>—</td>
   <td class="num">$58,741</td>
 </tr>
 <tr>
   <td>Common Area Cleaning - Contract</td>
   <td class="num">$61,215</td>
-  <td class="num">$57,065</td>
   <td class="num">+7.3%</td>
+  <td>2025</td>
   <td class="num">$20,548</td>
 </tr>
 <tr>
   <td>Plumbing Repairs and maintenance</td>
   <td class="num">$18,095</td>
-  <td class="num">$16,952</td>
   <td class="num">+6.7%</td>
+  <td>2025</td>
   <td class="num">$9,395</td>
 </tr></tbody>
     </table>
@@ -378,87 +583,52 @@ tr.neg td.num:last-child { color:var(--danger); }
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Inconsistent reserve contributions with months with $0 posted and an unexplained negative amount</h3>
+    <h3>Gas expense materially accelerated through June 2026</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Account 5120 &#x27;Reserve Contributions&#x27; shows 14 months with $0 actuals despite budgeted amounts (e.g., $25,369 in Apr-Jun 2024), plus a -$29,338.83 entry in Oct 2024. Total reserve contributions declined from $186,023 in 2023 to $0 in 2026.</p>
+  <p>Account 8600 Gas recorded $187,784.73 in Jan–Jun 2026, $136,574.38 (266.7%) above the same six months of 2025 and $165,451.41 above its listed $22,333.32 YTD budget. March 2026 alone was $66,815.57 (10.2 times the typical monthly amount), following $32,560.46 in January and $35,393.93 in February; this requires board or management explanation.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Large transfers from reserves funding operations rather than capital projects</h3>
+    <h3>Electricity YTD is sharply above prior-year level and listed budget</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Account 4850 &#x27;Transfer from Reserves&#x27; shows $515,898.51 total inflow, including $186,000 in Oct 2024 and $96,263 in Jul 2023. These appear to offset operating deficits rather than fund planned replacements.</p>
+  <p>Account 8500 Electricity recorded $210,186.87 in Jan–Jun 2026, up $124,731.25 (146.0%) from the same six months of 2025 and $65,186.87 above its $145,000.00 listed YTD budget. The April 2026 charge was $72,479.70, 3.2 times the typical monthly amount, and requires verification of billing, timing, and usage drivers.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Extreme boiler repair expense spike in Jan 2024</h3>
+    <h3>Electrical repairs concentrated in a June 2026 spike</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Account 7615 &#x27;Boiler Repairs &amp; Replacement&#x27; shows $142,250 in Jan 2024, which is 16 times its $8,875 typical monthly amount. This single-month expense exceeds the entire 2021 annual boiler budget ($10,722).</p>
+  <p>Account 7510 Electrical Repairs &amp; Mtce totaled $44,886.77 in Jan–Jun 2026—$39,759.86 (775.5%) above Jan–Jun 2025 and $41,136.77 above the listed $3,750.00 YTD budget. June 2026 accounts for a $43,993.02 spike, 87.0 times this account&#x27;s $505.72 median; the cause and supporting work should be reviewed.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Large insurance claim repair expenses in mid-2025</h3>
+    <h3>Several repair and maintenance lines exceed listed YTD budgets</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Account 7950 &#x27;Insurance Claim Repairs&#x27; shows $111,000 in Jun 2025 and $92,480 in Apr 2025, both significantly above its $54,108 median. These represent ~4.4% of 2025&#x27;s total expenses ($2,532,396).</p>
+  <p>For Jan–Jun 2026, account 7600 HVAC Repairs &amp; Mtce was $26,958.10, $20,291.42 above its $6,666.68 listed budget and $9,295.44 (52.6%) above the same six months of 2025. Account 7810 Garage Door / Gate Repairs &amp; Mtce was $19,837.11, $12,503.77 above listed budget and $9,185.14 (86.2%) above the comparable 2025 period; both cost increases require explanation.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>High volatility in repairs &amp; maintenance expenses across years</h3>
+    <h3>Elevator and general repairs rose substantially in comparable YTD periods</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Repairs &amp; maintenance category jumped from $167,950 in 2021 to $555,282 in 2023 (+231%), then fell to $99,703 in 2026 (-82%). This pattern suggests either deferred maintenance cycles or inconsistent expense classification.</p>
+  <p>Account 7640 Elevator Repairs &amp; Mtce was $8,654.36 in Jan–Jun 2026, $7,220.44 (503.5%) above Jan–Jun 2025 and $2,579.36 above its listed $6,075.00 YTD budget. Account 7000 General Repairs &amp; Mtce was $12,032.04, up $7,962.62 (195.7%) and $2,320.04 above its listed $9,712.00 budget; these lines require supporting-invoice and scope review.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>Inconsistent boiler-related account usage and budgeting</h3>
+    <h3>Legal Fees increased sharply in the first half of 2026</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>Multiple boiler accounts (1-60000, 3-60000, 3-65000, 3-85600) show erratic actuals vs. budgets, including months with zero actuals despite budgeted amounts (e.g., $833.33 monthly boiler repairs budget in 2021-2022), suggesting classification or reporting issues.</p>
+  <p>Account 5430 Legal Fees recorded $8,781.81 in Jan–Jun 2026, an increase of $10,572.35 (590.5%) versus the same six months of 2025 and $2,865.13 above its listed $5,916.68 YTD budget. The prior-period total was negative ($1,790.54), so the percentage comparison is influenced by that credit balance and requires explanation of both periods&#x27; activity.</p>
 </article>
 <article class="finding">
   <div class="finding-top">
-    <h3>August 2023 financial statement is absent</h3>
+    <h3>Selected contracted services are above listed 2026 YTD budgets</h3>
     <span class="pill verify">Needs review</span>
   </div>
-  <p>The statements set covers January 2021 through June 2026 (65 documents), but August 2023 is missing. This gap requires verification before relying on 2023 monthly trends or concluding that the year&#x27;s reported totals are complete.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>Expenses ran well above budget for three consecutive full years</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Reported expenses exceeded budget by $373,897.52 in 2022 ($2,007,354.60 actual vs $1,633,457.08 budget), $473,632.11 in 2023 ($2,044,977.95 vs $1,571,345.84), and $587,266.04 in 2024 ($2,072,295.37 vs $1,485,029.33). Those years also reported operating deficits of $180,897.46, $239,589.80, and $131,550.53, respectively; the board or management should explain drivers and budget-setting changes.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>Large 2023 carpet-replacement charges had zero stated monthly budget</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Account 7385, Carpet Repairs &amp; Replacement, recorded $96,263.06 in May 2023, $96,263.06 in July, $82,991.93 in October, and $10,105.00 in December—$285,623.05 in the available statements. Each listed month shows a $0.00 budget; because August 2023 is missing, the full-year account activity and authorization/supporting reserve treatment require verification.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>January 2024 boiler-replacement charge substantially exceeded stated budget</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Account 7615, Boiler Repairs &amp; Replacement, recorded $142,250.00 in January 2024 against a $0.00 monthly budget. This is about 16.0 times the typical monthly amount of $8,875.00; management should provide the project scope, approvals, funding source, and whether it was expected to be reserve-funded.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>Insurance-claim repair payments were concentrated above monthly budget in 2025</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Account 7950, Insurance Claim Repairs, recorded $274,136.28 in 2025, including $92,479.95 in April and $111,000.00 in June; each of those months exceeded the $40,833.33 monthly budget by $51,646.62 and $70,166.67. The related reimbursement/claim-recovery status is not available in these expense statements and requires board or management explanation.</p>
-</article>
-<article class="finding">
-  <div class="finding-top">
-    <h3>No reserve contributions recorded in first half of 2026 despite budget</h3>
-    <span class="pill verify">Needs review</span>
-  </div>
-  <p>Account 5120, Reserve Contributions, shows $0.00 actual in every month from January through June 2026, while monthly budget amounts total $186,191.64 over that period. The 2026 year-to-date figure is partial-year only, so the board should verify whether contributions were deferred, recorded elsewhere, or omitted from the statements.</p>
+  <p>Through June 2026, account 6410 Common Area Cleaning - Contract was $61,215.00, $20,548.32 above its listed $40,666.68 YTD budget; account 6085 Maintenance Personnel - Contract was $39,100.32, $16,433.64 above listed budget and $14,389.22 (58.2%) above Jan–Jun 2025. Account 8400 Water &amp; Sewer was also $15,685.07 above its listed $132,800.00 YTD budget, despite only a 4.0% same-period increase; contract terms, invoices, and budget phasing require review.</p>
 </article></div>
   </section>
 
@@ -476,7 +646,7 @@ tr.neg td.num:last-child { color:var(--danger); }
     <div class="panel">
       <h3 style="margin-top:0">Contributions and transfers by year</h3>
       <div class="chart-wrap"><canvas id="reservesChart"></canvas></div>
-      <p class="chart-caption">Amounts in thousands of dollars. 2026* covers January–June only.</p>
+      <p class="chart-caption">Amounts in thousands of dollars. Years marked * are missing at least one month.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -504,7 +674,7 @@ tr.neg td.num:last-child { color:var(--danger); }
   <td class="num">$207,601</td>
 </tr>
 <tr>
-  <td>2023</td>
+  <td>2023*</td>
   <td class="num">$186,023</td>
   <td class="num">$265,433</td>
   <td class="num neg">$79,410</td>
@@ -534,15 +704,18 @@ tr.neg td.num:last-child { color:var(--danger); }
       </table>
     </div>
     <p class="chart-caption" style="margin-top:.75rem">
-      Balance-sheet reserve account balances are not shown here because those figures were not
-      consistently available from the monthly statements used for this report.
+      These are the reserve amounts that flow through the monthly income and expense
+      statements. Reserve account balances sit on the balance sheet and are not yet
+      included here, so this section does not state how well funded the reserve is.
+      “Transfers in” combines every transfer account across both account-numbering eras,
+      so it is larger than any single account code.
     </p>
   </section>
 
   <section class="section" id="trends">
     <div class="section-head">
       <h2>Income and expenses</h2>
-      <p>2026* covers January–June only. August 2023 is missing from the statement set (2023-08).</p>
+      <p>Years marked * are missing at least one month (no statement for 2023-08), so year-over-year changes for them compare only the months both years have.</p>
     </div>
     <div class="panel" id="expenses-quarterly">
       <h3 style="margin-top:0">Expenses over time</h3>
@@ -556,51 +729,80 @@ tr.neg td.num:last-child { color:var(--danger); }
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Year</th><th class="num">Income</th><th class="num">Expense</th><th class="num">vs prior year</th><th class="num">Net</th></tr></thead>
-        <tbody><tr class="">
+        <thead><tr>
+          <th>Year</th>
+          <th class="num">Income reported</th>
+          <th class="num">Regular fees only</th>
+          <th class="num">Expense</th>
+          <th class="num">vs prior year</th>
+          <th class="num">Net reported</th>
+          <th class="num">Net on regular fees</th>
+        </tr></thead>
+        <tbody><tr class="neg">
   <td>2021</td>
   <td class="num">$1,680,584</td>
+  <td class="num">$1,573,204</td>
   <td class="num">$1,587,522</td>
   <td class="num">—</td>
   <td class="num">$93,062</td>
+  <td class="num">$-46,488</td>
 </tr>
 <tr class="neg">
   <td>2022</td>
   <td class="num">$1,826,457</td>
+  <td class="num">$1,617,910</td>
   <td class="num">$2,007,355</td>
   <td class="num">+26.4%</td>
   <td class="num">$-180,897</td>
+  <td class="num">$-201,618</td>
 </tr>
 <tr class="neg">
-  <td>2023</td>
+  <td>2023*</td>
   <td class="num">$1,805,388</td>
+  <td class="num">$1,468,291</td>
   <td class="num">$2,044,978</td>
-  <td class="num">+1.9%</td>
+  <td class="num">+13.1% <span class="basis">(11 mo)</span></td>
   <td class="num">$-239,590</td>
+  <td class="num">$-499,872</td>
 </tr>
 <tr class="neg">
   <td>2024</td>
   <td class="num">$1,940,745</td>
+  <td class="num">$1,634,351</td>
   <td class="num">$2,072,295</td>
-  <td class="num">+1.3%</td>
+  <td class="num">-13.3% <span class="basis">(11 mo)</span></td>
   <td class="num">$-131,551</td>
+  <td class="num">$-341,473</td>
 </tr>
-<tr class="">
+<tr class="neg">
   <td>2025</td>
   <td class="num">$2,586,440</td>
+  <td class="num">$1,863,058</td>
   <td class="num">$2,532,396</td>
   <td class="num">+22.2%</td>
   <td class="num">$54,044</td>
+  <td class="num">$-272,965</td>
 </tr>
 <tr class="">
   <td>2026*</td>
   <td class="num">$1,332,693</td>
+  <td class="num">$1,235,033</td>
   <td class="num">$1,218,254</td>
-  <td class="num">-51.9%</td>
+  <td class="num">+3.5% <span class="basis">(6 mo)</span></td>
   <td class="num">$114,439</td>
+  <td class="num">$58,187</td>
 </tr></tbody>
       </table>
     </div>
+    <p class="chart-caption">
+      “Income reported” is the statement Income section, which includes transfers from
+      reserves and special assessments. “Regular fees only” removes those, and also removes
+      reimbursements that are matched by a specific expense (insurance proceeds against claim
+      repairs, loan collections against loan charges) from both sides — so the last column
+      shows whether ordinary fees covered ordinary costs.
+      Years marked * are missing at least one month, so “vs prior year” compares only the
+      months both years have and states how many.
+    </p>
     <div class="panel">
       <h3 style="margin-top:0">Expense categories by year</h3>
       <div class="chart-wrap tall"><canvas id="categoryStackChart"></canvas></div>
@@ -709,13 +911,6 @@ tr.neg td.num:last-child { color:var(--danger); }
         <table>
           <thead><tr><th>Month</th><th>Code</th><th>Account</th><th class="num">Amount</th><th class="num">vs typical</th></tr></thead>
           <tbody><tr>
-  <td>2024-01</td>
-  <td>7615</td>
-  <td>Boiler Repairs and Replacement</td>
-  <td class="num">$142,250</td>
-  <td class="num">16.0×</td>
-</tr>
-<tr>
   <td>2025-06</td>
   <td>7950</td>
   <td>Insurance Claim Repairs</td>
@@ -763,9 +958,21 @@ tr.neg td.num:last-child { color:var(--danger); }
   <td>Electricity</td>
   <td class="num">$72,480</td>
   <td class="num">3.2×</td>
+</tr>
+<tr>
+  <td>2023-05</td>
+  <td>7610</td>
+  <td>Boiler Repairs</td>
+  <td class="num">$71,125</td>
+  <td class="num">11.7×</td>
 </tr></tbody>
         </table>
       </div>
+      <p class="chart-caption">
+        1 large charge is left out of this table because an equal credit
+        on another account in the same month cancels them, so no money was actually spent.
+        See “Some large charges are account-to-account reclassifications, not new costs” above.
+      </p>
     </div>
   </section>
 
@@ -778,6 +985,11 @@ tr.neg td.num:last-child { color:var(--danger); }
       <table>
         <thead><tr><th>Account</th><th>Codes and periods</th><th class="num">Combined total</th></tr></thead>
         <tbody><tr>
+  <td>Water and Sewer</td>
+  <td>1-75000 (2021-01–2021-04) → 3-75000 (2021-05–2023-03) → 75000 (2021-07–2023-03) → 8400 (2023-04–2026-06)</td>
+  <td class="num">$1,444,341</td>
+</tr>
+<tr>
   <td>Electricity</td>
   <td>3-70000 (2021-01–2023-03) → 70000 (2021-01–2023-03) → 8500 (2023-04–2026-06)</td>
   <td class="num">$1,433,335</td>
@@ -788,34 +1000,29 @@ tr.neg td.num:last-child { color:var(--danger); }
   <td class="num">$1,134,785</td>
 </tr>
 <tr>
+  <td>Reserve Contributions</td>
+  <td>1-56000 (2021-01–2023-03) → 2-56000 (2021-01–2023-03) → 3-56000 (2021-01–2023-03) → 5120 (2023-04–2026-06)</td>
+  <td class="num">$798,657</td>
+</tr>
+<tr>
+  <td>Common Area Cleaning - Contract</td>
+  <td>3-65200 (2021-01–2023-03) → 6410 (2023-04–2026-06)</td>
+  <td class="num">$575,298</td>
+</tr>
+<tr>
   <td>Gas</td>
   <td>1-72000 (2021-01–2021-09) → 72000 (2021-01–2023-03) → 3-72000 (2021-05–2023-03) → 8600 (2023-04–2026-06)</td>
   <td class="num">$569,247</td>
 </tr>
 <tr>
-  <td>Water and Sewer</td>
-  <td>1-75000 (2021-01–2021-04) → 3-75000 (2021-05–2023-03) → 75000 (2021-07–2023-03)</td>
-  <td class="num">$523,435</td>
+  <td>Office Personnel - Contract</td>
+  <td>3-66400 (2021-01–2023-03) → 6082 (2023-04–2026-06)</td>
+  <td class="num">$434,106</td>
 </tr>
 <tr>
   <td>Insurance Claim Repairs</td>
   <td>1-62700 (2021-06–2021-09) → 3-62700 (2021-06–2023-03) → 62700 (2021-09–2021-12) → 7950 (2023-06–2025-12)</td>
   <td class="num">$367,296</td>
-</tr>
-<tr>
-  <td>Loan Repayment</td>
-  <td>3-50128 (2022-05–2023-03) → 5200 (2023-04–2026-06)</td>
-  <td class="num">$309,363</td>
-</tr>
-<tr>
-  <td>Insurance - Building Policy</td>
-  <td>3-51800 (2021-01–2023-03) → 51800 (2021-02–2021-06)</td>
-  <td class="num">$140,723</td>
-</tr>
-<tr>
-  <td>Front Desk Personnel - Non Contract</td>
-  <td>1-53905 (2021-01–2023-03) → 5180 (2023-04–2026-06)</td>
-  <td class="num">$133,683</td>
 </tr></tbody>
       </table>
     </div>
@@ -842,7 +1049,7 @@ tr.neg td.num:last-child { color:var(--danger); }
   </footer>
 </div>
 
-<script id="report-data" type="application/json">{"yearly":[{"year":"2021","income_actual":1680583.86,"expense_actual":1587522.35,"expense_budget":1464182.92,"net_operating":93061.51,"expense_vs_budget_pct":108.4,"expense_by_category":{"Contracts / personnel":672049.36,"Electricity":220277.27,"Water & sewer":213409.77,"Repairs & maintenance":171473.87,"Reserve contributions":128948.16,"Legal & professional":73113.13,"Gas":51399.13,"Insurance":22728.78,"Utilities":18255.86,"Loan / financing":10722.11,"Administrative":8757.03,"Other expenses":-3612.12},"expense_yoy_pct":null},{"year":"2022","income_actual":1826457.14,"expense_actual":2007354.6,"expense_budget":1633457.08,"net_operating":-180897.46,"expense_vs_budget_pct":122.9,"expense_by_category":{"Contracts / personnel":657659.31,"Water & sewer":258374.41,"Electricity":238017.31,"Insurance":212511.74,"Reserve contributions":198970.79,"Repairs & maintenance":191653.39,"Loan / financing":90445.52,"Legal & professional":62260.78,"Gas":61575.4,"Utilities":18605.68,"Administrative":9626.37,"Other expenses":7653.9},"expense_yoy_pct":26.4},{"year":"2023","income_actual":1805388.15,"expense_actual":2044977.95,"expense_budget":1571345.84,"net_operating":-239589.8,"expense_vs_budget_pct":130.1,"expense_by_category":{"Repairs & maintenance":581124.31,"Contracts / personnel":560721.26,"Electricity":217770.79,"Reserve contributions":186022.87,"Water & sewer":167650.84,"Insurance":100957.21,"Legal & professional":73548.84,"Gas":63984.96,"Loan / financing":57670.56,"Utilities":19036.3,"Other expenses":10074.73,"Administrative":6415.28},"expense_yoy_pct":1.9},{"year":"2024","income_actual":1940744.84,"expense_actual":2072295.37,"expense_budget":1485029.33,"net_operating":-131550.53,"expense_vs_budget_pct":139.5,"expense_by_category":{"Contracts / personnel":662480.28,"Water & sewer":343649.61,"Repairs & maintenance":337154.89,"Electricity":234246.24,"Reserve contributions":149891.62,"Insurance":86166.84,"Loan / financing":82848.0,"Gas":81120.51,"Legal & professional":60769.17,"Utilities":22701.34,"Administrative":12663.97,"Other expenses":-1397.1},"expense_yoy_pct":1.3},{"year":"2025","income_actual":2586439.99,"expense_actual":2532395.64,"expense_budget":2538034.22,"net_operating":54044.35,"expense_vs_budget_pct":99.8,"expense_by_category":{"Contracts / personnel":800236.61,"Insurance":500976.72,"Electricity":312836.53,"Water & sewer":312770.82,"Repairs & maintenance":222015.84,"Reserve contributions":134823.27,"Gas":123382.47,"Loan / financing":82816.2,"Legal & professional":25953.06,"Administrative":12872.13,"Utilities":11866.4,"Other expenses":-8154.41},"expense_yoy_pct":22.2},{"year":"2026","income_actual":1332692.86,"expense_actual":1218254.33,"expense_budget":986898.5,"net_operating":114438.53,"expense_vs_budget_pct":123.4,"expense_by_category":{"Contracts / personnel":390955.23,"Electricity":210186.87,"Gas":187784.73,"Water & sewer":148485.07,"Repairs & maintenance":147043.29,"Insurance":60964.13,"Loan / financing":41408.1,"Legal & professional":19606.99,"Utilities":6186.85,"Administrative":3256.98,"Other expenses":2376.09,"Reserve contributions":0.0},"expense_yoy_pct":-51.9}],"periods":["2021-Q1","2021-Q2","2021-Q3","2021-Q4","2022-Q1","2022-Q2","2022-Q3","2022-Q4","2023-Q1","2023-Q2","2023-Q3","2023-Q4","2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2"],"quarterlyTotals":[333417.03,410803.3,381203.36,462098.66,455285.05,489034.29,539038.12,523997.14,398684.76,699604.25,392158.55,554530.39,482023.3,439451.34,569725.46,581095.27,489847.29,686781.46,709789.19,645977.7,597943.21,620311.12],"series":[{"id":"group:Contracts / personnel","name":"Contracts / personnel","kind":"group","group":"Contracts / personnel","data":[172001.72,162278.35,144784.07,192985.22,149439.02,182937.6,168558.87,156723.82,105195.34,188249.66,100638.25,166638.01,161789.95,103661.8,146976.84,250051.69,163857.0,205716.74,226304.36,204358.51,177191.1,213764.13]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","kind":"group","group":"Repairs & maintenance","data":[21723.1,99638.88,30407.45,19704.44,66491.7,17436.58,29805.72,77919.39,53462.46,246299.53,123327.02,158035.3,64954.8,37691.97,125079.46,109428.66,33969.98,63398.79,65944.44,58702.63,52041.93,95001.36]},{"id":"group:Water & sewer","name":"Water & sewer","kind":"group","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66]},{"id":"group:Electricity","name":"Electricity","kind":"group","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51]},{"id":"group:Insurance","name":"Insurance","kind":"group","group":"Insurance","data":[9055.64,-28984.59,-5510.88,48168.61,46726.01,75180.29,59954.95,30650.49,29024.7,13206.57,35207.08,23518.86,15846.36,12932.61,23811.37,33576.5,78296.26,222080.63,136055.2,64544.63,45532.06,15432.07]},{"id":"group:Reserve contributions","name":"Reserve contributions","kind":"group","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0]},{"id":"group:Gas","name":"Gas","kind":"group","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77]},{"id":"group:Loan / financing","name":"Loan / financing","kind":"group","group":"Loan / financing","data":[0.0,6027.93,0.0,4694.18,0.0,6901.35,62840.12,20704.05,20704.05,13802.7,8151.47,15012.34,20735.85,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05]}],"accountSeries":[{"id":"account:Electricity","name":"Electricity","kind":"account","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51],"total_actual":1433335.01},{"id":"account:Front Desk Personnel - Contract","name":"Front Desk Personnel - Contract","kind":"account","group":"Contracts / personnel","data":[45341.65,50810.4,38310.4,63310.43,38494.54,63586.61,51086.61,50870.61,26787.74,77597.74,25043.16,59215.74,59595.0,30723.0,71900.23,70413.16,69091.15,45971.91,55630.89,44344.9,41973.25,54685.55],"total_actual":1134784.67},{"id":"account:Water & Sewer","name":"Water & Sewer","kind":"account","group":"Water & sewer","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66],"total_actual":920905.21},{"id":"account:Gas","name":"Gas","kind":"account","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77],"total_actual":569247.2},{"id":"account:Water and Sewer","name":"Water and Sewer","kind":"account","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":523435.31},{"id":"account:Reserve Contributions","name":"Reserve Contributions","kind":"account","group":"Reserve contributions","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0],"total_actual":420004.25},{"id":"account:Building Insurance","name":"Building Insurance","kind":"account","group":"Insurance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,35799.28,23033.86,15361.36,0.0,23465.25,33576.5,3382.5,16834.25,102659.03,64544.63,45532.06,15432.07],"total_actual":379620.79},{"id":"account:Reserve Account Contribution","name":"Reserve Account Contribution","kind":"account","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":378652.46},{"id":"account:Insurance Claim Repairs","name":"Insurance Claim Repairs","kind":"account","group":"Insurance","data":[0.0,-45798.35,-20019.87,33649.32,27961.82,66849.54,16452.34,1671.09,12394.18,0.0,0.0,0.0,0.0,0.0,0.0,0.0,62599.59,203479.95,8056.74,0.0,0.0,0.0],"total_actual":367296.35},{"id":"account:Common Area Cleaning - Contract","name":"Common Area Cleaning - Contract","kind":"account","group":"Contracts / personnel","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,30822.68,25832.68,21003.9,22816.5,0.0,7239.8,57038.6,23176.9,33888.2,40810.0,30607.5,20405.0,40810.0],"total_actual":354451.76},{"id":"account:Loan Repayment","name":"Loan Repayment","kind":"account","group":"Loan / financing","data":[0.0,0.0,0.0,0.0,0.0,6901.35,20704.05,20704.05,20704.05,13802.7,6901.35,12572.79,20735.85,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05],"total_actual":309362.64},{"id":"account:Carpet Repairs & Replacement","name":"Carpet Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,96263.06,96263.06,93096.93,0.0,0.0,0.0,9967.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":295590.05},{"id":"account:Office Personnel - Contract","name":"Office Personnel - Contract","kind":"account","group":"Contracts / personnel","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,22425.0,14950.0,22425.0,23449.0,23667.0,23667.0,23667.0,16298.0,28169.99,-44467.99,19289.42,29370.63,29370.57],"total_actual":232280.62},{"id":"account:Cleaning Common Area - Contract","name":"Cleaning Common Area - Contract","kind":"account","group":"Contracts / personnel","data":[32047.7,24242.2,24152.1,24152.1,24565.5,24565.5,24565.5,25065.5,17490.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":220846.1},{"id":"account:Office Personnel Contract","name":"Office Personnel Contract","kind":"account","group":"Contracts / personnel","data":[22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":201825.0},{"id":"account:Management Fees","name":"Management Fees","kind":"account","group":"Contracts / personnel","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,14461.56,9641.04,14461.56,14461.56,12291.04,14461.56,14461.56,15658.75,15618.75,15618.75,15618.75,15618.75,15618.75],"total_actual":187992.38},{"id":"account:Boiler Repairs & Replacement","name":"Boiler Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,5440.0,142250.0,0.0,0.0,2053.68,0.0,17750.0,0.0,0.0,0.0,0.0],"total_actual":167493.68},{"id":"account:Insurance - Building Policy","name":"Insurance - Building Policy","kind":"account","group":"Insurance","data":[9055.64,16813.76,14508.99,14519.29,9682.96,570.0,43502.61,19238.95,12830.52,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":140722.72},{"id":"account:Front Desk Personnel - Non Contract","name":"Front Desk Personnel - Non Contract","kind":"account","group":"Contracts / personnel","data":[3348.0,2490.0,432.0,3196.5,2688.0,2175.0,1608.0,2648.0,1160.0,3055.5,1462.5,3552.0,3132.0,16596.0,2551.5,216.0,0.0,16674.0,16674.0,16674.0,16674.66,16674.99],"total_actual":133682.65},{"id":"account:Management Fee","name":"Management Fee","kind":"account","group":"Contracts / personnel","data":[14178.0,14178.0,14178.0,14178.0,14178.0,14272.52,14461.56,14461.56,14461.56,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":128547.2},{"id":"account:Plumbing Repairs & Mtce","name":"Plumbing Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,13107.36,3947.2,4234.0,9652.48,2840.0,1724.0,8903.44,15942.5,1009.6,13532.95,3763.03,15347.26,2747.95],"total_actual":96751.77},{"id":"account:Elevator Repairs & Mtce","name":"Elevator Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,8742.24,2240.23,5490.0,0.0,0.0,32495.0,0.0,0.0,1433.92,2192.03,34804.06,2012.99,6641.37],"total_actual":96051.84},{"id":"account:HVAC Repairs & Mtce","name":"HVAC Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,19845.67,8607.8,7323.72,8181.25,2727.5,0.0,8346.4,5067.0,12595.66,-9452.39,4307.09,9510.0,17448.1],"total_actual":94507.8},{"id":"account:Insurance Claim Repairs - Self Insured","name":"Insurance Claim Repairs - Self Insured","kind":"account","group":"Insurance","data":[0.0,0.0,0.0,0.0,9081.23,7760.75,0.0,9740.45,3800.0,6154.9,0.0,485.0,485.0,13138.2,0.0,0.0,10019.97,1766.43,27633.63,0.0,0.0,0.0],"total_actual":90065.56},{"id":"account:Garage Door / Gate Repairs & Mtce","name":"Garage Door / Gate Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,650.0,2596.5,2053.25,22402.05,403.86,1349.09,5938.29,6993.44,3658.53,524.91,1078.65,11732.82,8104.29],"total_actual":67485.68},{"id":"account:Electrical Repairs & Mtce","name":"Electrical Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3950.62,231.0,0.0,267.0,0.0,292.0,2021.46,59.69,5067.22,3521.24,538.4,473.04,44413.73],"total_actual":60835.4},{"id":"account:General Repairs and Maintenance","name":"General Repairs and Maintenance","kind":"account","group":"Repairs & maintenance","data":[10133.77,10557.4,4220.92,14182.1,4429.63,3707.7,7488.88,2528.91,886.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":58135.31},{"id":"account:Bad Debt","name":"Bad Debt","kind":"account","group":"Loan / financing","data":[0.0,6027.93,0.0,4694.18,0.0,0.0,42136.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":52858.18}],"groups":[{"id":"group:Contracts / personnel","name":"Contracts / personnel","child_ids":["account:Front Desk Personnel - Contract","account:Common Area Cleaning - Contract","account:Office Personnel - Contract","account:Cleaning Common Area - Contract","account:Office Personnel Contract","account:Management Fees","account:Front Desk Personnel - Non Contract","account:Management Fee"]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","child_ids":["account:Carpet Repairs & Replacement","account:Boiler Repairs & Replacement","account:Plumbing Repairs & Mtce","account:Elevator Repairs & Mtce","account:HVAC Repairs & Mtce","account:Garage Door / Gate Repairs & Mtce","account:Electrical Repairs & Mtce","account:General Repairs and Maintenance"]},{"id":"group:Water & sewer","name":"Water & sewer","child_ids":["account:Water & Sewer","account:Water and Sewer"]},{"id":"group:Electricity","name":"Electricity","child_ids":["account:Electricity"]},{"id":"group:Insurance","name":"Insurance","child_ids":["account:Building Insurance","account:Insurance Claim Repairs","account:Insurance - Building Policy","account:Insurance Claim Repairs - Self Insured"]},{"id":"group:Reserve contributions","name":"Reserve contributions","child_ids":["account:Reserve Contributions","account:Reserve Account Contribution"]},{"id":"group:Gas","name":"Gas","child_ids":["account:Gas"]},{"id":"group:Loan / financing","name":"Loan / financing","child_ids":["account:Loan Repayment","account:Bad Debt"]}],"defaultSelection":["group:Contracts / personnel","group:Repairs & maintenance","group:Water & sewer","group:Electricity","group:Insurance"],"categoryOrder":["Electricity","Gas","Water & sewer","Contracts / personnel","Repairs & maintenance","Insurance","Reserve contributions","Loan / financing"],"reservesYearly":[{"year":"2021","contribution_actual":128948.16,"contribution_budget":178484.24,"contribution_shortfall":49536.08,"contribution_vs_budget_pct":72.2,"transfer_from_reserves_actual":58824.56},{"year":"2022","contribution_actual":198970.79,"contribution_budget":257516.08,"contribution_shortfall":58545.29,"contribution_vs_budget_pct":77.3,"transfer_from_reserves_actual":207601.04},{"year":"2023","contribution_actual":186022.87,"contribution_budget":265432.65,"contribution_shortfall":79409.78,"contribution_vs_budget_pct":70.1,"transfer_from_reserves_actual":222478.37},{"year":"2024","contribution_actual":149891.62,"contribution_budget":227730.9,"contribution_shortfall":77839.28,"contribution_vs_budget_pct":65.8,"transfer_from_reserves_actual":213775.0},{"year":"2025","contribution_actual":134823.27,"contribution_budget":311689.83,"contribution_shortfall":176866.56,"contribution_vs_budget_pct":43.3,"transfer_from_reserves_actual":120207.58},{"year":"2026","contribution_actual":0.0,"contribution_budget":166191.64,"contribution_shortfall":166191.64,"contribution_vs_budget_pct":0.0,"transfer_from_reserves_actual":-84.06}]}</script>
+<script id="report-data" type="application/json">{"yearly":[{"year":"2021","months":12,"complete":true,"is_open_year":false,"income_actual":1680583.86,"income_recurring_actual":1573203.6,"income_funding_actual":58824.56,"income_offset_actual":48555.7,"funding_income_pct":3.5,"income_non_operating_by_kind":{"Transfers from reserves":58824.56,"Insurance claim proceeds":48555.7},"expense_actual":1587522.35,"expense_recurring_actual":1619691.25,"expense_offset_actual":-32168.9,"expense_budget":1464182.92,"net_recurring":-46487.65,"net_all_income":93061.51,"expense_actual_with_budget":1587522.35,"expense_actual_without_budget":0.0,"budget_coverage_pct":100.0,"expense_vs_budget_pct":108.4,"expense_vs_budget_pct_comparable":108.4,"expense_vs_budget_comparable":true,"expense_by_category":{"Contracts / personnel":672049.36,"Electricity":220277.27,"Water & sewer":213409.77,"Repairs & maintenance":171473.87,"Reserve contributions":128948.16,"Legal & professional":73113.13,"Gas":51399.13,"Insurance":22728.78,"Utilities":18255.86,"Loan / financing":10722.11,"Administrative":8757.03,"Other expenses":-3612.12},"expense_yoy_pct":null,"expense_yoy_basis":null,"expense_yoy_months_compared":null,"expense_yoy_current_actual":null,"expense_yoy_prior_actual":null},{"year":"2022","months":12,"complete":true,"is_open_year":false,"income_actual":1826457.14,"income_recurring_actual":1617910.12,"income_funding_actual":207601.04,"income_offset_actual":945.98,"funding_income_pct":11.4,"income_non_operating_by_kind":{"Transfers from reserves":207601.04,"Insurance claim proceeds":945.98},"expense_actual":2007354.6,"expense_recurring_actual":1819527.93,"expense_offset_actual":187826.67,"expense_budget":1633457.08,"net_recurring":-201617.81,"net_all_income":-180897.46,"expense_actual_with_budget":2007354.6,"expense_actual_without_budget":0.0,"budget_coverage_pct":100.0,"expense_vs_budget_pct":122.9,"expense_vs_budget_pct_comparable":122.9,"expense_vs_budget_comparable":true,"expense_by_category":{"Contracts / personnel":657659.31,"Water & sewer":258374.41,"Electricity":238017.31,"Insurance":212511.74,"Reserve contributions":198970.79,"Repairs & maintenance":191653.39,"Loan / financing":90445.52,"Legal & professional":62260.78,"Gas":61575.4,"Utilities":18605.68,"Administrative":9626.37,"Other expenses":7653.9},"expense_yoy_pct":26.4,"expense_yoy_basis":"full_year","expense_yoy_months_compared":12,"expense_yoy_current_actual":2007354.6,"expense_yoy_prior_actual":1587522.35},{"year":"2023","months":11,"complete":false,"is_open_year":false,"income_actual":1805388.15,"income_recurring_actual":1468290.83,"income_funding_actual":313945.22,"income_offset_actual":23152.1,"funding_income_pct":17.4,"income_non_operating_by_kind":{"Transfers from reserves":222478.37,"Special assessments":91466.85,"Loan repayment collections":23152.1},"expense_actual":2044977.95,"expense_recurring_actual":1968162.98,"expense_offset_actual":76814.97,"expense_budget":1571345.84,"net_recurring":-499872.15,"net_all_income":-239589.8,"expense_actual_with_budget":1650722.42,"expense_actual_without_budget":394255.53,"budget_coverage_pct":80.7,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":105.1,"expense_vs_budget_comparable":false,"expense_by_category":{"Repairs & maintenance":581124.31,"Contracts / personnel":560721.26,"Electricity":217770.79,"Reserve contributions":186022.87,"Water & sewer":167650.84,"Insurance":100957.21,"Legal & professional":73548.84,"Gas":63984.96,"Loan / financing":57670.56,"Utilities":19036.3,"Other expenses":10074.73,"Administrative":6415.28},"expense_yoy_pct":13.1,"expense_yoy_basis":"same_months","expense_yoy_months_compared":11,"expense_yoy_current_actual":2044977.95,"expense_yoy_prior_actual":1807457.71},{"year":"2024","months":12,"complete":true,"is_open_year":false,"income_actual":1940744.84,"income_recurring_actual":1634351.49,"income_funding_actual":247010.19,"income_offset_actual":59383.16,"funding_income_pct":12.7,"income_non_operating_by_kind":{"Transfers from reserves":213775.0,"Loan repayment collections":59383.16,"Special assessments":33235.19},"expense_actual":2072295.37,"expense_recurring_actual":1975824.17,"expense_offset_actual":96471.2,"expense_budget":1485029.33,"net_recurring":-341472.68,"net_all_income":-131550.53,"expense_actual_with_budget":1448000.76,"expense_actual_without_budget":624294.61,"budget_coverage_pct":69.9,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":97.5,"expense_vs_budget_comparable":false,"expense_by_category":{"Contracts / personnel":662480.28,"Water & sewer":343649.61,"Repairs & maintenance":337154.89,"Electricity":234246.24,"Reserve contributions":149891.62,"Insurance":86166.84,"Loan / financing":82848.0,"Gas":81120.51,"Legal & professional":60769.17,"Utilities":22701.34,"Administrative":12663.97,"Other expenses":-1397.1},"expense_yoy_pct":-13.3,"expense_yoy_basis":"same_months","expense_yoy_months_compared":11,"expense_yoy_current_actual":1772076.43,"expense_yoy_prior_actual":2044977.95},{"year":"2025","months":12,"complete":true,"is_open_year":false,"income_actual":2586439.99,"income_recurring_actual":1863058.12,"income_funding_actual":346662.09,"income_offset_actual":376719.78,"funding_income_pct":13.4,"income_non_operating_by_kind":{"Insurance claim proceeds":274555.09,"Special assessments":226454.51,"Transfers from reserves":120207.58,"Loan repayment collections":102164.69},"expense_actual":2532395.64,"expense_recurring_actual":2136023.13,"expense_offset_actual":396372.51,"expense_budget":2538034.22,"net_recurring":-272965.01,"net_all_income":54044.35,"expense_actual_with_budget":2384883.92,"expense_actual_without_budget":147511.72,"budget_coverage_pct":94.2,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":94.0,"expense_vs_budget_comparable":false,"expense_by_category":{"Contracts / personnel":800236.61,"Insurance":500976.72,"Electricity":312836.53,"Water & sewer":312770.82,"Repairs & maintenance":222015.84,"Reserve contributions":134823.27,"Gas":123382.47,"Loan / financing":82816.2,"Legal & professional":25953.06,"Administrative":12872.13,"Utilities":11866.4,"Other expenses":-8154.41},"expense_yoy_pct":22.2,"expense_yoy_basis":"full_year","expense_yoy_months_compared":12,"expense_yoy_current_actual":2532395.64,"expense_yoy_prior_actual":2072295.37},{"year":"2026","months":6,"complete":false,"is_open_year":true,"income_actual":1332692.86,"income_recurring_actual":1235033.37,"income_funding_actual":17443.73,"income_offset_actual":80215.76,"funding_income_pct":1.3,"income_non_operating_by_kind":{"Loan repayment collections":80215.76,"Special assessments":17527.79,"Transfers from reserves":-84.06},"expense_actual":1218254.33,"expense_recurring_actual":1176846.23,"expense_offset_actual":41408.1,"expense_budget":986898.5,"net_recurring":58187.14,"net_all_income":114438.53,"expense_actual_with_budget":848630.66,"expense_actual_without_budget":369623.67,"budget_coverage_pct":69.7,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":86.0,"expense_vs_budget_comparable":false,"expense_by_category":{"Contracts / personnel":390955.23,"Electricity":210186.87,"Gas":187784.73,"Water & sewer":148485.07,"Repairs & maintenance":147043.29,"Insurance":60964.13,"Loan / financing":41408.1,"Legal & professional":19606.99,"Utilities":6186.85,"Administrative":3256.98,"Other expenses":2376.09,"Reserve contributions":0.0},"expense_yoy_pct":3.5,"expense_yoy_basis":"same_months","expense_yoy_months_compared":6,"expense_yoy_current_actual":1218254.33,"expense_yoy_prior_actual":1176628.75}],"periods":["2021-Q1","2021-Q2","2021-Q3","2021-Q4","2022-Q1","2022-Q2","2022-Q3","2022-Q4","2023-Q1","2023-Q2","2023-Q3","2023-Q4","2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2"],"quarterlyTotals":[333417.03,410803.3,381203.36,462098.66,455285.05,489034.29,539038.12,523997.14,398684.76,699604.25,392158.55,554530.39,482023.3,439451.34,569725.46,581095.27,489847.29,686781.46,709789.19,645977.7,597943.21,620311.12],"series":[{"id":"group:Contracts / personnel","name":"Contracts / personnel","kind":"group","group":"Contracts / personnel","data":[172001.72,162278.35,144784.07,192985.22,149439.02,182937.6,168558.87,156723.82,105195.34,188249.66,100638.25,166638.01,161789.95,103661.8,146976.84,250051.69,163857.0,205716.74,226304.36,204358.51,177191.1,213764.13]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","kind":"group","group":"Repairs & maintenance","data":[21723.1,99638.88,30407.45,19704.44,66491.7,17436.58,29805.72,77919.39,53462.46,246299.53,123327.02,158035.3,64954.8,37691.97,125079.46,109428.66,33969.98,63398.79,65944.44,58702.63,52041.93,95001.36]},{"id":"group:Water & sewer","name":"Water & sewer","kind":"group","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66]},{"id":"group:Electricity","name":"Electricity","kind":"group","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51]},{"id":"group:Insurance","name":"Insurance","kind":"group","group":"Insurance","data":[9055.64,-28984.59,-5510.88,48168.61,46726.01,75180.29,59954.95,30650.49,29024.7,13206.57,35207.08,23518.86,15846.36,12932.61,23811.37,33576.5,78296.26,222080.63,136055.2,64544.63,45532.06,15432.07]},{"id":"group:Reserve contributions","name":"Reserve contributions","kind":"group","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0]},{"id":"group:Gas","name":"Gas","kind":"group","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77]},{"id":"group:Loan / financing","name":"Loan / financing","kind":"group","group":"Loan / financing","data":[0.0,6027.93,0.0,4694.18,0.0,6901.35,62840.12,20704.05,20704.05,13802.7,8151.47,15012.34,20735.85,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05]}],"accountSeries":[{"id":"account:Water & Sewer","name":"Water & Sewer","kind":"account","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66],"total_actual":1444340.52},{"id":"account:Electricity","name":"Electricity","kind":"account","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51],"total_actual":1433335.01},{"id":"account:Front Desk Personnel - Contract","name":"Front Desk Personnel - Contract","kind":"account","group":"Contracts / personnel","data":[45341.65,50810.4,38310.4,63310.43,38494.54,63586.61,51086.61,50870.61,26787.74,77597.74,25043.16,59215.74,59595.0,30723.0,71900.23,70413.16,69091.15,45971.91,55630.89,44344.9,41973.25,54685.55],"total_actual":1134784.67},{"id":"account:Reserve Contributions","name":"Reserve Contributions","kind":"account","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0],"total_actual":798656.71},{"id":"account:Common Area Cleaning - Contract","name":"Common Area Cleaning - Contract","kind":"account","group":"Contracts / personnel","data":[32047.7,24242.2,24152.1,24152.1,24565.5,24565.5,24565.5,25065.5,17490.0,30822.68,25832.68,21003.9,22816.5,0.0,7239.8,57038.6,23176.9,33888.2,40810.0,30607.5,20405.0,40810.0],"total_actual":575297.86},{"id":"account:Gas","name":"Gas","kind":"account","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77],"total_actual":569247.2},{"id":"account:Office Personnel - Contract","name":"Office Personnel - Contract","kind":"account","group":"Contracts / personnel","data":[22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,14950.0,22425.0,23449.0,23667.0,23667.0,23667.0,16298.0,28169.99,-44467.99,19289.42,29370.63,29370.57],"total_actual":434105.62},{"id":"account:Building Insurance","name":"Building Insurance","kind":"account","group":"Insurance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,35799.28,23033.86,15361.36,0.0,23465.25,33576.5,3382.5,16834.25,102659.03,64544.63,45532.06,15432.07],"total_actual":379620.79},{"id":"account:Insurance Claim Repairs","name":"Insurance Claim Repairs","kind":"account","group":"Insurance","data":[0.0,-45798.35,-20019.87,33649.32,27961.82,66849.54,16452.34,1671.09,12394.18,0.0,0.0,0.0,0.0,0.0,0.0,0.0,62599.59,203479.95,8056.74,0.0,0.0,0.0],"total_actual":367296.35},{"id":"account:Management Fees","name":"Management Fees","kind":"account","group":"Contracts / personnel","data":[14178.0,14178.0,14178.0,14178.0,14178.0,14272.52,14461.56,14461.56,14461.56,14461.56,9641.04,14461.56,14461.56,12291.04,14461.56,14461.56,15658.75,15618.75,15618.75,15618.75,15618.75,15618.75],"total_actual":316539.58},{"id":"account:Loan Repayment","name":"Loan Repayment","kind":"account","group":"Loan / financing","data":[0.0,0.0,0.0,0.0,0.0,6901.35,20704.05,20704.05,20704.05,13802.7,6901.35,12572.79,20735.85,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05],"total_actual":309362.64},{"id":"account:Carpet Repairs & Replacement","name":"Carpet Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,96263.06,96263.06,93096.93,0.0,0.0,0.0,9967.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":295590.05},{"id":"account:Boiler Repairs & Replacement","name":"Boiler Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,5440.0,142250.0,0.0,0.0,2053.68,0.0,17750.0,0.0,0.0,0.0,0.0],"total_actual":167493.68},{"id":"account:Insurance - Building Policy","name":"Insurance - Building Policy","kind":"account","group":"Insurance","data":[9055.64,16813.76,14508.99,14519.29,9682.96,570.0,43502.61,19238.95,12830.52,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":140722.72},{"id":"account:Front Desk Personnel - Non Contract","name":"Front Desk Personnel - Non Contract","kind":"account","group":"Contracts / personnel","data":[3348.0,2490.0,432.0,3196.5,2688.0,2175.0,1608.0,2648.0,1160.0,3055.5,1462.5,3552.0,3132.0,16596.0,2551.5,216.0,0.0,16674.0,16674.0,16674.0,16674.66,16674.99],"total_actual":133682.65},{"id":"account:Maintenance Personnel - Contract","name":"Maintenance Personnel - Contract","kind":"account","group":"Contracts / personnel","data":[4766.64,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2537.0,10456.7,14254.4,23065.6,18174.0,16679.89,22420.43],"total_actual":112354.66},{"id":"account:Trash Collection - Contract","name":"Trash Collection - Contract","kind":"account","group":"Contracts / personnel","data":[5089.95,3631.8,3393.3,6786.59,3393.28,6786.56,5089.94,5089.92,3443.61,6812.02,3176.42,5144.93,8130.28,3301.87,3233.0,7973.98,4737.0,3283.0,3158.0,6126.0,4483.58,4880.16],"total_actual":107145.19},{"id":"account:Security Monitoring - Contract","name":"Security Monitoring - Contract","kind":"account","group":"Contracts / personnel","data":[4727.99,6414.85,4857.0,3385.7,4857.0,4857.0,4857.0,3238.0,3286.57,5002.71,5002.71,5002.71,5152.8,1717.6,3435.2,6870.4,0.0,8845.75,4953.07,6884.25,5199.66,5199.66],"total_actual":103747.63},{"id":"account:Plumbing Repairs & Mtce","name":"Plumbing Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,13107.36,3947.2,4234.0,9652.48,2840.0,1724.0,8903.44,15942.5,1009.6,13532.95,3763.03,15347.26,2747.95],"total_actual":96751.77},{"id":"account:Elevator Repairs & Mtce","name":"Elevator Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,8742.24,2240.23,5490.0,0.0,0.0,32495.0,0.0,0.0,1433.92,2192.03,34804.06,2012.99,6641.37],"total_actual":96051.84},{"id":"account:HVAC Repairs & Mtce","name":"HVAC Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,19845.67,8607.8,7323.72,8181.25,2727.5,0.0,8346.4,5067.0,12595.66,-9452.39,4307.09,9510.0,17448.1],"total_actual":94507.8},{"id":"account:Insurance Claim Repairs - Self Insured","name":"Insurance Claim Repairs - Self Insured","kind":"account","group":"Insurance","data":[0.0,0.0,0.0,0.0,9081.23,7760.75,0.0,9740.45,3800.0,6154.9,0.0,485.0,485.0,13138.2,0.0,0.0,10019.97,1766.43,27633.63,0.0,0.0,0.0],"total_actual":90065.56},{"id":"account:Garage Door / Gate Repairs & Mtce","name":"Garage Door / Gate Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,650.0,2596.5,2053.25,22402.05,403.86,1349.09,5938.29,6993.44,3658.53,524.91,1078.65,11732.82,8104.29],"total_actual":67485.68},{"id":"account:Electrical Repairs & Mtce","name":"Electrical Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3950.62,231.0,0.0,267.0,0.0,292.0,2021.46,59.69,5067.22,3521.24,538.4,473.04,44413.73],"total_actual":60835.4},{"id":"account:General Repairs and Maintenance","name":"General Repairs and Maintenance","kind":"account","group":"Repairs & maintenance","data":[10133.77,10557.4,4220.92,14182.1,4429.63,3707.7,7488.88,2528.91,886.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":58135.31},{"id":"account:Bad Debt","name":"Bad Debt","kind":"account","group":"Loan / financing","data":[0.0,6027.93,0.0,4694.18,0.0,0.0,42136.07,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":52858.18}],"groups":[{"id":"group:Contracts / personnel","name":"Contracts / personnel","child_ids":["account:Front Desk Personnel - Contract","account:Common Area Cleaning - Contract","account:Office Personnel - Contract","account:Management Fees","account:Front Desk Personnel - Non Contract","account:Maintenance Personnel - Contract","account:Trash Collection - Contract","account:Security Monitoring - Contract"]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","child_ids":["account:Carpet Repairs & Replacement","account:Boiler Repairs & Replacement","account:Plumbing Repairs & Mtce","account:Elevator Repairs & Mtce","account:HVAC Repairs & Mtce","account:Garage Door / Gate Repairs & Mtce","account:Electrical Repairs & Mtce","account:General Repairs and Maintenance"]},{"id":"group:Water & sewer","name":"Water & sewer","child_ids":["account:Water & Sewer"]},{"id":"group:Electricity","name":"Electricity","child_ids":["account:Electricity"]},{"id":"group:Insurance","name":"Insurance","child_ids":["account:Building Insurance","account:Insurance Claim Repairs","account:Insurance - Building Policy","account:Insurance Claim Repairs - Self Insured"]},{"id":"group:Reserve contributions","name":"Reserve contributions","child_ids":["account:Reserve Contributions"]},{"id":"group:Gas","name":"Gas","child_ids":["account:Gas"]},{"id":"group:Loan / financing","name":"Loan / financing","child_ids":["account:Loan Repayment","account:Bad Debt"]}],"defaultSelection":["group:Contracts / personnel","group:Repairs & maintenance","group:Water & sewer","group:Electricity","group:Insurance"],"categoryOrder":["Electricity","Gas","Water & sewer","Contracts / personnel","Repairs & maintenance","Insurance","Reserve contributions","Loan / financing"],"reservesYearly":[{"year":"2021","contribution_actual":128948.16,"contribution_budget":178484.24,"contribution_shortfall":49536.08,"contribution_vs_budget_pct":72.2,"transfer_from_reserves_actual":58824.56},{"year":"2022","contribution_actual":198970.79,"contribution_budget":257516.08,"contribution_shortfall":58545.29,"contribution_vs_budget_pct":77.3,"transfer_from_reserves_actual":207601.04},{"year":"2023","contribution_actual":186022.87,"contribution_budget":265432.65,"contribution_shortfall":79409.78,"contribution_vs_budget_pct":70.1,"transfer_from_reserves_actual":222478.37},{"year":"2024","contribution_actual":149891.62,"contribution_budget":227730.9,"contribution_shortfall":77839.28,"contribution_vs_budget_pct":65.8,"transfer_from_reserves_actual":213775.0},{"year":"2025","contribution_actual":134823.27,"contribution_budget":311689.83,"contribution_shortfall":176866.56,"contribution_vs_budget_pct":43.3,"transfer_from_reserves_actual":120207.58},{"year":"2026","contribution_actual":0.0,"contribution_budget":166191.64,"contribution_shortfall":166191.64,"contribution_vs_budget_pct":0.0,"transfer_from_reserves_actual":-84.06}],"incompleteYears":["2023","2026"],"utilities":{"Electricity":{"yearly":[{"year":"2021","actual":220277.27,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":238017.31,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":8.1,"dc_benchmark_yoy_pct":11.2,"vs_dc_pp":-3.1},{"year":"2023","actual":217770.79,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":1.9,"dc_benchmark_yoy_pct":9.3,"vs_dc_pp":-7.4},{"year":"2024","actual":234246.24,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":-4.9,"dc_benchmark_yoy_pct":2.4,"vs_dc_pp":-7.3},{"year":"2025","actual":312836.53,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":33.6,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2026","actual":210186.87,"months":6,"complete":false,"compare_basis":"same_months","months_compared":6,"condo_yoy_pct":146.0,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2025"],"rise_count":1},"Gas":{"yearly":[{"year":"2021","actual":51399.13,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":61575.4,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":19.8,"dc_benchmark_yoy_pct":21.0,"vs_dc_pp":-1.2},{"year":"2023","actual":63984.96,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":9.3,"dc_benchmark_yoy_pct":-13.1,"vs_dc_pp":22.4},{"year":"2024","actual":81120.51,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":26.8,"dc_benchmark_yoy_pct":-3.8,"vs_dc_pp":30.6},{"year":"2025","actual":123382.47,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":52.1,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2026","actual":187784.73,"months":6,"complete":false,"compare_basis":"same_months","months_compared":6,"condo_yoy_pct":266.7,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2022","2024","2025"],"rise_count":3},"Water & sewer":{"yearly":[{"year":"2021","actual":213409.77,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":258374.41,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":21.1,"dc_benchmark_yoy_pct":7.8,"vs_dc_pp":13.3},{"year":"2023","actual":167650.84,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":-28.7,"dc_benchmark_yoy_pct":9.5,"vs_dc_pp":-38.2},{"year":"2024","actual":343649.61,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":86.6,"dc_benchmark_yoy_pct":3.25,"vs_dc_pp":83.3},{"year":"2025","actual":312770.82,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":-9.0,"dc_benchmark_yoy_pct":8.0,"vs_dc_pp":-17.0},{"year":"2026","actual":148485.07,"months":6,"complete":false,"compare_basis":"same_months","months_compared":6,"condo_yoy_pct":4.0,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2022","2024"],"rise_count":2}}}</script>
 <script>
 const DATA = JSON.parse(document.getElementById("report-data").textContent);
 const PALETTE = ["#0f766e","#1d4e89","#b45309","#0e7490","#a16207","#be123c","#3f6212","#334155"];
@@ -854,7 +1061,7 @@ const legend = {
     font:{ family:"Figtree", size:12 }, color:"#3a4f5a" }
 };
 
-const yearLabels = DATA.yearly.map(r => r.year === "2026" ? "2026*" : r.year);
+const yearLabels = DATA.yearly.map(r => r.complete === false ? r.year + "*" : r.year);
 const quarterlyValues = DATA.quarterlyTotals.map(v => Math.round((v/1000)*10)/10);
 
 new Chart(document.getElementById("quarterlyExpenseChart"), {
@@ -910,7 +1117,8 @@ new Chart(document.getElementById("incomeExpenseChart"), {
   data:{
     labels: yearLabels,
     datasets:[
-      { label:"Income ($k)", data:DATA.yearly.map(r => Math.round(r.income_actual/1000)), backgroundColor:"#1d4e89", borderRadius:4 },
+      { label:"Income reported ($k)", data:DATA.yearly.map(r => Math.round(r.income_actual/1000)), backgroundColor:"#1d4e89", borderRadius:4 },
+      { label:"Regular fees only ($k)", data:DATA.yearly.map(r => Math.round(r.income_recurring_actual/1000)), backgroundColor:"#0e7490", borderRadius:4 },
       { label:"Expense ($k)", data:DATA.yearly.map(r => Math.round(r.expense_actual/1000)), backgroundColor:"#0f766e", borderRadius:4 }
     ]
   },
@@ -1172,8 +1380,49 @@ document.getElementById("selectUtilities")?.addEventListener("click", () => {
 document.getElementById("clearSeries")?.addEventListener("click", () => setSelection([]));
 buildSeriesPicker();
 
+(function() {
+  const el = document.getElementById("utilityPatternChart");
+  if (!el || !DATA.utilities) return;
+  const names = ["Gas", "Electricity", "Water & sewer"];
+  const yearSet = new Set();
+  names.forEach(n => ((DATA.utilities[n] || {}).yearly || []).forEach(r => yearSet.add(r.year)));
+  const yearList = [...yearSet].sort();
+  const labels = yearList.map(y => {
+    const anyPartial = names.some(n => {
+      const row = ((DATA.utilities[n] || {}).yearly || []).find(r => r.year === y);
+      return row && !row.complete;
+    });
+    return anyPartial ? y + "*" : y;
+  });
+  const colors = { "Gas":"#0f766e", "Electricity":"#1d4e89", "Water & sewer":"#b45309" };
+  new Chart(el, {
+    type:"bar",
+    data:{
+      labels,
+      datasets: names.map(n => ({
+        label: n,
+        data: yearList.map(y => {
+          const row = ((DATA.utilities[n] || {}).yearly || []).find(r => r.year === y);
+          return row ? Math.round((row.actual/1000)*10)/10 : null;
+        }),
+        backgroundColor: colors[n],
+        borderRadius: 3
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend },
+      scales:{
+        x:{ ticks:tick, grid:{ color:"rgba(13,27,34,0.06)" }, title:{ display:true, text:"Year", color:"#3a4f5a" } },
+        y:{ ticks:tick, grid, title:{ display:true, text:"Bill total ($ thousands)", color:"#3a4f5a" } }
+      }
+    }
+  });
+})();
+
+
 if (DATA.reservesYearly && DATA.reservesYearly.length) {
-  const reserveLabels = DATA.reservesYearly.map(r => r.year === "2026" ? "2026*" : r.year);
+  const reserveLabels = DATA.reservesYearly.map(r => DATA.incompleteYears.includes(r.year) ? r.year + "*" : r.year);
   new Chart(document.getElementById("reservesChart"), {
     type:"bar",
     data:{
