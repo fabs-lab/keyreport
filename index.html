@@ -62,24 +62,62 @@ body::before {
 .chart-wrap.tall { height:380px; }
 .chart-caption { margin:.65rem 0 0; color:var(--ink-soft); font-size:.88rem; }
 .series-picker {
-  display:grid; gap:.65rem; margin:0 0 .9rem; padding:.85rem .95rem;
+  display:grid; gap:.7rem; margin:0 0 .9rem; padding:.85rem .95rem;
   border:1px solid var(--line); border-radius:.85rem; background:rgba(248,251,253,.65);
 }
 .series-picker-toolbar { display:flex; flex-wrap:wrap; gap:.5rem .75rem; align-items:center; }
-.series-picker-toolbar button {
+.series-picker-toolbar button, .series-chip, .series-selected-chip {
   border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:.45rem;
   padding:.35rem .7rem; font:600 .82rem var(--body); cursor:pointer;
 }
-.series-picker-toolbar button:hover { border-color:var(--accent); color:var(--accent-deep); }
-.series-groups { display:grid; gap:.55rem; max-height:220px; overflow:auto; padding-right:.25rem; }
-.series-group { border-top:1px solid rgba(13,27,34,.06); padding-top:.45rem; }
-.series-group:first-child { border-top:0; padding-top:0; }
-.series-group-head { display:flex; align-items:center; gap:.45rem; font-weight:600; font-size:.92rem; }
-.series-children { display:grid; gap:.25rem; margin:.35rem 0 0 1.35rem; }
-.series-children label, .series-group-head label {
-  display:flex; align-items:flex-start; gap:.4rem; font-weight:400; font-size:.86rem; color:var(--ink-soft); cursor:pointer;
+.series-picker-toolbar button:hover, .series-chip:hover { border-color:var(--accent); color:var(--accent-deep); }
+.series-chip { padding:.4rem .75rem; font-weight:600; }
+.series-chip.on {
+  border-color:rgba(15,118,110,.45); background:rgba(15,118,110,.12); color:#0f4f4a;
 }
-.series-children label span { line-height:1.3; }
+.series-chip.partial {
+  border-color:rgba(29,78,137,.4); background:rgba(29,78,137,.1); color:#1d4e89;
+}
+.series-group-chips { display:flex; flex-wrap:wrap; gap:.45rem; }
+.series-account-panel {
+  display:grid; gap:.55rem; padding-top:.15rem; border-top:1px solid rgba(13,27,34,.08);
+}
+.series-account-controls {
+  display:grid; grid-template-columns:minmax(11rem,1fr) minmax(10rem,1.1fr); gap:.5rem;
+}
+.series-account-controls label {
+  display:grid; gap:.25rem; font-size:.78rem; font-weight:600; color:var(--ink-soft);
+}
+.series-account-controls select,
+.series-account-controls input {
+  width:100%; border:1px solid var(--line); border-radius:.45rem; background:#fff;
+  padding:.4rem .55rem; font:500 .86rem var(--body); color:var(--ink);
+}
+.series-account-list {
+  display:grid; gap:.2rem; max-height:9.5rem; overflow:auto;
+  padding:.35rem .45rem; border:1px solid var(--line); border-radius:.55rem; background:#fff;
+}
+.series-account-list label {
+  display:grid; grid-template-columns:auto 1fr auto; gap:.45rem; align-items:start;
+  padding:.28rem .2rem; font-size:.86rem; color:var(--ink); cursor:pointer;
+}
+.series-account-list label:hover { background:rgba(213,224,232,.35); border-radius:.35rem; }
+.series-account-list .acct-name { line-height:1.3; }
+.series-account-list .acct-total {
+  font-variant-numeric:tabular-nums; color:var(--ink-soft); font-size:.8rem; white-space:nowrap;
+}
+.series-account-empty { color:var(--ink-soft); font-size:.86rem; padding:.35rem .2rem; }
+.series-selected { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; min-height:1.6rem; }
+.series-selected-label { font-size:.78rem; font-weight:600; color:var(--ink-soft); margin-right:.15rem; }
+.series-selected-chip {
+  display:inline-flex; align-items:center; gap:.35rem; padding:.28rem .55rem .28rem .65rem;
+  background:rgba(15,118,110,.1); border-color:rgba(15,118,110,.28); color:#0f4f4a; font-size:.8rem;
+}
+.series-selected-chip button {
+  border:0; background:transparent; color:inherit; cursor:pointer; font:700 .9rem var(--body);
+  line-height:1; padding:0; opacity:.7;
+}
+.series-selected-chip button:hover { opacity:1; }
 .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:.9rem; background:rgba(248,251,253,.78); }
 table { width:100%; border-collapse:collapse; font-size:.92rem; }
 th, td { padding:.7rem .85rem; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap; }
@@ -92,6 +130,7 @@ tr.neg td.num:last-child { color:var(--danger); }
 .footer { margin-top:2.5rem; padding-top:1.1rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.9rem; }
 @media (max-width:900px) {
   .stats, .grid-2 { grid-template-columns:1fr 1fr; }
+  .series-account-controls { grid-template-columns:1fr; }
 }
 @media (max-width:640px) {
   .stats, .grid-2 { grid-template-columns:1fr; }
@@ -576,10 +615,19 @@ tr.neg td.num:last-child { color:var(--danger); }
           <button type="button" id="selectUtilities">Electricity, gas, water</button>
           <button type="button" id="clearSeries">Clear</button>
         </div>
-        <div class="series-groups" id="seriesGroups"></div>
-        <p class="chart-caption" style="margin:0">
-          Choose a whole group, or individual accounts inside a group (for example Front Desk under Contracts / personnel).
-        </p>
+        <div class="series-group-chips" id="seriesGroupChips" aria-label="Expense groups"></div>
+        <div class="series-account-panel">
+          <div class="series-account-controls">
+            <label>Browse accounts in
+              <select id="seriesAccountGroup"></select>
+            </label>
+            <label>Filter
+              <input type="search" id="seriesAccountSearch" placeholder="e.g. Front Desk" autocomplete="off" />
+            </label>
+          </div>
+          <div class="series-account-list" id="seriesAccountList"></div>
+        </div>
+        <div class="series-selected" id="seriesSelected" aria-live="polite"></div>
       </div>
       <div class="chart-wrap tall"><canvas id="categoryTrendChart"></canvas></div>
       <p class="chart-caption">Quarterly totals for the selected groups or accounts.</p>
@@ -901,71 +949,168 @@ new Chart(document.getElementById("categoryStackChart"), {
 const allSeries = [...(DATA.series || []), ...(DATA.accountSeries || [])];
 const seriesById = Object.fromEntries(allSeries.map(s => [s.id, s]));
 const selected = new Set(DATA.defaultSelection || (DATA.series || []).slice(0,5).map(s => s.id));
+const groups = DATA.groups || [];
+const groupById = Object.fromEntries(groups.map(g => [g.id, g]));
+let browseGroupId = (groups[0] && groups[0].id) || "";
 
-function buildSeriesPicker() {
-  const root = document.getElementById("seriesGroups");
-  if (!root) return;
-  root.innerHTML = "";
-  (DATA.groups || []).forEach(group => {
-    const wrap = document.createElement("div");
-    wrap.className = "series-group";
-    const head = document.createElement("div");
-    head.className = "series-group-head";
-    const groupLabel = document.createElement("label");
-    const groupCb = document.createElement("input");
-    groupCb.type = "checkbox";
-    groupCb.dataset.seriesId = group.id;
-    groupCb.checked = selected.has(group.id);
-    groupCb.addEventListener("change", () => {
-      if (groupCb.checked) {
-        selected.add(group.id);
-        (group.child_ids || []).forEach(id => selected.delete(id));
-      } else {
-        selected.delete(group.id);
-      }
-      syncPickerChecks();
-      renderTrendChart();
-    });
-    groupLabel.appendChild(groupCb);
-    groupLabel.appendChild(document.createTextNode(" Whole group: " + group.name));
-    head.appendChild(groupLabel);
-    wrap.appendChild(head);
+function moneyCompact(n) {
+  const v = Number(n) || 0;
+  if (Math.abs(v) >= 1e6) return "$" + (v/1e6).toFixed(1) + "M";
+  if (Math.abs(v) >= 1e3) return "$" + Math.round(v/1e3) + "k";
+  return "$" + Math.round(v);
+}
 
-    const kids = document.createElement("div");
-    kids.className = "series-children";
-    (group.child_ids || []).forEach(id => {
-      const series = seriesById[id];
-      if (!series) return;
-      const lab = document.createElement("label");
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.dataset.seriesId = id;
-      cb.checked = selected.has(id);
-      cb.addEventListener("change", () => {
-        if (cb.checked) {
-          selected.add(id);
-          selected.delete(group.id);
-        } else {
-          selected.delete(id);
-        }
-        syncPickerChecks();
-        renderTrendChart();
-      });
-      const span = document.createElement("span");
-      span.textContent = series.name;
-      lab.appendChild(cb);
-      lab.appendChild(span);
-      kids.appendChild(lab);
-    });
-    wrap.appendChild(kids);
-    root.appendChild(wrap);
+function childSelectedCount(group) {
+  return (group.child_ids || []).filter(id => selected.has(id)).length;
+}
+
+function syncGroupChips() {
+  document.querySelectorAll("#seriesGroupChips .series-chip").forEach(btn => {
+    const group = groupById[btn.dataset.groupId];
+    if (!group) return;
+    const kids = childSelectedCount(group);
+    btn.classList.toggle("on", selected.has(group.id));
+    btn.classList.toggle("partial", !selected.has(group.id) && kids > 0);
+    btn.setAttribute("aria-pressed", selected.has(group.id) ? "true" : "false");
+    const base = group.name;
+    btn.textContent = (!selected.has(group.id) && kids > 0) ? (base + " (" + kids + ")") : base;
   });
 }
 
-function syncPickerChecks() {
-  document.querySelectorAll("#seriesGroups input[data-series-id]").forEach(cb => {
-    cb.checked = selected.has(cb.dataset.seriesId);
+function renderSelectedChips() {
+  const root = document.getElementById("seriesSelected");
+  if (!root) return;
+  root.innerHTML = "";
+  const ids = [...selected].filter(id => seriesById[id]);
+  if (!ids.length) {
+    const empty = document.createElement("span");
+    empty.className = "series-selected-label";
+    empty.textContent = "Nothing selected — pick groups or accounts above.";
+    root.appendChild(empty);
+    return;
+  }
+  const label = document.createElement("span");
+  label.className = "series-selected-label";
+  label.textContent = "On chart";
+  root.appendChild(label);
+  ids.forEach(id => {
+    const s = seriesById[id];
+    const chip = document.createElement("span");
+    chip.className = "series-selected-chip";
+    chip.appendChild(document.createTextNode(s.name));
+    const x = document.createElement("button");
+    x.type = "button";
+    x.setAttribute("aria-label", "Remove " + s.name);
+    x.textContent = "×";
+    x.addEventListener("click", () => {
+      selected.delete(id);
+      syncPickerUI();
+      renderTrendChart();
+    });
+    chip.appendChild(x);
+    root.appendChild(chip);
   });
+}
+
+function renderAccountList() {
+  const list = document.getElementById("seriesAccountList");
+  const searchEl = document.getElementById("seriesAccountSearch");
+  if (!list) return;
+  list.innerHTML = "";
+  const group = groupById[browseGroupId];
+  if (!group) {
+    list.innerHTML = '<div class="series-account-empty">No groups available.</div>';
+    return;
+  }
+  const q = ((searchEl && searchEl.value) || "").trim().toLowerCase();
+  const kids = (group.child_ids || [])
+    .map(id => seriesById[id])
+    .filter(Boolean)
+    .filter(s => !q || s.name.toLowerCase().includes(q));
+  if (!kids.length) {
+    list.innerHTML = '<div class="series-account-empty">No accounts match in this group.</div>';
+    return;
+  }
+  const groupOn = selected.has(group.id);
+  kids.forEach(series => {
+    const lab = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = selected.has(series.id) || groupOn;
+    cb.disabled = groupOn;
+    cb.addEventListener("change", () => {
+      if (cb.checked) {
+        selected.add(series.id);
+        selected.delete(group.id);
+      } else {
+        selected.delete(series.id);
+      }
+      syncPickerUI();
+      renderTrendChart();
+    });
+    const name = document.createElement("span");
+    name.className = "acct-name";
+    name.textContent = series.name;
+    const total = document.createElement("span");
+    total.className = "acct-total";
+    total.textContent = moneyCompact(series.total_actual);
+    lab.appendChild(cb);
+    lab.appendChild(name);
+    lab.appendChild(total);
+    list.appendChild(lab);
+  });
+  if (groupOn) {
+    const note = document.createElement("div");
+    note.className = "series-account-empty";
+    note.textContent = "Whole group is on the chart. Turn the group chip off to pick individual accounts.";
+    list.appendChild(note);
+  }
+}
+
+function buildSeriesPicker() {
+  const chips = document.getElementById("seriesGroupChips");
+  const groupSelect = document.getElementById("seriesAccountGroup");
+  if (!chips || !groupSelect) return;
+  chips.innerHTML = "";
+  groupSelect.innerHTML = "";
+  groups.forEach((group, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "series-chip";
+    btn.dataset.groupId = group.id;
+    btn.textContent = group.name;
+    btn.addEventListener("click", () => {
+      if (selected.has(group.id)) {
+        selected.delete(group.id);
+      } else {
+        selected.add(group.id);
+        (group.child_ids || []).forEach(id => selected.delete(id));
+      }
+      browseGroupId = group.id;
+      if (groupSelect) groupSelect.value = group.id;
+      syncPickerUI();
+      renderTrendChart();
+    });
+    chips.appendChild(btn);
+
+    const opt = document.createElement("option");
+    opt.value = group.id;
+    opt.textContent = group.name + " (" + (group.child_ids || []).length + ")";
+    if (i === 0) opt.selected = true;
+    groupSelect.appendChild(opt);
+  });
+  groupSelect.addEventListener("change", () => {
+    browseGroupId = groupSelect.value;
+    renderAccountList();
+  });
+  document.getElementById("seriesAccountSearch")?.addEventListener("input", renderAccountList);
+  syncPickerUI();
+}
+
+function syncPickerUI() {
+  syncGroupChips();
+  renderAccountList();
+  renderSelectedChips();
 }
 
 function selectedDatasets() {
@@ -1010,7 +1155,7 @@ function renderTrendChart() {
 function setSelection(ids) {
   selected.clear();
   ids.forEach(id => { if (seriesById[id]) selected.add(id); });
-  syncPickerChecks();
+  syncPickerUI();
   renderTrendChart();
 }
 
