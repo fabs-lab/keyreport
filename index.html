@@ -551,6 +551,155 @@ tr.neg td.num.neg-cell { color:var(--danger); }
     </div>
   </div>
 </article>
+<article class="finding" id="finding-monthly-vs-ytd">
+  <div class="finding-top">
+    <h3>Month-by-month totals do not match the statements’ own year-to-date</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Adding each month’s current-period column does not equal the year-to-date the same statements print for 198 of 818 account-years.</li>
+<li>Widest like-for-like gap is 2024 expenses: $1,636,624 from the monthly columns versus $1,147,125 on the statements (+489,499).</li>
+<li>Largest single account: Electricity (8500) in 2024 — monthly columns $234,246 versus statement year-to-date $-280,545 (+514,791; Prior period restated).</li>
+<li>2023 cannot be checked account by account because the chart of accounts was renumbered mid-year and no code spans the whole year.</li>
+<li>These are source-statement inconsistencies, not extraction errors. Yearly totals in this report remain the sum of what each month reported at the time. Where the gap is large, the statement’s own year-to-date is the better figure to ask management about.</li>
+</ul>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Section</th>
+          <th class="num">Accounts comparable</th>
+          <th class="num">Sum of months</th>
+          <th class="num">Statement YTD</th>
+          <th class="num">Difference</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2021</td>
+  <td>Expenses</td>
+  <td class="num">71 of 133</td>
+  <td class="num">$1,089,375</td>
+  <td class="num">$1,223,296</td>
+  <td class="num neg-cell">$-133,921</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Expenses</td>
+  <td class="num">72 of 106</td>
+  <td class="num">$1,716,897</td>
+  <td class="num">$1,750,658</td>
+  <td class="num neg-cell">$-33,760</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Expenses</td>
+  <td class="num">0 of 180</td>
+  <td class="num">$2,044,978</td>
+  <td class="num">—</td>
+  <td class="num">Not reconcilable</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Expenses</td>
+  <td class="num">25 of 76</td>
+  <td class="num">$1,636,624</td>
+  <td class="num">$1,147,125</td>
+  <td class="num neg-cell">$489,499</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Expenses</td>
+  <td class="num">54 of 90</td>
+  <td class="num">$2,102,951</td>
+  <td class="num">$2,112,585</td>
+  <td class="num neg-cell">$-9,635</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Expenses</td>
+  <td class="num">41 of 60</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$0</td>
+</tr></tbody>
+    </table>
+  </div>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Code</th>
+          <th>Account</th>
+          <th class="num">Sum of months</th>
+          <th class="num">Statement YTD</th>
+          <th class="num">Difference</th>
+          <th>Why they differ</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2024</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$234,246</td>
+  <td class="num">$-280,545</td>
+  <td class="num neg-cell">$514,791</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-70000</td>
+  <td>Electricity</td>
+  <td class="num">$123,755</td>
+  <td class="num">$220,277</td>
+  <td class="num neg-cell">$-96,523</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$312,837</td>
+  <td class="num">$357,915</td>
+  <td class="num neg-cell">$-45,079</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>3-75000</td>
+  <td>Water and Sewer</td>
+  <td class="num">$222,524</td>
+  <td class="num">$258,374</td>
+  <td class="num neg-cell">$-35,850</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$134,823</td>
+  <td class="num">$101,001</td>
+  <td class="num neg-cell">$33,822</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-52000</td>
+  <td>Legal Fees - Common</td>
+  <td class="num">$291</td>
+  <td class="num">$32,352</td>
+  <td class="num neg-cell">$-32,061</td>
+  <td>Prior period restated</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    Comparable accounts appear under the same code on every statement in the year.
+    Years marked * are missing at least one month.
+  </p>
+  <p><a href="#ytd-reconciliation">See the full year-to-date check →</a></p>
+</article>
 <article class="finding" id="finding-insurance-review">
   <div class="finding-top">
     <h3>Insurance charges spiked — review before treating them as operating cost</h3>
@@ -1641,6 +1790,253 @@ tr.neg td.num.neg-cell { color:var(--danger); }
       Years marked * are missing at least one month, so “vs prior year” compares only the
       months both years have and states how many.
     </p>
+
+    <div class="panel" id="ytd-reconciliation">
+      <h3 style="margin-top:0">Do these totals match the statements' own year-to-date?</h3>
+      <p class="chart-caption" style="margin-top:0">
+        Not always. Every yearly figure above adds up each statement's current-period
+        column. The statements also print a year-to-date column, and the two disagree for
+        <strong>198</strong> of
+        <strong>818</strong> account-years.
+        The widest gap is 2024 expenses, where $1,636,624 of summed monthly columns sits $489,499 above the $1,147,125 year-to-date the statements report for those same accounts. 2023 cannot be reconciled at all at account level, because the chart of accounts was renumbered mid-year and no account code spans the whole year.
+        Treat the yearly totals as the sum of what each month reported, not as the
+        association's closed year-end position.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Year</th>
+            <th>Section</th>
+            <th class="num">Accounts comparable</th>
+            <th class="num">Sum of monthly columns</th>
+            <th class="num">Statement year-to-date</th>
+            <th class="num">Difference</th>
+            <th class="num">%</th>
+          </tr></thead>
+          <tbody><tr>
+  <td>2021</td>
+  <td>Expenses</td>
+  <td class="num">71 of 133</td>
+  <td class="num">$1,089,375</td>
+  <td class="num">$1,223,296</td>
+  <td class="num neg-cell">$-133,921</td>
+  <td class="num">-10.9%</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>Income</td>
+  <td class="num">14 of 39</td>
+  <td class="num">$1,540,792</td>
+  <td class="num">$1,543,953</td>
+  <td class="num neg-cell">$-3,161</td>
+  <td class="num">-0.2%</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Expenses</td>
+  <td class="num">72 of 106</td>
+  <td class="num">$1,716,897</td>
+  <td class="num">$1,750,658</td>
+  <td class="num neg-cell">$-33,760</td>
+  <td class="num">-1.9%</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Income</td>
+  <td class="num">16 of 36</td>
+  <td class="num">$1,534,621</td>
+  <td class="num">$1,535,422</td>
+  <td class="num">$-801</td>
+  <td class="num">-0.1%</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Expenses</td>
+  <td class="num">0 of 180</td>
+  <td class="num">$2,044,978</td>
+  <td class="num" colspan="3">No account code spans the whole year — not reconcilable</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Income</td>
+  <td class="num">0 of 44</td>
+  <td class="num">$1,805,388</td>
+  <td class="num" colspan="3">No account code spans the whole year — not reconcilable</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Expenses</td>
+  <td class="num">25 of 76</td>
+  <td class="num">$1,636,624</td>
+  <td class="num">$1,147,125</td>
+  <td class="num neg-cell">$489,499</td>
+  <td class="num">+42.7%</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Income</td>
+  <td class="num">9 of 14</td>
+  <td class="num">$1,726,230</td>
+  <td class="num">$1,726,230</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Expenses</td>
+  <td class="num">54 of 90</td>
+  <td class="num">$2,102,951</td>
+  <td class="num">$2,112,585</td>
+  <td class="num neg-cell">$-9,635</td>
+  <td class="num">-0.5%</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Income</td>
+  <td class="num">8 of 22</td>
+  <td class="num">$1,574,422</td>
+  <td class="num">$1,550,957</td>
+  <td class="num neg-cell">$23,465</td>
+  <td class="num">+1.5%</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Expenses</td>
+  <td class="num">41 of 60</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Income</td>
+  <td class="num">12 of 18</td>
+  <td class="num">$1,628,147</td>
+  <td class="num">$1,628,147</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr></tbody>
+        </table>
+      </div>
+      <h4 style="margin:1.25rem 0 .4rem">Largest single differences</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Year</th>
+            <th>Code</th>
+            <th>Account</th>
+            <th class="num">Sum of months</th>
+            <th class="num">Statement YTD</th>
+            <th class="num">Difference</th>
+            <th>Why they differ</th>
+          </tr></thead>
+          <tbody><tr>
+  <td>2024</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$234,246</td>
+  <td class="num">$-280,545</td>
+  <td class="num neg-cell">$514,791</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-70000</td>
+  <td>Electricity</td>
+  <td class="num">$123,755</td>
+  <td class="num">$220,277</td>
+  <td class="num neg-cell">$-96,523</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$312,837</td>
+  <td class="num">$357,915</td>
+  <td class="num neg-cell">$-45,079</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>3-75000</td>
+  <td>Water and Sewer</td>
+  <td class="num">$222,524</td>
+  <td class="num">$258,374</td>
+  <td class="num neg-cell">$-35,850</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$134,823</td>
+  <td class="num">$101,001</td>
+  <td class="num neg-cell">$33,822</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-52000</td>
+  <td>Legal Fees - Common</td>
+  <td class="num">$291</td>
+  <td class="num">$32,352</td>
+  <td class="num neg-cell">$-32,061</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>4051</td>
+  <td>Loan Repayment</td>
+  <td class="num">$102,165</td>
+  <td class="num">$70,921</td>
+  <td class="num neg-cell">$31,244</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>1-52000</td>
+  <td>Legal Fees - Residential</td>
+  <td class="num">$33,768</td>
+  <td class="num">$3,962</td>
+  <td class="num neg-cell">$29,806</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$149,892</td>
+  <td class="num">$175,184</td>
+  <td class="num neg-cell">$-25,292</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>6083</td>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$215,039</td>
+  <td class="num">$191,337</td>
+  <td class="num neg-cell">$23,701</td>
+  <td>Year-to-date restarted</td>
+</tr></tbody>
+        </table>
+      </div>
+      <ul class="chart-caption" style="margin-top:.75rem"><li><strong>Year-to-date restarted</strong> — The statements&#x27; own year-to-date restarted mid-year, so it no longer accumulates every month shown.</li>
+<li><strong>Prior period restated</strong> — The statements&#x27; year-to-date moved by more than that month&#x27;s own column, i.e. a prior period was restated without restating the monthly column.</li></ul>
+      <p class="chart-caption" style="margin-top:.75rem">
+        “Comparable” accounts are the ones whose code appears on every statement in the
+        year, so their months and their year-to-date cover the same span. The rest changed
+        code partway through the year and cannot be compared line-for-line.
+        These are not extraction errors — each figure was checked back to the source PDF.
+        They are places where the statements themselves restate a prior period, restart a
+        year-to-date, or move an account to a new code partway through the year. Where a
+        difference is large, the statement year-to-date is usually the better figure to ask
+        management about.
+      </p>
+    </div>
+
     <div class="panel">
       <h3 style="margin-top:0">Expense categories by year</h3>
       <div class="chart-wrap tall"><canvas id="categoryStackChart"></canvas></div>
