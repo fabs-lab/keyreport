@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Kenyon Square financial review from monthly association statements." />
+<title>Financial Report</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --ink:#0d1b22; --ink-soft:#3a4f5a; --mist:#e7eef3; --panel:rgba(248,251,253,.9);
+  --line:rgba(13,27,34,.1); --accent:#0f766e; --accent-deep:#0b5f59; --signal:#b45309; --danger:#9f1239;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Figtree",system-ui,sans-serif;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; overflow-x:hidden; }
+body {
+  margin:0; color:var(--ink); font:400 16px/1.5 var(--body);
+  overflow-x:hidden;
+  background:
+    radial-gradient(1000px 520px at 8% -8%, rgba(15,118,110,.18), transparent 55%),
+    radial-gradient(900px 480px at 100% 0%, rgba(30,64,90,.16), transparent 52%),
+    linear-gradient(180deg,#dfe8ef 0%, var(--mist) 42%, #d9e4ec 100%);
+}
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.22; z-index:0;
+  background-image:linear-gradient(rgba(13,27,34,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,27,34,.04) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+.site {
+  position:relative; z-index:1;
+  width:min(1120px, calc(100% - 2rem));
+  max-width:100%;
+  margin-inline:auto;
+  padding:1.25rem 0 3.5rem;
+  overflow-x:clip;
+}
+.topbar { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:1.25rem; }
+.topbar nav { display:flex; flex-wrap:wrap; gap:.85rem 1.1rem; }
+.topbar a { color:var(--ink-soft); text-decoration:none; font-weight:500; font-size:.92rem; }
+.finding a { color:var(--accent-deep); font-weight:600; text-decoration:none; }
+.finding a:hover { text-decoration:underline; }
+.brand { font-family:var(--display); font-weight:700; letter-spacing:-.02em; }
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.85rem; }
+.stat { background:var(--panel); border:1px solid var(--line); border-radius:.9rem; padding:1rem; }
+.stat strong { display:block; font:700 1.5rem/1.1 var(--display); letter-spacing:-.03em; }
+.stat.accent strong { color:var(--accent-deep); }
+.stat.danger strong { color:var(--danger); }
+.stat span { color:var(--ink-soft); font-size:.9rem; }
+.section { margin:2.5rem 0; min-width:0; }
+.section-head { display:grid; gap:.35rem; margin-bottom:1rem; }
+.section-head h2 { margin:0; font:700 clamp(1.45rem,2.2vw,1.9rem)/1.15 var(--display); letter-spacing:-.03em; }
+.section-head p { margin:0; color:var(--ink-soft); max-width:44rem; }
+.panel { background:var(--panel); border:1px solid var(--line); border-radius:1rem; padding:1.1rem 1.15rem; min-width:0; }
+.panel + .panel, .panel + .table-wrap { margin-top:.9rem; }
+.callout { border-left:3px solid var(--accent); padding-left:.95rem; }
+.findings { display:grid; gap:.8rem; min-width:0; }
+.finding { background:rgba(248,251,253,.78); border:1px solid var(--line); border-radius:.9rem; padding:1rem 1.1rem; min-width:0; overflow-x:auto; }
+.finding-top { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem; }
+.finding h3 { margin:0; font-size:1.05rem; min-width:0; }
+.finding p { margin:.4rem 0 0; color:var(--ink-soft); }
+.finding-bullets {
+  margin:.45rem 0 0; padding-left:1.15rem; color:var(--ink-soft);
+  display:grid; gap:.35rem;
+}
+.finding-bullets li { margin:0; padding-left:.15rem; overflow-wrap:anywhere; }
+.pill {
+  display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:.4rem;
+  padding:.2rem .55rem; font-size:.78rem; font-weight:600;
+}
+.pill.verify { border-color:rgba(180,83,9,.35); color:#92400e; background:rgba(180,83,9,.1); }
+tr.rise td { background:rgba(159,18,57,.06); }
+tr.rise td:first-child { font-weight:600; }
+tr.grow td.num:nth-child(5) { color:var(--signal); font-weight:600; }
+tr.shrink td.num:nth-child(5) { color:var(--danger); font-weight:600; }
+.util-year-block + .util-year-block { margin-top:.25rem; }
+.chart-wrap { position:relative; height:320px; }
+.chart-wrap.tall { height:380px; }
+.chart-caption { margin:.65rem 0 0; color:var(--ink-soft); font-size:.88rem; }
+.chart-caption a { color:var(--accent-deep); font-weight:600; text-decoration:none; }
+.chart-caption a:hover { text-decoration:underline; }
+.series-picker {
+  display:grid; gap:.7rem; margin:0 0 .9rem; padding:.85rem .95rem;
+  border:1px solid var(--line); border-radius:.85rem; background:rgba(248,251,253,.65);
+}
+.series-picker-toolbar { display:flex; flex-wrap:wrap; gap:.5rem .75rem; align-items:center; }
+.series-picker-toolbar button, .series-chip, .series-selected-chip {
+  border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:.45rem;
+  padding:.35rem .7rem; font:600 .82rem var(--body); cursor:pointer;
+}
+.series-picker-toolbar button:hover, .series-chip:hover { border-color:var(--accent); color:var(--accent-deep); }
+.series-chip { padding:.4rem .75rem; font-weight:600; }
+.series-chip.on {
+  border-color:rgba(15,118,110,.45); background:rgba(15,118,110,.12); color:#0f4f4a;
+}
+.series-chip.partial {
+  border-color:rgba(29,78,137,.4); background:rgba(29,78,137,.1); color:#1d4e89;
+}
+.series-group-chips { display:flex; flex-wrap:wrap; gap:.45rem; }
+.series-account-panel {
+  display:grid; gap:.55rem; padding-top:.15rem; border-top:1px solid rgba(13,27,34,.08);
+}
+.series-account-controls {
+  display:grid; grid-template-columns:minmax(11rem,1fr) minmax(10rem,1.1fr); gap:.5rem;
+}
+.series-account-controls label {
+  display:grid; gap:.25rem; font-size:.78rem; font-weight:600; color:var(--ink-soft);
+}
+.series-account-controls select,
+.series-account-controls input {
+  width:100%; border:1px solid var(--line); border-radius:.45rem; background:#fff;
+  padding:.4rem .55rem; font:500 .86rem var(--body); color:var(--ink);
+}
+.series-account-list {
+  display:grid; gap:.2rem; max-height:9.5rem; overflow:auto;
+  padding:.35rem .45rem; border:1px solid var(--line); border-radius:.55rem; background:#fff;
+}
+.series-account-list label {
+  display:grid; grid-template-columns:auto 1fr auto; gap:.45rem; align-items:start;
+  padding:.28rem .2rem; font-size:.86rem; color:var(--ink); cursor:pointer;
+}
+.series-account-list label:hover { background:rgba(213,224,232,.35); border-radius:.35rem; }
+.series-account-list .acct-name { line-height:1.3; }
+.series-account-list .acct-total {
+  font-variant-numeric:tabular-nums; color:var(--ink-soft); font-size:.8rem; white-space:nowrap;
+}
+.series-account-empty { color:var(--ink-soft); font-size:.86rem; padding:.35rem .2rem; }
+.series-selected { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; min-height:1.6rem; }
+.series-selected-label { font-size:.78rem; font-weight:600; color:var(--ink-soft); margin-right:.15rem; }
+.series-selected-chip {
+  display:inline-flex; align-items:center; gap:.35rem; padding:.28rem .55rem .28rem .65rem;
+  background:rgba(15,118,110,.1); border-color:rgba(15,118,110,.28); color:#0f4f4a; font-size:.8rem;
+}
+.series-selected-chip button {
+  border:0; background:transparent; color:inherit; cursor:pointer; font:700 .9rem var(--body);
+  line-height:1; padding:0; opacity:.7;
+}
+.series-selected-chip button:hover { opacity:1; }
+.table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:.9rem; background:rgba(248,251,253,.78); min-width:0; max-width:100%; }
+table { width:100%; border-collapse:collapse; font-size:.92rem; }
+th, td { padding:.7rem .85rem; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap; }
+th { color:var(--ink-soft); background:rgba(213,224,232,.45); }
+tr:last-child td { border-bottom:0; }
+.num { text-align:right; font-variant-numeric:tabular-nums; }
+.basis { color:var(--ink-soft); font-size:.82em; font-variant-numeric:normal; }
+tr.neg td.num.neg-cell { color:var(--danger); }
+.grid-2 { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:1rem; min-width:0; }
+.footer { margin-top:2.5rem; padding-top:1.1rem; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.9rem; }
+@media (max-width:900px) {
+  .stats, .grid-2 { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .series-account-controls { grid-template-columns:1fr; }
+}
+@media (max-width:640px) {
+  .stats, .grid-2 { grid-template-columns:minmax(0,1fr); }
+  .topbar { flex-direction:column; align-items:flex-start; }
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div class="site">
+  <header class="topbar">
+    <div class="brand">Financial report</div>
+    <nav>
+      <a href="#findings">Findings</a>
+      <a href="#reserves">Reserves</a>
+      <a href="#expenses-quarterly">Expenses</a>
+      <a href="#accounts">Accounts</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <section class="stats" aria-label="Key figures">
+    <div class="stat"><strong>66</strong><span>Monthly statements reviewed</span></div>
+    <div class="stat"><strong>$1,564,794</strong><span>Costs in 2021 (ex-insurance)</span></div>
+    <div class="stat accent"><strong>$2,031,419</strong><span>Costs in 2025 (ex-insurance)</span></div>
+    <div class="stat"><strong>+29.8%</strong><span>Cost change 2021→2025</span></div>
+  </section>
+  <p class="chart-caption" style="margin:-.35rem 0 1.25rem">
+    Top figures exclude the Insurance category as a sensitivity (premiums are ordinary
+    operating cost; claim repairs need separate recovery review).
+    2026* Jan–Jul ×1.714 run-rate would be about $2,375,010 on the same basis — a scenario, not a forecast.
+  </p>
+
+  <section class="section" id="findings">
+    <div class="section-head">
+      <h2>Main findings</h2>
+      <p>Items that stand out in the monthly statements and may need board or management explanation. They are review points, not accusations.</p>
+    </div>
+    <div class="findings"><article class="finding" id="finding-expense-growth">
+  <div class="finding-top">
+    <h3>Costs rose (Insurance category excluded) — and not every line went up</h3>
+    <span class="pill">From the statements</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Excluding the Insurance category (sensitivity), operating-style expenses rose from $1,564,794 in 2021 to $2,031,419 in 2025 (+$466,625, 29.8%).</li>
+<li>Utilities (electricity, gas, water) added $263,904.</li>
+<li>On-site personnel added $48,595.</li>
+<li>Management fees added $68,422.</li>
+<li>Maintenance contracts added $10,831.</li>
+<li>Many recurring contract lines barely moved — for example Front Desk Personnel - Contract $197,773→$215,039, Reserve Contributions $128,948→$134,823, Management Fees $56,712→$62,515.</li>
+<li>Offsetting decline: Other expenses -4,542 (-1.0% of the net change).</li>
+<li>Offsetting decline: Utilities -6,389 (-1.4% of the net change).</li>
+<li>Offsetting decline: Legal &amp; professional -47,160 (-10.1% of the net change).</li>
+<li>A simple 2026 Jan–Jul ×1.714 run-rate (from 7 months) is about $2,375,010 excluding insurance (+343,591 vs 2025; +810,216 vs 2021) — a scenario, not a forecast (early-year utility and repair charges are seasonal and lumpier than a full year).</li>
+</ul>
+  <p class="chart-caption">This comparison excludes the whole Insurance category (building premiums and claim repairs) as a sensitivity so claim volatility does not dominate the trend. Premiums alone would still be ordinary operating cost; claim-repair charges often sit next to insurance-proceeds income and need separate net-cost review. See the insurance finding.</p>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Months</th>
+          <th class="num">All expenses</th>
+          <th class="num">Insurance (excluded)</th>
+          <th class="num">Ex-insurance</th>
+          <th class="num">Ex-insurance annualized</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2021</td>
+  <td class="num">12</td>
+  <td class="num">$1,587,522</td>
+  <td class="num">$22,729</td>
+  <td class="num">$1,564,794</td>
+  <td class="num">$1,564,794</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td class="num">12</td>
+  <td class="num">$2,007,355</td>
+  <td class="num">$212,512</td>
+  <td class="num">$1,794,843</td>
+  <td class="num">$1,794,843</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td class="num">11</td>
+  <td class="num">$2,044,978</td>
+  <td class="num">$100,957</td>
+  <td class="num">$1,944,021</td>
+  <td class="num">$2,120,750</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td class="num">12</td>
+  <td class="num">$2,072,295</td>
+  <td class="num">$86,167</td>
+  <td class="num">$1,986,129</td>
+  <td class="num">$1,986,129</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td class="num">12</td>
+  <td class="num">$2,532,396</td>
+  <td class="num">$500,977</td>
+  <td class="num">$2,031,419</td>
+  <td class="num">$2,031,419</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td class="num">7</td>
+  <td class="num">$1,482,500</td>
+  <td class="num">$97,078</td>
+  <td class="num">$1,385,423</td>
+  <td class="num">$2,375,010</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    Partial years (marked *) are scaled to 12 months only as a simple run-rate scenario —
+    not a forecast. First-half utility and repair charges can be seasonal.
+    Insurance is shown then removed from the cost columns as a sensitivity.
+  </p>
+  <div class="grid-2" style="margin-top:.9rem">
+    <div>
+      <h4 style="margin:.2rem 0 .4rem;font-size:.95rem">Category change excluding insurance (2021→2025)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th class="num">2021</th>
+              <th class="num">2025</th>
+              <th class="num">2026* ann.</th>
+              <th class="num">$ change</th>
+              <th class="num">Line %</th>
+              <th class="num">Share of change</th>
+            </tr>
+          </thead>
+          <tbody><tr class="grow">
+  <td>Water &amp; sewer</td>
+  <td class="num">$213,410</td>
+  <td class="num">$312,771</td>
+  <td class="num">$296,206</td>
+  <td class="num">$99,361</td>
+  <td class="num">+46.6%</td>
+  <td class="num">+21.3%</td>
+</tr>
+<tr class="grow">
+  <td>Electricity</td>
+  <td class="num">$220,277</td>
+  <td class="num">$312,837</td>
+  <td class="num">$423,733</td>
+  <td class="num">$92,559</td>
+  <td class="num">+42.0%</td>
+  <td class="num">+19.8%</td>
+</tr>
+<tr class="grow">
+  <td>Loan / financing</td>
+  <td class="num">$10,722</td>
+  <td class="num">$82,816</td>
+  <td class="num">$82,816</td>
+  <td class="num">$72,094</td>
+  <td class="num">+672.4%</td>
+  <td class="num">+15.5%</td>
+</tr>
+<tr class="grow">
+  <td>Gas</td>
+  <td class="num">$51,399</td>
+  <td class="num">$123,382</td>
+  <td class="num">$330,141</td>
+  <td class="num">$71,983</td>
+  <td class="num">+140.0%</td>
+  <td class="num">+15.4%</td>
+</tr>
+<tr class="grow">
+  <td>Management fees</td>
+  <td class="num">$57,162</td>
+  <td class="num">$125,584</td>
+  <td class="num">$62,475</td>
+  <td class="num">$68,422</td>
+  <td class="num">+119.7%</td>
+  <td class="num">+14.7%</td>
+</tr>
+<tr class="grow">
+  <td>Repairs &amp; maintenance</td>
+  <td class="num">$169,809</td>
+  <td class="num">$220,690</td>
+  <td class="num">$368,512</td>
+  <td class="num">$50,881</td>
+  <td class="num">+30.0%</td>
+  <td class="num">+10.9%</td>
+</tr>
+<tr class="grow">
+  <td>On-site personnel</td>
+  <td class="num">$301,706</td>
+  <td class="num">$350,301</td>
+  <td class="num">$458,309</td>
+  <td class="num">$48,595</td>
+  <td class="num">+16.1%</td>
+  <td class="num">+10.4%</td>
+</tr>
+<tr class="shrink">
+  <td>Legal &amp; professional</td>
+  <td class="num">$73,113</td>
+  <td class="num">$25,953</td>
+  <td class="num">$35,710</td>
+  <td class="num">$-47,160</td>
+  <td class="num">-64.5%</td>
+  <td class="num">-10.1%</td>
+</tr>
+<tr class="grow">
+  <td>Maintenance contracts</td>
+  <td class="num">$314,846</td>
+  <td class="num">$325,677</td>
+  <td class="num">$293,861</td>
+  <td class="num">$10,831</td>
+  <td class="num">+3.4%</td>
+  <td class="num">+2.3%</td>
+</tr>
+<tr class="shrink">
+  <td>Utilities</td>
+  <td class="num">$18,256</td>
+  <td class="num">$11,866</td>
+  <td class="num">$12,191</td>
+  <td class="num">$-6,389</td>
+  <td class="num">-35.0%</td>
+  <td class="num">-1.4%</td>
+</tr>
+<tr class="grow">
+  <td>Reserve contributions</td>
+  <td class="num">$128,948</td>
+  <td class="num">$134,823</td>
+  <td class="num">$0</td>
+  <td class="num">$5,875</td>
+  <td class="num">+4.6%</td>
+  <td class="num">+1.3%</td>
+</tr>
+<tr class="shrink">
+  <td>Other expenses</td>
+  <td class="num">$-3,612</td>
+  <td class="num">$-8,154</td>
+  <td class="num">$4,982</td>
+  <td class="num">$-4,542</td>
+  <td class="num">-125.8%</td>
+  <td class="num">-1.0%</td>
+</tr>
+<tr class="grow">
+  <td>Administrative</td>
+  <td class="num">$8,757</td>
+  <td class="num">$12,872</td>
+  <td class="num">$6,073</td>
+  <td class="num">$4,115</td>
+  <td class="num">+47.0%</td>
+  <td class="num">+0.9%</td>
+</tr></tbody>
+        </table>
+      </div>
+      <p class="chart-caption">
+        “Line %” is that category’s own change vs 2021. “Share of change” is how much of the
+        overall $466,625 net change it accounts for, including declines that offset the rise.
+      </p>
+    </div>
+    <div>
+      <h4 style="margin:.2rem 0 .4rem;font-size:.95rem">Lines that rose the most (ex-insurance)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th class="num">2021</th>
+              <th class="num">2025</th>
+              <th class="num">2026* ann.</th>
+              <th class="num">$ change</th>
+              <th class="num">Line %</th>
+            </tr>
+          </thead>
+          <tbody><tr>
+  <td>Water and Sewer</td>
+  <td class="num">$213,410</td>
+  <td class="num">$312,771</td>
+  <td class="num">$296,206</td>
+  <td class="num">$99,361</td>
+  <td class="num">+46.6%</td>
+</tr>
+<tr>
+  <td>Electricity</td>
+  <td class="num">$220,277</td>
+  <td class="num">$312,837</td>
+  <td class="num">$423,733</td>
+  <td class="num">$92,559</td>
+  <td class="num">+42.0%</td>
+</tr>
+<tr>
+  <td>Loan Repayment</td>
+  <td class="num">$0</td>
+  <td class="num">$82,816</td>
+  <td class="num">$82,816</td>
+  <td class="num">$82,816</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Gas</td>
+  <td class="num">$51,399</td>
+  <td class="num">$123,382</td>
+  <td class="num">$330,141</td>
+  <td class="num">$71,983</td>
+  <td class="num">+140.0%</td>
+</tr>
+<tr>
+  <td>Management Fees - Non-Contract</td>
+  <td class="num">$450</td>
+  <td class="num">$63,069</td>
+  <td class="num">$0</td>
+  <td class="num">$62,619</td>
+  <td class="num">+13915.4%</td>
+</tr>
+<tr>
+  <td>Maintenance Personnel - Contract</td>
+  <td class="num">$4,767</td>
+  <td class="num">$65,951</td>
+  <td class="num">$79,012</td>
+  <td class="num">$61,184</td>
+  <td class="num">+1283.6%</td>
+</tr>
+<tr>
+  <td>Front Desk Personnel - Non Contract</td>
+  <td class="num">$9,466</td>
+  <td class="num">$50,022</td>
+  <td class="num">$66,699</td>
+  <td class="num">$40,556</td>
+  <td class="num">+428.4%</td>
+</tr>
+<tr>
+  <td>Elevator Repairs and maintenance</td>
+  <td class="num">$0</td>
+  <td class="num">$38,430</td>
+  <td class="num">$17,664</td>
+  <td class="num">$38,430</td>
+  <td class="num">—</td>
+</tr></tbody>
+        </table>
+      </div>
+      <h4 style="margin:.85rem 0 .4rem;font-size:.95rem">Material lines that stayed about the same</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th class="num">2021</th>
+              <th class="num">2025</th>
+              <th class="num">2026* ann.</th>
+              <th class="num">$ change</th>
+              <th class="num">Line %</th>
+            </tr>
+          </thead>
+          <tbody><tr>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$197,773</td>
+  <td class="num">$215,039</td>
+  <td class="num">$195,116</td>
+  <td class="num">$17,266</td>
+  <td class="num">+8.7%</td>
+</tr>
+<tr>
+  <td>Reserve Contributions</td>
+  <td class="num">$128,948</td>
+  <td class="num">$134,823</td>
+  <td class="num">$0</td>
+  <td class="num">$5,875</td>
+  <td class="num">+4.6%</td>
+</tr>
+<tr>
+  <td>Management Fees</td>
+  <td class="num">$56,712</td>
+  <td class="num">$62,515</td>
+  <td class="num">$62,475</td>
+  <td class="num">$5,803</td>
+  <td class="num">+10.2%</td>
+</tr>
+<tr>
+  <td>Elevator Maintenance - Contract</td>
+  <td class="num">$20,857</td>
+  <td class="num">$23,028</td>
+  <td class="num">$18,736</td>
+  <td class="num">$2,171</td>
+  <td class="num">+10.4%</td>
+</tr></tbody>
+        </table>
+      </div>
+      <p class="chart-caption" style="margin-top:.55rem">
+        “About the same” means the line was at least $20k in 2021 and changed by less than
+        $25k and under 15%. Chart-of-accounts renames can make a line look like it vanished
+        while a successor account absorbed the spend.
+      </p>
+    </div>
+  </div>
+</article>
+<article class="finding" id="finding-monthly-vs-ytd">
+  <div class="finding-top">
+    <h3>Month-by-month totals do not match the statements’ own year-to-date</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Adding each month’s current-period column does not equal the year-to-date the same statements print for 198 of 818 account-years.</li>
+<li>Widest like-for-like gap is 2024 expenses: $1,636,624 from the monthly columns versus $1,147,125 on the statements (+489,499).</li>
+<li>Largest single account: Electricity (8500) in 2024 — monthly columns $234,246 versus statement year-to-date $-280,545 (+514,791; Prior period restated).</li>
+<li>2023 cannot be checked account by account because the chart of accounts was renumbered mid-year and no code spans the whole year.</li>
+<li>These are source-statement inconsistencies, not extraction errors. Yearly totals in this report remain the sum of what each month reported at the time. Where the gap is large, the statement’s own year-to-date is the better figure to ask management about.</li>
+</ul>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Section</th>
+          <th class="num">Accounts comparable</th>
+          <th class="num">Sum of months</th>
+          <th class="num">Statement YTD</th>
+          <th class="num">Difference</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2021</td>
+  <td>Expenses</td>
+  <td class="num">71 of 133</td>
+  <td class="num">$1,089,375</td>
+  <td class="num">$1,223,296</td>
+  <td class="num neg-cell">$-133,921</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Expenses</td>
+  <td class="num">72 of 106</td>
+  <td class="num">$1,716,897</td>
+  <td class="num">$1,750,658</td>
+  <td class="num neg-cell">$-33,760</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Expenses</td>
+  <td class="num">0 of 180</td>
+  <td class="num">$2,044,978</td>
+  <td class="num">—</td>
+  <td class="num">Not reconcilable</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Expenses</td>
+  <td class="num">25 of 76</td>
+  <td class="num">$1,636,624</td>
+  <td class="num">$1,147,125</td>
+  <td class="num neg-cell">$489,499</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Expenses</td>
+  <td class="num">54 of 90</td>
+  <td class="num">$2,102,951</td>
+  <td class="num">$2,112,585</td>
+  <td class="num neg-cell">$-9,635</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Expenses</td>
+  <td class="num">41 of 60</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$0</td>
+</tr></tbody>
+    </table>
+  </div>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Code</th>
+          <th>Account</th>
+          <th class="num">Sum of months</th>
+          <th class="num">Statement YTD</th>
+          <th class="num">Difference</th>
+          <th>Why they differ</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2024</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$234,246</td>
+  <td class="num">$-280,545</td>
+  <td class="num neg-cell">$514,791</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-70000</td>
+  <td>Electricity</td>
+  <td class="num">$123,755</td>
+  <td class="num">$220,277</td>
+  <td class="num neg-cell">$-96,523</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$312,837</td>
+  <td class="num">$357,915</td>
+  <td class="num neg-cell">$-45,079</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>3-75000</td>
+  <td>Water and Sewer</td>
+  <td class="num">$222,524</td>
+  <td class="num">$258,374</td>
+  <td class="num neg-cell">$-35,850</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$134,823</td>
+  <td class="num">$101,001</td>
+  <td class="num neg-cell">$33,822</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-52000</td>
+  <td>Legal Fees - Common</td>
+  <td class="num">$291</td>
+  <td class="num">$32,352</td>
+  <td class="num neg-cell">$-32,061</td>
+  <td>Prior period restated</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    Comparable accounts appear under the same code on every statement in the year.
+    Years marked * are missing at least one month.
+  </p>
+  <p><a href="#ytd-reconciliation">See the full year-to-date check →</a></p>
+</article>
+<article class="finding" id="finding-insurance-review">
+  <div class="finding-top">
+    <h3>Insurance charges spiked — review before treating them as operating cost</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Insurance lines totaled $500,977 in 2025 (building premiums, claim repairs, and related accounts).</li>
+<li>That year also shows $274,555 of insurance-claim proceeds income.</li>
+<li>The cost-growth comparison above excludes the whole Insurance category as a sensitivity: premiums are ordinary operating cost, but claim-repair charges may be reimbursed or capital in nature.</li>
+<li>Board or management should explain net cost after recoveries — not treat the full insurance total as an ordinary operating increase.</li>
+</ul>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Insurance lines</th>
+          <th class="num">Annualized</th>
+          <th class="num">Claim proceeds income</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>2021</td>
+  <td class="num">$22,729</td>
+  <td class="num">$22,729</td>
+  <td class="num">$48,556</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td class="num">$212,512</td>
+  <td class="num">$212,512</td>
+  <td class="num">$946</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td class="num">$100,957</td>
+  <td class="num">$110,135</td>
+  <td class="num">$0</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td class="num">$86,167</td>
+  <td class="num">$86,167</td>
+  <td class="num">$0</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td class="num">$500,977</td>
+  <td class="num">$500,977</td>
+  <td class="num">$274,555</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td class="num">$97,078</td>
+  <td class="num">$166,419</td>
+  <td class="num">$0</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    Claim proceeds are income on the statements, not a reduction of the insurance expense lines.
+    Net economic cost after recovery needs management confirmation.
+  </p>
+</article>
+<article class="finding" id="finding-onsite_personnel_breakdown">
+  <div class="finding-top">
+    <h3>What On-site personnel includes</h3>
+    <span class="pill">From the statements</span>
+  </div>
+  <ul class="finding-bullets">
+<li>On-site personnel covers front-desk, office, and maintenance staffing (contract and non-contract). It excludes the management company and vendor maintenance contracts.</li>
+<li>In 2025 the category totaled $350,301 (+48,595 vs 2021).</li>
+<li>Front Desk Personnel - Contract: $215,039 in 2025 (+17,266 vs 2021).</li>
+<li>Office Personnel - Contract: $19,289 in 2025 (-70,411 vs 2021).</li>
+<li>Front Desk Personnel - Non Contract: $50,022 in 2025 (+40,556 vs 2021).</li>
+<li>Maintenance Personnel - Contract: $65,951 in 2025 (+61,184 vs 2021).</li>
+</ul>
+  
+  <p class="chart-caption">
+    Front-desk, office, and maintenance staffing lines (contract and non-contract).
+  </p>
+  <div style="margin-top:.85rem">
+  
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th class="num">2021</th>
+          <th class="num">2025</th>
+          <th class="num">2026* ann.</th>
+          <th class="num">$ change</th>
+          <th class="num">Line %</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$197,773</td>
+  <td class="num">$215,039</td>
+  <td class="num">$195,116</td>
+  <td class="num">$17,266</td>
+  <td class="num">+8.7%</td>
+</tr>
+<tr>
+  <td>Office Personnel - Contract</td>
+  <td class="num">$89,700</td>
+  <td class="num">$19,289</td>
+  <td class="num">$117,482</td>
+  <td class="num">$-70,411</td>
+  <td class="num">-78.5%</td>
+</tr>
+<tr>
+  <td>Front Desk Personnel - Non Contract</td>
+  <td class="num">$9,466</td>
+  <td class="num">$50,022</td>
+  <td class="num">$66,699</td>
+  <td class="num">$40,556</td>
+  <td class="num">+428.4%</td>
+</tr>
+<tr>
+  <td>Maintenance Personnel - Contract</td>
+  <td class="num">$4,767</td>
+  <td class="num">$65,951</td>
+  <td class="num">$79,012</td>
+  <td class="num">$61,184</td>
+  <td class="num">+1283.6%</td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+</article>
+<article class="finding" id="finding-management_fees_breakdown">
+  <div class="finding-top">
+    <h3>What Management fees includes</h3>
+    <span class="pill">From the statements</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Management fees are charges from the management company (contract and non-contract). They are separate from on-site staffing.</li>
+<li>In 2025 the category totaled $125,584 (+68,422 vs 2021).</li>
+<li>Management Fees: $62,515 in 2025 (+5,803 vs 2021).</li>
+<li>Management Fees - Non-Contract: $63,069 in 2025 (+62,619 vs 2021).</li>
+</ul>
+  
+  <p class="chart-caption">
+    Management-company fee lines only (contract and non-contract).
+  </p>
+  <div style="margin-top:.85rem">
+  
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th class="num">2021</th>
+          <th class="num">2025</th>
+          <th class="num">2026* ann.</th>
+          <th class="num">$ change</th>
+          <th class="num">Line %</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>Management Fees</td>
+  <td class="num">$56,712</td>
+  <td class="num">$62,515</td>
+  <td class="num">$62,475</td>
+  <td class="num">$5,803</td>
+  <td class="num">+10.2%</td>
+</tr>
+<tr>
+  <td>Management Fees - Non-Contract</td>
+  <td class="num">$450</td>
+  <td class="num">$63,069</td>
+  <td class="num">$0</td>
+  <td class="num">$62,619</td>
+  <td class="num">+13915.4%</td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+</article>
+<article class="finding" id="finding-maintenance_contracts_breakdown">
+  <div class="finding-top">
+    <h3>What Maintenance contracts includes</h3>
+    <span class="pill">From the statements</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Maintenance contracts covers recurring vendor contracts for building operations (cleaning, trash, security, landscaping) and equipment/preventative maintenance (elevator, boiler, HVAC, and similar). It excludes on-site staffing and the management company.</li>
+<li>In 2025 the category totaled $327,201 (+12,355 vs 2021).</li>
+<li>Building operations contracts: $227,795 in 2025 (+43,787 vs 2021).</li>
+<li>Maintenance vendor contracts: $99,407 in 2025 (-31,432 vs 2021).</li>
+</ul>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Sub-record</th>
+          <th class="num">Accounts</th>
+          <th class="num">2021</th>
+          <th class="num">2025</th>
+          <th class="num">2026* ann.</th>
+          <th class="num">$ change</th>
+          <th class="num">Line %</th>
+        </tr>
+      </thead>
+      <tbody><tr class="grow">
+  <td>Building operations contracts</td>
+  <td class="num">20</td>
+  <td class="num">$184,008</td>
+  <td class="num">$227,795</td>
+  <td class="num">$207,478</td>
+  <td class="num">$43,787</td>
+  <td class="num">+23.8%</td>
+</tr>
+<tr class="shrink">
+  <td>Maintenance vendor contracts</td>
+  <td class="num">27</td>
+  <td class="num">$130,839</td>
+  <td class="num">$99,407</td>
+  <td class="num">$87,128</td>
+  <td class="num">$-31,432</td>
+  <td class="num">-24.0%</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    Building operations are cleaning/trash/security/landscaping-type contracts; maintenance vendor contracts are equipment and preventative/contractor maintenance lines.
+  </p>
+  <div style="margin-top:.85rem">
+  <h4 style="margin:.2rem 0 .4rem;font-size:.95rem">Building operations contracts</h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th class="num">2021</th>
+          <th class="num">2025</th>
+          <th class="num">2026* ann.</th>
+          <th class="num">$ change</th>
+          <th class="num">Line %</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>Common Area Cleaning - Contract</td>
+  <td class="num">$104,594</td>
+  <td class="num">$128,483</td>
+  <td class="num">$122,430</td>
+  <td class="num">$23,888</td>
+  <td class="num">+22.8%</td>
+</tr>
+<tr>
+  <td>Trash Collection - Contract</td>
+  <td class="num">$18,902</td>
+  <td class="num">$21,619</td>
+  <td class="num">$20,322</td>
+  <td class="num">$2,717</td>
+  <td class="num">+14.4%</td>
+</tr>
+<tr>
+  <td>Security Monitoring - Contract</td>
+  <td class="num">$19,386</td>
+  <td class="num">$20,683</td>
+  <td class="num">$20,799</td>
+  <td class="num">$1,298</td>
+  <td class="num">+6.7%</td>
+</tr>
+<tr>
+  <td>Pest Control - Contract</td>
+  <td class="num">$9,227</td>
+  <td class="num">$9,137</td>
+  <td class="num">$10,321</td>
+  <td class="num">$-90</td>
+  <td class="num">-1.0%</td>
+</tr>
+<tr>
+  <td>Landscaping - Contract</td>
+  <td class="num">$11,095</td>
+  <td class="num">$5,964</td>
+  <td class="num">$7,094</td>
+  <td class="num">$-5,131</td>
+  <td class="num">-46.2%</td>
+</tr>
+<tr>
+  <td>Snow Removal - Contract</td>
+  <td class="num">$4,300</td>
+  <td class="num">$8,225</td>
+  <td class="num">$9,525</td>
+  <td class="num">$3,925</td>
+  <td class="num">+91.3%</td>
+</tr>
+<tr>
+  <td>Security Guard - Contract</td>
+  <td class="num">$5,469</td>
+  <td class="num">$13,950</td>
+  <td class="num">$0</td>
+  <td class="num">$8,482</td>
+  <td class="num">+155.1%</td>
+</tr>
+<tr>
+  <td>Building Link - Contract</td>
+  <td class="num">$0</td>
+  <td class="num">$10,158</td>
+  <td class="num">$9,303</td>
+  <td class="num">$10,158</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Trash Compactor - Contract</td>
+  <td class="num">$1,500</td>
+  <td class="num">$1,425</td>
+  <td class="num">$4,524</td>
+  <td class="num">$-75</td>
+  <td class="num">-5.0%</td>
+</tr>
+<tr>
+  <td>Glass / Window Washing - Contract</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Window Washing - Contract</td>
+  <td class="num">$6,310</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$-6,310</td>
+  <td class="num">-100.0%</td>
+</tr>
+<tr>
+  <td>Trash Chute - Contract</td>
+  <td class="num">$1,531</td>
+  <td class="num">$1,111</td>
+  <td class="num">$1,995</td>
+  <td class="num">$-421</td>
+  <td class="num">-27.5%</td>
+</tr></tbody>
+    </table>
+  </div>
+</div><div style="margin-top:.85rem">
+  <h4 style="margin:.2rem 0 .4rem;font-size:.95rem">Maintenance vendor contracts</h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th class="num">2021</th>
+          <th class="num">2025</th>
+          <th class="num">2026* ann.</th>
+          <th class="num">$ change</th>
+          <th class="num">Line %</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>Elevator Maintenance - Contract</td>
+  <td class="num">$20,857</td>
+  <td class="num">$23,028</td>
+  <td class="num">$18,736</td>
+  <td class="num">$2,171</td>
+  <td class="num">+10.4%</td>
+</tr>
+<tr>
+  <td>Water Management - Contract</td>
+  <td class="num">$18,000</td>
+  <td class="num">$1,500</td>
+  <td class="num">$0</td>
+  <td class="num">$-16,500</td>
+  <td class="num">-91.7%</td>
+</tr>
+<tr>
+  <td>Boiler Maintenance - Contract</td>
+  <td class="num">$9,533</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$-9,533</td>
+  <td class="num">-100.0%</td>
+</tr>
+<tr>
+  <td>Fire Extinguisher / Alarms - Contract</td>
+  <td class="num">$15,479</td>
+  <td class="num">$14,031</td>
+  <td class="num">$18,672</td>
+  <td class="num">$-1,448</td>
+  <td class="num">-9.4%</td>
+</tr>
+<tr>
+  <td>Mechanical Systems - Contract</td>
+  <td class="num">$0</td>
+  <td class="num">$32,767</td>
+  <td class="num">$10,812</td>
+  <td class="num">$32,767</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Plumbing Repairs - Contractor</td>
+  <td class="num">$12,952</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$-12,952</td>
+  <td class="num">-100.0%</td>
+</tr>
+<tr>
+  <td>HVAC Repairs - Contractor</td>
+  <td class="num">$12,322</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$-12,322</td>
+  <td class="num">-100.0%</td>
+</tr>
+<tr>
+  <td>HVAC Preventative maintenance - Contract</td>
+  <td class="num">$0</td>
+  <td class="num">$5,840</td>
+  <td class="num">$20,823</td>
+  <td class="num">$5,840</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Water Treatment Maintenance -</td>
+  <td class="num">$0</td>
+  <td class="num">$5,649</td>
+  <td class="num">$5,215</td>
+  <td class="num">$5,649</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>Garage Door / Parking Gate maintenance -</td>
+  <td class="num">$0</td>
+  <td class="num">$8,356</td>
+  <td class="num">$3,877</td>
+  <td class="num">$8,356</td>
+  <td class="num">—</td>
+</tr>
+<tr>
+  <td>HVAC - Repairs - Contractor</td>
+  <td class="num">$11,697</td>
+  <td class="num">$0</td>
+  <td class="num">$0</td>
+  <td class="num">$-11,697</td>
+  <td class="num">-100.0%</td>
+</tr>
+<tr>
+  <td>Security System Repairs and maintenance</td>
+  <td class="num">$0</td>
+  <td class="num">$1,326</td>
+  <td class="num">$720</td>
+  <td class="num">$1,326</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Regular fees did not cover regular costs in every full year (2021–2025)</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>The Income section includes reserve draws and special assessments — money brought in to cover costs rather than regular fee revenue.</li>
+<li>Setting those aside, and also removing reimbursement pairs (insurance proceeds against claim repairs, loan collections against loan charges) from both sides, recurring costs exceeded recurring fees in:</li>
+<li>2021: −$46,488.</li>
+<li>2022: −$201,618.</li>
+<li>2023: −$499,872.</li>
+<li>2024: −$341,473.</li>
+<li>2025: −$272,965.</li>
+<li>Largest gap is 2023: recurring fees $1,468,291 vs recurring costs $1,968,163, drawing $313,945 of funding inflows — Transfers from reserves $222,478; Special assessments $91,467.</li>
+<li>Reported net is positive in 2025 only after counting funding inflows as income.</li>
+<li>In 2021, reported net stays positive after removing funding inflows alone; the regular-fee shortfall appears only after also removing matched reimbursement pairs from both sides.</li>
+<li>Confirm which draws the board approved and for what purpose.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Budget-vs-actual comparisons are not reliable in every year</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Many statement rows carry an actual amount with no budget figure, so an unadjusted comparison against budget understates the denominator and looks like an overrun.</li>
+<li>2023: 80.7% of expense dollars have a budget figure ($394,256 without one).</li>
+<li>2024: 69.9% of expense dollars have a budget figure ($624,295 without one).</li>
+<li>2025: 94.2% of expense dollars have a budget figure ($147,512 without one).</li>
+<li>2026: 74.3% of expense dollars have a budget figure ($381,273 without one).</li>
+<li>Percent-of-budget is therefore reported only for 2021, 2022, where coverage is at least 95%.</li>
+<li>Earlier apparent overruns in the low-coverage years should not be read as spending above an approved budget without checking the source statements.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Some large charges are account-to-account reclassifications, not new costs</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>1 charge of $5,000 or more is offset by an equal credit on another account in the same month, so the net cost is $0.</li>
+<li>Largest: $142,250 in 2024-01, debited to Boiler Repairs &amp; Replacement (7615) and credited from Boiler Repairs (7610).</li>
+<li>These are excluded from the unusually-large-charge table.</li>
+<li>Confirm the reason for each move, but do not read them as additional spending.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Largest expense categories in 2025</h3>
+    <span class="pill">From the statements</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Insurance: $500,977.</li>
+<li>On-site personnel: $350,301.</li>
+<li>Maintenance contracts: $325,677.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Unusually large single-month expenses need review</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Largest example: Insurance Claim Repairs (2025-06) at $111,000.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Missing monthly statement</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>No statement is available for: 2023-08.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Some expense accounts changed account codes mid-stream</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <p>
+    The same account name appears under different codes in different periods
+    (likely a chart-of-accounts change around early 2023). Totals are split across
+    codes unless combined by name.
+  </p>
+  <p><a href="#account-codes">View account codes that changed →</a></p>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Reserve contributions ran below budget over this period</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Reserve contributions recorded $798,657 actual versus $1,440,716 budget (shortfall $642,059).</li>
+<li>In 2025, actual $134,823 vs budget $311,690.</li>
+<li>2026 year-to-date shows no contributions recorded on the statements versus $199,862 budget.</li>
+<li>Requires board or management explanation of funding policy and recording.</li>
+</ul>
+</article>
+<article class="finding">
+  <div class="finding-top">
+    <h3>Large transfers from reserves into operating results</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Transfers from reserves total $822,802 across this report (largest year 2023: $222,478).</li>
+<li>That total combines every transfer account across both chart-of-accounts eras — a single-code figure will be lower:</li>
+<li>4850 Transfer from Reserves: $515,899.</li>
+<li>3-46000 Transfer from Reserve: $207,637.</li>
+<li>1-46000 Transfer from Reserve: $99,267.</li>
+<li>Verify whether each transfer funded approved capital work versus covering operating shortfalls.</li>
+</ul>
+</article>
+<article class="finding" id="finding-utilities-pattern">
+  <div class="finding-top">
+    <h3>Utility bills show multi-year pressure, not only a 2026 spike</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <ul class="finding-bullets">
+<li>Utility patterns differ by bill:</li>
+<li>Electricity rose in 2025 (from $220,277 in 2021 to $312,837 in 2025); 2026 year-to-date is already +58.1% vs the same months a year earlier.</li>
+<li>Gas rose in 2022, 2024, 2025 (from $51,399 in 2021 to $123,382 in 2025); 2026 year-to-date is already +248.2% vs the same months a year earlier.</li>
+<li>Water &amp; sewer rose in 2022, 2024 (from $213,410 in 2021 to $312,771 in 2025); 2026 year-to-date is already +3.7% vs the same months a year earlier.</li>
+<li>Compare each year with published DC-area rate/price changes in the table below (BLS CPI-U for electricity and gas; DC Water retail rate changes for water &amp; sewer).</li>
+<li>Those benchmarks are annual area price changes, not building usage; blank later years mean the published annual series is not available yet.</li>
+<li>Building cost growth that outpaces those benchmarks points to usage, rate mix, or billing changes beyond general area inflation.</li>
+</ul>
+  <div class="chart-wrap" style="height:260px;margin-top:.85rem">
+    <canvas id="utilityPatternChart"></canvas>
+  </div>
+  <p class="chart-caption">Annual utility bill totals ($ thousands). Partial years are marked with *.</p>
+  <div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Gas
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 3 full years: 2022, 2024, 2025
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$51,399</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="rise">
+  <td>2022</td>
+  <td class="num">$61,575</td>
+  <td class="num">+19.8%</td>
+  <td class="num">+21.0%</td>
+  <td class="num">-1.2 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$63,985</td>
+  <td class="num">+9.3%</td>
+  <td class="num">-13.1%</td>
+  <td class="num">+22.4 pp</td>
+</tr>
+<tr class="rise">
+  <td>2024</td>
+  <td class="num">$81,121</td>
+  <td class="num">+26.8%</td>
+  <td class="num">-3.8%</td>
+  <td class="num">+30.6 pp</td>
+</tr>
+<tr class="rise">
+  <td>2025</td>
+  <td class="num">$123,382</td>
+  <td class="num">+52.1%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$192,582</td>
+  <td class="num">+248.2%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div><div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Electricity
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 1 full year: 2025
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$220,277</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2022</td>
+  <td class="num">$238,017</td>
+  <td class="num">+8.1%</td>
+  <td class="num">+11.2%</td>
+  <td class="num">-3.1 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$217,771</td>
+  <td class="num">+1.9%</td>
+  <td class="num">+9.3%</td>
+  <td class="num">-7.4 pp</td>
+</tr>
+<tr class="">
+  <td>2024</td>
+  <td class="num">$234,246</td>
+  <td class="num">-4.9%</td>
+  <td class="num">+2.4%</td>
+  <td class="num">-7.3 pp</td>
+</tr>
+<tr class="rise">
+  <td>2025</td>
+  <td class="num">$312,837</td>
+  <td class="num">+33.6%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$247,178</td>
+  <td class="num">+58.1%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div><div class="util-year-block">
+  <h4 style="margin:.85rem 0 .35rem;font-size:.95rem">Water &amp; sewer
+    <span class="chart-caption" style="display:inline;margin-left:.35rem">
+      rose in 2 full years: 2022, 2024
+    </span>
+  </h4>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="num">Building cost</th>
+          <th class="num">Building YoY</th>
+          <th class="num">DC published</th>
+          <th class="num">vs DC</th>
+        </tr>
+      </thead>
+      <tbody><tr class="">
+  <td>2021</td>
+  <td class="num">$213,410</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr>
+<tr class="rise">
+  <td>2022</td>
+  <td class="num">$258,374</td>
+  <td class="num">+21.1%</td>
+  <td class="num">+7.8%</td>
+  <td class="num">+13.3 pp</td>
+</tr>
+<tr class="">
+  <td>2023*</td>
+  <td class="num">$167,651</td>
+  <td class="num">-28.7%</td>
+  <td class="num">+9.5%</td>
+  <td class="num">-38.2 pp</td>
+</tr>
+<tr class="rise">
+  <td>2024</td>
+  <td class="num">$343,650</td>
+  <td class="num">+86.6%</td>
+  <td class="num">+3.2%</td>
+  <td class="num">+83.3 pp</td>
+</tr>
+<tr class="">
+  <td>2025</td>
+  <td class="num">$312,771</td>
+  <td class="num">-9.0%</td>
+  <td class="num">+8.0%</td>
+  <td class="num">-17.0 pp</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$172,787</td>
+  <td class="num">+3.7%</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+  <p class="chart-caption" style="margin-top:.65rem">
+    Highlighted rows are full years with building cost up ≥15%. “DC published” is an area
+    rate/price change (not usage). Blank cells mean the published annual series is not
+    available for that year. Partial years compare the same months of the prior year.
+  </p>
+  <p class="chart-caption">Sources: <a href="https://data.bls.gov/timeseries/CUURS35ASEHF01" rel="noopener noreferrer">Electricity</a> — BLS CPI-U electricity, Washington–Arlington–Alexandria annual average; <a href="https://data.bls.gov/timeseries/CUURS35ASEHF02" rel="noopener noreferrer">Gas</a> — BLS CPI-U utility (piped) gas, Washington–Arlington–Alexandria annual average; <a href="https://www.dcwater.com/" rel="noopener noreferrer">Water &amp; sewer</a> — DC Water retail water &amp; sewer volumetric rate increase (fiscal year).</p>
+  <p><a href="#expenses-quarterly">See quarterly expense chart →</a></p>
+</article>
+<article class="finding" id="finding-ytd-pattern">
+  <div class="finding-top">
+    <h3>Large cost increases that often repeat across years — not only in 2026</h3>
+    <span class="pill verify">Needs review</span>
+  </div>
+  <p>
+    Jan–Jul 2026 vs the same months a year earlier.
+    3 of these accounts also rose ≥15% in multiple full calendar years —
+    so the latest jump is often a continuation, not a one-off.
+  </p>
+  <div class="table-wrap" style="margin-top:.75rem">
+    <table>
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th class="num">YTD this year</th>
+          <th class="num">YTD change</th>
+          <th>Earlier full-year rises (≥15%)</th>
+          <th class="num">vs listed budget</th>
+        </tr>
+      </thead>
+      <tbody><tr>
+  <td>Electrical Repairs and maintenance</td>
+  <td class="num">$102,156</td>
+  <td class="num">+1457.0%</td>
+  <td>2025</td>
+  <td class="num">$97,593</td>
+</tr>
+<tr>
+  <td>Legal Fees</td>
+  <td class="num">$9,412</td>
+  <td class="num">+786.2%</td>
+  <td>2024</td>
+  <td class="num">$2,328</td>
+</tr>
+<tr>
+  <td>General Repairs and maintenance</td>
+  <td class="num">$12,032</td>
+  <td class="num">+404.9%</td>
+  <td>2025</td>
+  <td class="num">$455</td>
+</tr>
+<tr>
+  <td>HVAC Repairs and maintenance</td>
+  <td class="num">$28,332</td>
+  <td class="num">+275.9%</td>
+  <td>—</td>
+  <td class="num">$20,624</td>
+</tr>
+<tr>
+  <td>Gas</td>
+  <td class="num">$192,582</td>
+  <td class="num">+248.2%</td>
+  <td>2022, 2024, 2025</td>
+  <td class="num">$164,666</td>
+</tr>
+<tr>
+  <td>Fire Protection Repairs and maintenance</td>
+  <td class="num">$13,266</td>
+  <td class="num">+219.8%</td>
+  <td>2024</td>
+  <td class="num">$10,975</td>
+</tr>
+<tr>
+  <td>Elevator Repairs and maintenance</td>
+  <td class="num">$10,304</td>
+  <td class="num">+184.2%</td>
+  <td>2025</td>
+  <td class="num">$3,154</td>
+</tr>
+<tr>
+  <td>Garage Door / Gate Repairs and maintenance</td>
+  <td class="num">$22,548</td>
+  <td class="num">+170.5%</td>
+  <td>2024</td>
+  <td class="num">$13,465</td>
+</tr>
+<tr>
+  <td>Fire Extinguisher / Alarms - Contract</td>
+  <td class="num">$10,892</td>
+  <td class="num">+162.8%</td>
+  <td>2025</td>
+  <td class="num">$6,205</td>
+</tr>
+<tr>
+  <td>Front Desk Personnel - Non Contract</td>
+  <td class="num">$38,908</td>
+  <td class="num">+75.0%</td>
+  <td>2024, 2025</td>
+  <td class="num">$-835</td>
+</tr>
+<tr>
+  <td>Legal Fees - Collections</td>
+  <td class="num">$10,769</td>
+  <td class="num">+63.2%</td>
+  <td>2025</td>
+  <td class="num">$-4,189</td>
+</tr>
+<tr>
+  <td>Electricity</td>
+  <td class="num">$247,178</td>
+  <td class="num">+58.1%</td>
+  <td>2025</td>
+  <td class="num">$65,928</td>
+</tr>
+<tr>
+  <td>Maintenance Personnel - Contract</td>
+  <td class="num">$46,090</td>
+  <td class="num">+31.0%</td>
+  <td>2025</td>
+  <td class="num">$17,757</td>
+</tr>
+<tr>
+  <td>Water and Sewer</td>
+  <td class="num">$172,787</td>
+  <td class="num">+3.7%</td>
+  <td>2022, 2024</td>
+  <td class="num">$6,787</td>
+</tr>
+<tr>
+  <td>Plumbing Repairs and maintenance</td>
+  <td class="num">$18,967</td>
+  <td class="num">+3.6%</td>
+  <td>2025</td>
+  <td class="num">$8,926</td>
+</tr>
+<tr>
+  <td>Office Personnel - Contract</td>
+  <td class="num">$68,531</td>
+  <td class="num">—</td>
+  <td>—</td>
+  <td class="num">$68,531</td>
+</tr></tbody>
+    </table>
+  </div>
+  <p class="chart-caption">
+    “vs listed budget” uses only budget cells present on the statements. Overall 2026
+    expense-budget coverage is incomplete, so these are review indicators rather than a
+    conclusion that total spending is over an approved budget.
+  </p>
+</article></div>
+  </section>
+
+  <section class="section" id="reserves">
+    <div class="section-head">
+      <h2>Reserves</h2>
+      <p>Money set aside for major repairs, and transfers from reserves into the operating results.</p>
+    </div>
+    <div class="stats" style="margin-bottom:1rem">
+      <div class="stat"><strong>$798,657</strong><span>Contributions recorded</span></div>
+      <div class="stat"><strong>$1,440,716</strong><span>Contributions budgeted</span></div>
+      <div class="stat danger"><strong>$642,059</strong><span>Contribution shortfall</span></div>
+      <div class="stat"><strong>$822,802</strong><span>Transfers from reserves</span></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Contributions and transfers by year</h3>
+      <div class="chart-wrap"><canvas id="reservesChart"></canvas></div>
+      <p class="chart-caption">Amounts in thousands of dollars. Years marked * are missing at least one month.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th class="num">Contributions</th>
+            <th class="num">Budgeted</th>
+            <th class="num">Shortfall</th>
+            <th class="num">Transfers in</th>
+          </tr>
+        </thead>
+        <tbody><tr>
+  <td>2021</td>
+  <td class="num">$128,948</td>
+  <td class="num">$178,484</td>
+  <td class="num neg">$49,536</td>
+  <td class="num">$58,825</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td class="num">$198,971</td>
+  <td class="num">$257,516</td>
+  <td class="num neg">$58,545</td>
+  <td class="num">$207,601</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td class="num">$186,023</td>
+  <td class="num">$265,433</td>
+  <td class="num neg">$79,410</td>
+  <td class="num">$222,478</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td class="num">$149,892</td>
+  <td class="num">$227,731</td>
+  <td class="num neg">$77,839</td>
+  <td class="num">$213,775</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td class="num">$134,823</td>
+  <td class="num">$311,690</td>
+  <td class="num neg">$176,867</td>
+  <td class="num">$120,208</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td class="num">$0</td>
+  <td class="num">$199,862</td>
+  <td class="num neg">$199,862</td>
+  <td class="num">$-84</td>
+</tr></tbody>
+      </table>
+    </div>
+    <p class="chart-caption" style="margin-top:.75rem">
+      These are the reserve amounts that flow through the monthly income and expense
+      statements. Reserve account balances sit on the balance sheet and are not yet
+      included here, so this section does not state how well funded the reserve is.
+      “Transfers in” combines every transfer account across both account-numbering eras,
+      so it is larger than any single account code.
+    </p>
+  </section>
+
+  <section class="section" id="trends">
+    <div class="section-head">
+      <h2>Income and expenses</h2>
+      <p>Years marked * are missing at least one month (no statement for 2023-08), so year-over-year changes for them compare only the months both years have.</p>
+    </div>
+    <div class="panel" id="expenses-quarterly">
+      <h3 style="margin-top:0">Expenses over time</h3>
+      <div class="chart-wrap tall"><canvas id="quarterlyExpenseChart"></canvas></div>
+      <p class="chart-caption">Total expenses by quarter, in thousands of dollars.</p>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Income vs expense by year</h3>
+      <div class="chart-wrap"><canvas id="incomeExpenseChart"></canvas></div>
+      <p class="chart-caption">Annual totals in thousands of dollars.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Year</th>
+          <th class="num">Income reported</th>
+          <th class="num">Regular fees only</th>
+          <th class="num">Expense</th>
+          <th class="num">vs prior year</th>
+          <th class="num">Net reported</th>
+          <th class="num">Net on regular fees</th>
+        </tr></thead>
+        <tbody><tr class="neg">
+  <td>2021</td>
+  <td class="num">$1,680,584</td>
+  <td class="num">$1,573,204</td>
+  <td class="num">$1,587,522</td>
+  <td class="num">—</td>
+  <td class="num">$93,062</td>
+  <td class="num neg-cell">$-46,488</td>
+</tr>
+<tr class="neg">
+  <td>2022</td>
+  <td class="num">$1,826,457</td>
+  <td class="num">$1,617,910</td>
+  <td class="num">$2,007,355</td>
+  <td class="num">+26.4%</td>
+  <td class="num">$-180,897</td>
+  <td class="num neg-cell">$-201,618</td>
+</tr>
+<tr class="neg">
+  <td>2023*</td>
+  <td class="num">$1,805,388</td>
+  <td class="num">$1,468,291</td>
+  <td class="num">$2,044,978</td>
+  <td class="num">+13.1% <span class="basis">(11 mo)</span></td>
+  <td class="num">$-239,590</td>
+  <td class="num neg-cell">$-499,872</td>
+</tr>
+<tr class="neg">
+  <td>2024</td>
+  <td class="num">$1,940,745</td>
+  <td class="num">$1,634,351</td>
+  <td class="num">$2,072,295</td>
+  <td class="num">-13.3% <span class="basis">(11 mo)</span></td>
+  <td class="num">$-131,551</td>
+  <td class="num neg-cell">$-341,473</td>
+</tr>
+<tr class="neg">
+  <td>2025</td>
+  <td class="num">$2,586,440</td>
+  <td class="num">$1,863,058</td>
+  <td class="num">$2,532,396</td>
+  <td class="num">+22.2%</td>
+  <td class="num">$54,044</td>
+  <td class="num neg-cell">$-272,965</td>
+</tr>
+<tr class="">
+  <td>2026*</td>
+  <td class="num">$1,631,263</td>
+  <td class="num">$1,434,892</td>
+  <td class="num">$1,482,500</td>
+  <td class="num">-2.9% <span class="basis">(7 mo)</span></td>
+  <td class="num">$148,763</td>
+  <td class="num ">$702</td>
+</tr></tbody>
+      </table>
+    </div>
+    <p class="chart-caption">
+      “Income reported” is the statement Income section, which includes transfers from
+      reserves and special assessments. “Regular fees only” removes those, and also removes
+      reimbursements that are matched by a specific expense (insurance proceeds against claim
+      repairs, loan collections against loan charges) from both sides — so the last column
+      shows whether ordinary fees covered ordinary costs.
+      Years marked * are missing at least one month, so “vs prior year” compares only the
+      months both years have and states how many.
+    </p>
+
+    <div class="panel" id="ytd-reconciliation">
+      <h3 style="margin-top:0">Do these totals match the statements' own year-to-date?</h3>
+      <p class="chart-caption" style="margin-top:0">
+        Not always. Every yearly figure above adds up each statement's current-period
+        column. The statements also print a year-to-date column, and the two disagree for
+        <strong>198</strong> of
+        <strong>818</strong> account-years.
+        The widest gap is 2024 expenses, where $1,636,624 of summed monthly columns sits $489,499 above the $1,147,125 year-to-date the statements report for those same accounts. 2023 cannot be reconciled at all at account level, because the chart of accounts was renumbered mid-year and no account code spans the whole year.
+        Treat the yearly totals as the sum of what each month reported, not as the
+        association's closed year-end position.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Year</th>
+            <th>Section</th>
+            <th class="num">Accounts comparable</th>
+            <th class="num">Sum of monthly columns</th>
+            <th class="num">Statement year-to-date</th>
+            <th class="num">Difference</th>
+            <th class="num">%</th>
+          </tr></thead>
+          <tbody><tr>
+  <td>2021</td>
+  <td>Expenses</td>
+  <td class="num">71 of 133</td>
+  <td class="num">$1,089,375</td>
+  <td class="num">$1,223,296</td>
+  <td class="num neg-cell">$-133,921</td>
+  <td class="num">-10.9%</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>Income</td>
+  <td class="num">14 of 39</td>
+  <td class="num">$1,540,792</td>
+  <td class="num">$1,543,953</td>
+  <td class="num neg-cell">$-3,161</td>
+  <td class="num">-0.2%</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Expenses</td>
+  <td class="num">72 of 106</td>
+  <td class="num">$1,716,897</td>
+  <td class="num">$1,750,658</td>
+  <td class="num neg-cell">$-33,760</td>
+  <td class="num">-1.9%</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>Income</td>
+  <td class="num">16 of 36</td>
+  <td class="num">$1,534,621</td>
+  <td class="num">$1,535,422</td>
+  <td class="num">$-801</td>
+  <td class="num">-0.1%</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Expenses</td>
+  <td class="num">0 of 180</td>
+  <td class="num">$2,044,978</td>
+  <td class="num" colspan="3">No account code spans the whole year — not reconcilable</td>
+</tr>
+<tr>
+  <td>2023*</td>
+  <td>Income</td>
+  <td class="num">0 of 44</td>
+  <td class="num">$1,805,388</td>
+  <td class="num" colspan="3">No account code spans the whole year — not reconcilable</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Expenses</td>
+  <td class="num">25 of 76</td>
+  <td class="num">$1,636,624</td>
+  <td class="num">$1,147,125</td>
+  <td class="num neg-cell">$489,499</td>
+  <td class="num">+42.7%</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>Income</td>
+  <td class="num">9 of 14</td>
+  <td class="num">$1,726,230</td>
+  <td class="num">$1,726,230</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Expenses</td>
+  <td class="num">54 of 90</td>
+  <td class="num">$2,102,951</td>
+  <td class="num">$2,112,585</td>
+  <td class="num neg-cell">$-9,635</td>
+  <td class="num">-0.5%</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>Income</td>
+  <td class="num">8 of 22</td>
+  <td class="num">$1,574,422</td>
+  <td class="num">$1,550,957</td>
+  <td class="num neg-cell">$23,465</td>
+  <td class="num">+1.5%</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Expenses</td>
+  <td class="num">41 of 60</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$1,357,545</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr>
+<tr>
+  <td>2026*</td>
+  <td>Income</td>
+  <td class="num">12 of 18</td>
+  <td class="num">$1,628,147</td>
+  <td class="num">$1,628,147</td>
+  <td class="num">$0</td>
+  <td class="num">+0.0%</td>
+</tr></tbody>
+        </table>
+      </div>
+      <h4 style="margin:1.25rem 0 .4rem">Largest single differences</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Year</th>
+            <th>Code</th>
+            <th>Account</th>
+            <th class="num">Sum of months</th>
+            <th class="num">Statement YTD</th>
+            <th class="num">Difference</th>
+            <th>Why they differ</th>
+          </tr></thead>
+          <tbody><tr>
+  <td>2024</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$234,246</td>
+  <td class="num">$-280,545</td>
+  <td class="num neg-cell">$514,791</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-70000</td>
+  <td>Electricity</td>
+  <td class="num">$123,755</td>
+  <td class="num">$220,277</td>
+  <td class="num neg-cell">$-96,523</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$312,837</td>
+  <td class="num">$357,915</td>
+  <td class="num neg-cell">$-45,079</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2022</td>
+  <td>3-75000</td>
+  <td>Water and Sewer</td>
+  <td class="num">$222,524</td>
+  <td class="num">$258,374</td>
+  <td class="num neg-cell">$-35,850</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$134,823</td>
+  <td class="num">$101,001</td>
+  <td class="num neg-cell">$33,822</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>3-52000</td>
+  <td>Legal Fees - Common</td>
+  <td class="num">$291</td>
+  <td class="num">$32,352</td>
+  <td class="num neg-cell">$-32,061</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>4051</td>
+  <td>Loan Repayment</td>
+  <td class="num">$102,165</td>
+  <td class="num">$70,921</td>
+  <td class="num neg-cell">$31,244</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2021</td>
+  <td>1-52000</td>
+  <td>Legal Fees - Residential</td>
+  <td class="num">$33,768</td>
+  <td class="num">$3,962</td>
+  <td class="num neg-cell">$29,806</td>
+  <td>Year-to-date restarted</td>
+</tr>
+<tr>
+  <td>2024</td>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$149,892</td>
+  <td class="num">$175,184</td>
+  <td class="num neg-cell">$-25,292</td>
+  <td>Prior period restated</td>
+</tr>
+<tr>
+  <td>2025</td>
+  <td>6083</td>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$215,039</td>
+  <td class="num">$191,337</td>
+  <td class="num neg-cell">$23,701</td>
+  <td>Year-to-date restarted</td>
+</tr></tbody>
+        </table>
+      </div>
+      <ul class="chart-caption" style="margin-top:.75rem"><li><strong>Year-to-date restarted</strong> — The statements&#x27; own year-to-date restarted mid-year, so it no longer accumulates every month shown.</li>
+<li><strong>Prior period restated</strong> — The statements&#x27; year-to-date moved by more than that month&#x27;s own column, i.e. a prior period was restated without restating the monthly column.</li></ul>
+      <p class="chart-caption" style="margin-top:.75rem">
+        “Comparable” accounts are the ones whose code appears on every statement in the
+        year, so their months and their year-to-date cover the same span. The rest changed
+        code partway through the year and cannot be compared line-for-line.
+        These are not extraction errors — each figure was checked back to the source PDF.
+        They are places where the statements themselves restate a prior period, restart a
+        year-to-date, or move an account to a new code partway through the year. Where a
+        difference is large, the statement year-to-date is usually the better figure to ask
+        management about.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin-top:0">Expense categories by year</h3>
+      <div class="chart-wrap tall"><canvas id="categoryStackChart"></canvas></div>
+      <p class="chart-caption">
+        How spending broke down across major categories each year.
+        The Insurance category is left out of this stack (same sensitivity as the cost-growth
+        finding above); premiums and claim repairs are covered in the insurance finding.
+      </p>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Expense categories by quarter</h3>
+      <div class="series-picker" id="seriesPicker">
+        <div class="series-picker-toolbar">
+          <strong style="font-size:.9rem">What to show</strong>
+          <button type="button" id="selectDefaultGroups">Top groups</button>
+          <button type="button" id="selectUtilities">Electricity, gas, water</button>
+          <button type="button" id="clearSeries">Clear</button>
+        </div>
+        <div class="series-group-chips" id="seriesGroupChips" aria-label="Expense groups"></div>
+        <div class="series-account-panel">
+          <div class="series-account-controls">
+            <label>Browse accounts in
+              <select id="seriesAccountGroup"></select>
+            </label>
+            <label>Filter
+              <input type="search" id="seriesAccountSearch" placeholder="e.g. Front Desk" autocomplete="off" />
+            </label>
+          </div>
+          <div class="series-account-list" id="seriesAccountList"></div>
+        </div>
+        <div class="series-selected" id="seriesSelected" aria-live="polite"></div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="categoryTrendChart"></canvas></div>
+      <p class="chart-caption">Quarterly totals for the selected groups or accounts.</p>
+    </div>
+  </section>
+
+  <section class="section grid-2" id="accounts">
+    <div>
+      <div class="section-head"><h2>Largest expense accounts</h2><p>Totals across all months in this report. Codes can change when the chart of accounts is renumbered.</p></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Code</th><th>Account</th><th class="num">Total</th><th>Months covered</th></tr></thead>
+          <tbody><tr>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$957,467</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>8400</td>
+  <td>Water and Sewer</td>
+  <td class="num">$945,207</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>6083</td>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$723,344</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>8600</td>
+  <td>Gas</td>
+  <td class="num">$437,243</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>1-65700</td>
+  <td>Front Desk Personnel - Contract</td>
+  <td class="num">$428,599</td>
+  <td>2021-01 – 2023-03</td>
+</tr>
+<tr>
+  <td>5120</td>
+  <td>Reserve Contributions</td>
+  <td class="num">$420,004</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>3-70000</td>
+  <td>Electricity</td>
+  <td class="num">$416,259</td>
+  <td>2021-01 – 2023-03</td>
+</tr>
+<tr>
+  <td>5320</td>
+  <td>Building Insurance</td>
+  <td class="num">$415,735</td>
+  <td>2023-04 – 2026-07</td>
+</tr>
+<tr>
+  <td>3-75000</td>
+  <td>Water and Sewer</td>
+  <td class="num">$370,457</td>
+  <td>2021-05 – 2023-03</td>
+</tr>
+<tr>
+  <td>6410</td>
+  <td>Common Area Cleaning - Contract</td>
+  <td class="num">$364,654</td>
+  <td>2023-04 – 2026-07</td>
+</tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="section-head"><h2>Unusually large monthly charges</h2><p>Compared with each account’s typical month.</p></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Month</th><th>Code</th><th>Account</th><th class="num">Amount</th><th class="num">vs typical</th></tr></thead>
+          <tbody><tr>
+  <td>2025-06</td>
+  <td>7950</td>
+  <td>Insurance Claim Repairs</td>
+  <td class="num">$111,000</td>
+  <td class="num">2.1×</td>
+</tr>
+<tr>
+  <td>2023-05</td>
+  <td>7385</td>
+  <td>Carpet Repairs and Replacement</td>
+  <td class="num">$96,263</td>
+  <td class="num">2.1×</td>
+</tr>
+<tr>
+  <td>2023-07</td>
+  <td>7385</td>
+  <td>Carpet Repairs and Replacement</td>
+  <td class="num">$96,263</td>
+  <td class="num">2.1×</td>
+</tr>
+<tr>
+  <td>2025-04</td>
+  <td>7950</td>
+  <td>Insurance Claim Repairs</td>
+  <td class="num">$92,480</td>
+  <td class="num">1.7×</td>
+</tr>
+<tr>
+  <td>2025-07</td>
+  <td>5320</td>
+  <td>Building Insurance</td>
+  <td class="num">$87,227</td>
+  <td class="num">5.7×</td>
+</tr>
+<tr>
+  <td>2023-10</td>
+  <td>7385</td>
+  <td>Carpet Repairs and Replacement</td>
+  <td class="num">$82,992</td>
+  <td class="num">1.8×</td>
+</tr>
+<tr>
+  <td>2026-04</td>
+  <td>8500</td>
+  <td>Electricity</td>
+  <td class="num">$72,480</td>
+  <td class="num">3.1×</td>
+</tr>
+<tr>
+  <td>2023-05</td>
+  <td>7610</td>
+  <td>Boiler Repairs</td>
+  <td class="num">$71,125</td>
+  <td class="num">11.7×</td>
+</tr></tbody>
+        </table>
+      </div>
+      <p class="chart-caption">
+        1 large charge is left out of this table because an equal credit
+        on another account in the same month cancels them, so no money was actually spent.
+        See “Some large charges are account-to-account reclassifications, not new costs” above.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="account-codes">
+    <div class="section-head">
+      <h2>Account codes that changed</h2>
+      <p>Same account name under more than one code—usually a chart-of-accounts renumbering. Linked from the related finding above.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Account</th><th>Codes and periods</th><th class="num">Combined total</th></tr></thead>
+        <tbody><tr>
+  <td>Electricity</td>
+  <td>3-70000 (2021-01–2023-03) → 70000 (2021-01–2023-03) → 8500 (2023-04–2026-07)</td>
+  <td class="num">$1,470,326</td>
+</tr>
+<tr>
+  <td>Water and Sewer</td>
+  <td>1-75000 (2021-01–2021-04) → 3-75000 (2021-05–2023-03) → 75000 (2021-07–2023-03) → 8400 (2023-04–2026-07)</td>
+  <td class="num">$1,468,642</td>
+</tr>
+<tr>
+  <td>Front Desk Personnel - Contract</td>
+  <td>1-65700 (2021-01–2023-03) → 6083 (2023-04–2026-07)</td>
+  <td class="num">$1,151,943</td>
+</tr>
+<tr>
+  <td>Reserve Contributions</td>
+  <td>1-56000 (2021-01–2023-03) → 2-56000 (2021-01–2023-03) → 3-56000 (2021-01–2023-03) → 5120 (2023-04–2026-07)</td>
+  <td class="num">$798,657</td>
+</tr>
+<tr>
+  <td>Common Area Cleaning - Contract</td>
+  <td>3-65200 (2021-01–2023-03) → 6410 (2023-04–2026-07)</td>
+  <td class="num">$585,500</td>
+</tr>
+<tr>
+  <td>Gas</td>
+  <td>1-72000 (2021-01–2021-09) → 72000 (2021-01–2023-03) → 3-72000 (2021-05–2023-03) → 8600 (2023-04–2026-07)</td>
+  <td class="num">$574,045</td>
+</tr>
+<tr>
+  <td>Office Personnel - Contract</td>
+  <td>3-66400 (2021-01–2023-03) → 6082 (2023-04–2026-07)</td>
+  <td class="num">$443,896</td>
+</tr>
+<tr>
+  <td>Insurance Claim Repairs</td>
+  <td>1-62700 (2021-06–2021-09) → 3-62700 (2021-06–2023-03) → 62700 (2021-09–2021-12) → 7950 (2023-06–2025-12)</td>
+  <td class="num">$367,296</td>
+</tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="section-head">
+      <h2>About this report</h2>
+      <p>Prepared from the association’s monthly financial statements.</p>
+    </div>
+    <div class="panel callout">
+      <p>
+        This report covers <strong>66</strong> monthly statements from
+        <strong>2021-01-01</strong> through <strong>2026-07-01</strong>
+         (missing 2023-08).
+        Figures come from the statement line items. Findings highlight patterns that may need
+        explanation; they do not allege wrongdoing.
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Report date 2026-09-07. Findings are for review, not accusations.</p>
+  </footer>
+</div>
+
+<script id="report-data" type="application/json">{"yearly":[{"year":"2021","months":12,"complete":true,"is_open_year":false,"income_actual":1680583.86,"income_recurring_actual":1573203.6,"income_funding_actual":58824.56,"income_offset_actual":48555.7,"funding_income_pct":3.5,"income_non_operating_by_kind":{"Transfers from reserves":58824.56,"Insurance claim proceeds":48555.7},"expense_actual":1587522.35,"expense_recurring_actual":1619691.25,"expense_offset_actual":-32168.9,"expense_budget":1464182.92,"net_recurring":-46487.65,"net_all_income":93061.51,"expense_actual_with_budget":1587522.35,"expense_actual_without_budget":0.0,"budget_coverage_pct":100.0,"expense_vs_budget_pct":108.4,"expense_vs_budget_pct_comparable":108.4,"expense_vs_budget_comparable":true,"expense_by_category":{"Maintenance contracts":314846.34,"On-site personnel":301706.02,"Electricity":220277.27,"Water & sewer":213409.77,"Repairs & maintenance":169808.87,"Reserve contributions":128948.16,"Legal & professional":73113.13,"Management fees":57162.0,"Gas":51399.13,"Insurance":22728.78,"Utilities":18255.86,"Loan / financing":10722.11,"Administrative":8757.03,"Other expenses":-3612.12},"expense_yoy_pct":null,"expense_yoy_basis":null,"expense_yoy_months_compared":null,"expense_yoy_current_actual":null,"expense_yoy_prior_actual":null},{"year":"2022","months":12,"complete":true,"is_open_year":false,"income_actual":1826457.14,"income_recurring_actual":1617910.12,"income_funding_actual":207601.04,"income_offset_actual":945.98,"funding_income_pct":11.4,"income_non_operating_by_kind":{"Transfers from reserves":207601.04,"Insurance claim proceeds":945.98},"expense_actual":2007354.6,"expense_recurring_actual":1819527.93,"expense_offset_actual":187826.67,"expense_budget":1633457.08,"net_recurring":-201617.81,"net_all_income":-180897.46,"expense_actual_with_budget":2007354.6,"expense_actual_without_budget":0.0,"budget_coverage_pct":100.0,"expense_vs_budget_pct":122.9,"expense_vs_budget_pct_comparable":122.9,"expense_vs_budget_comparable":true,"expense_by_category":{"Maintenance contracts":303999.78,"On-site personnel":302857.37,"Water & sewer":258374.41,"Electricity":238017.31,"Insurance":212511.74,"Reserve contributions":198970.79,"Repairs & maintenance":185081.91,"Loan / financing":90445.52,"Legal & professional":62260.78,"Gas":61575.4,"Management fees":57373.64,"Utilities":18605.68,"Administrative":9626.37,"Other expenses":7653.9},"expense_yoy_pct":26.4,"expense_yoy_basis":"full_year","expense_yoy_months_compared":12,"expense_yoy_current_actual":2007354.6,"expense_yoy_prior_actual":1587522.35},{"year":"2023","months":11,"complete":false,"is_open_year":false,"income_actual":1805388.15,"income_recurring_actual":1468290.83,"income_funding_actual":313945.22,"income_offset_actual":23152.1,"funding_income_pct":17.4,"income_non_operating_by_kind":{"Transfers from reserves":222478.37,"Special assessments":91466.85,"Loan repayment collections":23152.1},"expense_actual":2044977.95,"expense_recurring_actual":1968162.98,"expense_offset_actual":76814.97,"expense_budget":1571345.84,"net_recurring":-499872.15,"net_all_income":-239589.8,"expense_actual_with_budget":1650722.42,"expense_actual_without_budget":394255.53,"budget_coverage_pct":80.7,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":105.1,"expense_vs_budget_comparable":false,"expense_by_category":{"Repairs & maintenance":579904.31,"On-site personnel":281899.38,"Maintenance contracts":228816.16,"Electricity":217770.79,"Reserve contributions":186022.87,"Water & sewer":167650.84,"Insurance":100957.21,"Legal & professional":73548.84,"Gas":63984.96,"Loan / financing":57670.56,"Management fees":53025.72,"Utilities":19036.3,"Other expenses":8274.73,"Administrative":6415.28},"expense_yoy_pct":13.1,"expense_yoy_basis":"same_months","expense_yoy_months_compared":11,"expense_yoy_current_actual":2044977.95,"expense_yoy_prior_actual":1807457.71},{"year":"2024","months":12,"complete":true,"is_open_year":false,"income_actual":1940744.84,"income_recurring_actual":1634351.49,"income_funding_actual":247010.19,"income_offset_actual":59383.16,"funding_income_pct":12.7,"income_non_operating_by_kind":{"Transfers from reserves":213775.0,"Loan repayment collections":59383.16,"Special assessments":33235.19},"expense_actual":2072295.37,"expense_recurring_actual":1975824.17,"expense_offset_actual":96471.2,"expense_budget":1485029.33,"net_recurring":-341472.68,"net_all_income":-131550.53,"expense_actual_with_budget":1448000.76,"expense_actual_without_budget":624294.61,"budget_coverage_pct":69.9,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":97.5,"expense_vs_budget_comparable":false,"expense_by_category":{"On-site personnel":353038.89,"Water & sewer":343649.61,"Repairs & maintenance":325493.18,"Maintenance contracts":266352.38,"Electricity":234246.24,"Reserve contributions":149891.62,"Insurance":86166.84,"Loan / financing":82848.0,"Gas":81120.51,"Legal & professional":60769.17,"Management fees":55675.72,"Utilities":22701.34,"Administrative":12663.97,"Other expenses":-2322.1},"expense_yoy_pct":-13.3,"expense_yoy_basis":"same_months","expense_yoy_months_compared":11,"expense_yoy_current_actual":1772076.43,"expense_yoy_prior_actual":2044977.95},{"year":"2025","months":12,"complete":true,"is_open_year":false,"income_actual":2586439.99,"income_recurring_actual":1863058.12,"income_funding_actual":346662.09,"income_offset_actual":376719.78,"funding_income_pct":13.4,"income_non_operating_by_kind":{"Insurance claim proceeds":274555.09,"Special assessments":226454.51,"Transfers from reserves":120207.58,"Loan repayment collections":102164.69},"expense_actual":2532395.64,"expense_recurring_actual":2136023.13,"expense_offset_actual":396372.51,"expense_budget":2538034.22,"net_recurring":-272965.01,"net_all_income":54044.35,"expense_actual_with_budget":2384883.92,"expense_actual_without_budget":147511.72,"budget_coverage_pct":94.2,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":94.0,"expense_vs_budget_comparable":false,"expense_by_category":{"Insurance":500976.72,"On-site personnel":350300.97,"Maintenance contracts":325677.31,"Electricity":312836.53,"Water & sewer":312770.82,"Repairs & maintenance":220690.0,"Reserve contributions":134823.27,"Management fees":125584.17,"Gas":123382.47,"Loan / financing":82816.2,"Legal & professional":25953.06,"Administrative":12872.13,"Utilities":11866.4,"Other expenses":-8154.41},"expense_yoy_pct":22.2,"expense_yoy_basis":"full_year","expense_yoy_months_compared":12,"expense_yoy_current_actual":2532395.64,"expense_yoy_prior_actual":2072295.37},{"year":"2026","months":7,"complete":false,"is_open_year":true,"income_actual":1631263.08,"income_recurring_actual":1434892.5,"income_funding_actual":108290.32,"income_offset_actual":88080.26,"funding_income_pct":6.6,"income_non_operating_by_kind":{"Special assessments":108374.38,"Loan repayment collections":88080.26,"Transfers from reserves":-84.06},"expense_actual":1482500.38,"expense_recurring_actual":1434190.93,"expense_offset_actual":48309.45,"expense_budget":1207824.41,"net_recurring":701.57,"net_all_income":148762.7,"expense_actual_with_budget":1101227.84,"expense_actual_without_budget":381272.54,"budget_coverage_pct":74.3,"expense_vs_budget_pct":null,"expense_vs_budget_pct_comparable":91.2,"expense_vs_budget_comparable":false,"expense_by_category":{"On-site personnel":267347.13,"Electricity":247177.79,"Repairs & maintenance":214965.34,"Gas":192582.35,"Water & sewer":172786.94,"Maintenance contracts":171419.18,"Insurance":97077.85,"Loan / financing":48309.45,"Management fees":36443.75,"Legal & professional":20830.92,"Utilities":7111.17,"Administrative":3542.62,"Other expenses":2905.89,"Reserve contributions":0.0},"expense_yoy_pct":-2.9,"expense_yoy_basis":"same_months","expense_yoy_months_compared":7,"expense_yoy_current_actual":1482500.38,"expense_yoy_prior_actual":1526660.44}],"periods":["2021-Q1","2021-Q2","2021-Q3","2021-Q4","2022-Q1","2022-Q2","2022-Q3","2022-Q4","2023-Q1","2023-Q2","2023-Q3","2023-Q4","2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2","2026-Q3"],"quarterlyTotals":[333417.03,410803.3,381203.36,462098.66,455285.05,489034.29,539038.12,523997.14,398684.76,699604.25,392158.55,554530.39,482023.3,439451.34,569725.46,581095.27,489847.29,686781.46,709789.19,645977.7,597943.21,620311.12,264246.05],"series":[{"id":"group:On-site personnel","name":"On-site personnel","kind":"group","group":"On-site personnel","data":[75881.29,75725.4,61167.4,88931.93,63607.54,88186.61,75119.61,75943.61,50372.74,103078.24,41455.66,86992.74,86176.0,70986.0,98118.73,97758.16,95845.85,105070.3,50902.5,98482.32,104698.43,123151.54,39497.16]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","kind":"group","group":"Repairs & maintenance","data":[20378.1,99453.88,30272.45,19704.44,65505.3,17436.58,24896.22,77243.81,53462.46,245329.53,123327.02,157785.3,60227.39,31752.65,125079.46,108433.68,33969.98,62407.95,65609.44,58702.63,51621.93,95001.36,68342.05]},{"id":"group:Maintenance contracts","name":"Maintenance contracts","kind":"group","group":"Maintenance contracts","data":[83287.43,72559.95,69573.67,89425.29,72639.88,80478.47,83887.2,66994.23,40361.04,71679.86,49541.55,67233.71,65879.8,26324.08,34396.55,139751.95,52352.4,86018.53,103535.1,83771.28,57293.92,74993.84,39131.42]},{"id":"group:Electricity","name":"Electricity","kind":"group","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51,36990.92]},{"id":"group:Water & sewer","name":"Water & sewer","kind":"group","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66,24301.87]},{"id":"group:Reserve contributions","name":"Reserve contributions","kind":"group","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0,0.0]},{"id":"group:Gas","name":"Gas","kind":"group","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77,4797.62]},{"id":"group:Management fees","name":"Management fees","kind":"group","group":"Management fees","data":[14178.0,14178.0,14178.0,14628.0,14178.0,14272.52,14461.56,14461.56,14461.56,14461.56,9641.04,14461.56,14461.56,12291.04,14461.56,14461.56,15658.75,15618.75,72201.76,22104.91,15618.75,15618.75,5206.25]}],"accountSeries":[{"id":"account:Electricity","name":"Electricity","kind":"account","group":"Electricity","data":[41794.7,50066.46,72551.33,55864.78,50727.14,56092.93,75716.75,55480.49,54563.93,63013.85,45285.59,54907.42,46444.07,63744.73,93028.52,31028.92,29215.53,56240.09,126152.83,101228.08,75387.36,134799.51,36990.92],"total_actual":1470325.93},{"id":"account:Water & Sewer","name":"Water & Sewer","kind":"account","group":"Water & sewer","data":[43723.17,45035.1,57731.96,66919.54,59782.31,53554.99,60879.88,84157.23,51651.13,53628.99,20685.16,41685.56,71324.57,92064.62,91000.43,89259.99,71999.67,70793.85,79379.68,90597.62,75430.41,73054.66,24301.87],"total_actual":1468642.39},{"id":"account:Front Desk Personnel - Contract","name":"Front Desk Personnel - Contract","kind":"account","group":"On-site personnel","data":[45341.65,50810.4,38310.4,63310.43,38494.54,63586.61,51086.61,50870.61,26787.74,77597.74,25043.16,59215.74,59595.0,30723.0,71900.23,70413.16,69091.15,45971.91,55630.89,44344.9,41973.25,54685.55,17158.64],"total_actual":1151943.31},{"id":"account:Reserve Contributions","name":"Reserve Contributions","kind":"account","group":"Reserve contributions","data":[0.0,32237.04,48355.56,48355.56,48355.56,49148.21,50733.51,50733.51,50733.51,50733.51,33822.34,50733.51,43941.09,50733.51,50733.51,4483.51,50733.51,19911.17,20237.5,43941.09,0.0,0.0,0.0],"total_actual":798656.71},{"id":"account:Common Area Cleaning - Contract","name":"Common Area Cleaning - Contract","kind":"account","group":"Maintenance contracts","data":[32047.7,24242.2,24152.1,24152.1,24565.5,24565.5,24565.5,25065.5,17490.0,30822.68,25832.68,21003.9,22816.5,0.0,7239.8,57038.6,23176.9,33888.2,40810.0,30607.5,20405.0,40810.0,10202.5],"total_actual":585500.36},{"id":"account:Gas","name":"Gas","kind":"account","group":"Gas","data":[19782.25,14184.37,7812.33,9620.18,16034.85,26340.26,8569.84,10630.45,23827.71,18680.72,8348.51,13128.02,32087.36,21855.48,12311.55,14866.12,33674.06,17536.29,12695.54,59476.58,134769.96,53014.77,4797.62],"total_actual":574044.82},{"id":"account:Office Personnel - Contract","name":"Office Personnel - Contract","kind":"account","group":"On-site personnel","data":[22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,22425.0,14950.0,22425.0,23449.0,23667.0,23667.0,23667.0,16298.0,28169.99,-44467.99,19289.42,29370.63,29370.57,9790.19],"total_actual":443895.81},{"id":"account:Building Insurance","name":"Building Insurance","kind":"account","group":"Insurance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,35799.28,23033.86,15361.36,0.0,23465.25,33576.5,3382.5,16834.25,102659.03,64544.63,45532.06,15432.07,36113.72],"total_actual":415734.51},{"id":"account:Insurance Claim Repairs","name":"Insurance Claim Repairs","kind":"account","group":"Insurance","data":[0.0,-45798.35,-20019.87,33649.32,27961.82,66849.54,16452.34,1671.09,12394.18,0.0,0.0,0.0,0.0,0.0,0.0,0.0,62599.59,203479.95,8056.74,0.0,0.0,0.0,0.0],"total_actual":367296.35},{"id":"account:Management Fees","name":"Management Fees","kind":"account","group":"Management fees","data":[14178.0,14178.0,14178.0,14178.0,14178.0,14272.52,14461.56,14461.56,14461.56,14461.56,9641.04,14461.56,14461.56,12291.04,14461.56,14461.56,15658.75,15618.75,15618.75,15618.75,15618.75,15618.75,5206.25],"total_actual":321745.83},{"id":"account:Loan Repayment","name":"Loan Repayment","kind":"account","group":"Loan / financing","data":[0.0,0.0,0.0,0.0,0.0,6901.35,20704.05,20704.05,20704.05,13802.7,6901.35,12572.79,20735.85,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,20704.05,6901.35],"total_actual":316263.99},{"id":"account:Carpet Repairs & Replacement","name":"Carpet Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,96263.06,96263.06,93096.93,0.0,0.0,0.0,9967.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":295590.05},{"id":"account:Boiler Repairs & Replacement","name":"Boiler Repairs & Replacement","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,5440.0,142250.0,0.0,0.0,2053.68,0.0,17750.0,0.0,0.0,0.0,0.0,0.0],"total_actual":167493.68},{"id":"account:Insurance - Building Policy","name":"Insurance - Building Policy","kind":"account","group":"Insurance","data":[9055.64,16813.76,14508.99,14519.29,9682.96,570.0,43502.61,19238.95,12830.52,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":140722.72},{"id":"account:Front Desk Personnel - Non Contract","name":"Front Desk Personnel - Non Contract","kind":"account","group":"On-site personnel","data":[3348.0,2490.0,432.0,3196.5,2688.0,2175.0,1608.0,2648.0,1160.0,3055.5,1462.5,3552.0,3132.0,16596.0,2551.5,216.0,0.0,16674.0,16674.0,16674.0,16674.66,16674.99,5558.33],"total_actual":139240.98},{"id":"account:Elevator Maintenance - Contract","name":"Elevator Maintenance - Contract","kind":"account","group":"Maintenance contracts","data":[984.21,6588.2,6642.49,6642.49,6998.13,6998.13,7157.66,7898.66,1091.03,6104.11,1698.25,7165.76,7357.29,1106.96,2115.0,17738.03,3773.6,7071.35,3422.97,8760.34,4683.93,4683.93,1561.31],"total_actual":128243.83},{"id":"account:Maintenance Personnel - Contract","name":"Maintenance Personnel - Contract","kind":"account","group":"On-site personnel","data":[4766.64,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2537.0,10456.7,14254.4,23065.6,18174.0,16679.89,22420.43,6990.0],"total_actual":119344.66},{"id":"account:Electrical Repairs & Mtce","name":"Electrical Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3950.62,231.0,0.0,267.0,0.0,292.0,2021.46,59.69,5067.22,3521.24,538.4,473.04,44413.73,57269.16],"total_actual":118104.56},{"id":"account:Trash Collection - Contract","name":"Trash Collection - Contract","kind":"account","group":"Maintenance contracts","data":[5089.95,3631.8,3393.3,6786.59,3393.28,6786.56,5089.94,5089.92,3443.61,7377.02,3176.42,5719.93,8255.28,3476.87,3483.0,8298.98,5112.0,6622.5,3423.36,6461.0,4983.58,5225.16,1645.92],"total_actual":115965.97},{"id":"account:Security Monitoring - Contract","name":"Security Monitoring - Contract","kind":"account","group":"Maintenance contracts","data":[4727.99,6414.85,4857.0,3385.7,4857.0,4857.0,4857.0,3238.0,3286.57,5002.71,5002.71,5002.71,5152.8,1717.6,3435.2,6870.4,0.0,8845.75,4953.07,6884.25,5199.66,5199.66,1733.22],"total_actual":105480.85},{"id":"account:Elevator Repairs & Mtce","name":"Elevator Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,8742.24,2240.23,5490.0,0.0,0.0,32495.0,0.0,0.0,1433.92,2192.03,34804.06,2012.99,6641.37,1649.73],"total_actual":97701.57},{"id":"account:Plumbing Repairs & Mtce","name":"Plumbing Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,13107.36,3947.2,4234.0,9652.48,2840.0,1724.0,8903.44,15942.5,1009.6,13532.95,3763.03,15347.26,2747.95,872.27],"total_actual":97624.04},{"id":"account:HVAC Repairs & Mtce","name":"HVAC Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,19845.67,8607.8,7323.72,8181.25,2727.5,0.0,8346.4,5067.0,12595.66,-9452.39,4307.09,9510.0,17448.1,1374.0],"total_actual":95881.8},{"id":"account:Water Management - Contract","name":"Water Management - Contract","kind":"account","group":"Maintenance contracts","data":[4500.0,3000.0,4500.0,6000.0,3000.0,6000.0,4500.0,3000.0,3000.0,7500.0,1500.0,6000.0,3000.0,3000.0,3000.0,7500.0,1500.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":70500.0},{"id":"account:Garage Door / Gate Repairs & Mtce","name":"Garage Door / Gate Repairs & Mtce","kind":"account","group":"Repairs & maintenance","data":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,650.0,2596.5,2053.25,22402.05,403.86,1349.09,5938.29,6993.44,3658.53,524.91,1078.65,11732.82,8104.29,2711.25],"total_actual":70196.93},{"id":"account:Boiler Maintenance - Contract","name":"Boiler Maintenance - Contract","kind":"account","group":"Maintenance contracts","data":[0.0,3575.01,2383.34,3575.01,3575.01,3575.01,4766.64,1191.67,1191.67,3933.3,6689.67,4650.0,4650.0,3640.0,3053.39,15094.12,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":65543.84},{"id":"account:Management Fees - Non-Contract","name":"Management Fees - Non-Contract","kind":"account","group":"Management fees","data":[0.0,0.0,0.0,450.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,56583.01,6486.16,0.0,0.0,0.0],"total_actual":63519.17},{"id":"account:General Repairs and Maintenance","name":"General Repairs and Maintenance","kind":"account","group":"Repairs & maintenance","data":[10133.77,10557.4,4220.92,14182.1,4429.63,3707.7,7488.88,2528.91,886.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"total_actual":58135.31},{"id":"account:Fire Extinguisher / Alarms - Contract","name":"Fire Extinguisher / Alarms - Contract","kind":"account","group":"Maintenance contracts","data":[6778.99,8700.0,0.0,0.0,251.86,8700.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1102.57,971.0,2524.0,9824.75,711.55,711.55,711.55,9468.65],"total_actual":50456.47},{"id":"account:Pest Control - Contract","name":"Pest Control - Contract","kind":"account","group":"Maintenance contracts","data":[1902.7,1749.0,2999.8,2575.8,1250.8,2109.4,1876.2,2051.1,1425.7,2501.6,625.4,3286.0,1876.2,625.4,2846.1,2115.25,1356.8,3010.4,2316.1,2453.9,2257.8,3010.4,752.6],"total_actual":46974.45}],"groups":[{"id":"group:On-site personnel","name":"On-site personnel","child_ids":["account:Front Desk Personnel - Contract","account:Office Personnel - Contract","account:Front Desk Personnel - Non Contract","account:Maintenance Personnel - Contract"]},{"id":"group:Repairs & maintenance","name":"Repairs & maintenance","child_ids":["account:Carpet Repairs & Replacement","account:Boiler Repairs & Replacement","account:Electrical Repairs & Mtce","account:Elevator Repairs & Mtce","account:Plumbing Repairs & Mtce","account:HVAC Repairs & Mtce","account:Garage Door / Gate Repairs & Mtce","account:General Repairs and Maintenance"]},{"id":"group:Maintenance contracts","name":"Maintenance contracts","child_ids":["account:Common Area Cleaning - Contract","account:Elevator Maintenance - Contract","account:Trash Collection - Contract","account:Security Monitoring - Contract","account:Water Management - Contract","account:Boiler Maintenance - Contract","account:Fire Extinguisher / Alarms - Contract","account:Pest Control - Contract"]},{"id":"group:Electricity","name":"Electricity","child_ids":["account:Electricity"]},{"id":"group:Water & sewer","name":"Water & sewer","child_ids":["account:Water & Sewer"]},{"id":"group:Reserve contributions","name":"Reserve contributions","child_ids":["account:Reserve Contributions"]},{"id":"group:Gas","name":"Gas","child_ids":["account:Gas"]},{"id":"group:Management fees","name":"Management fees","child_ids":["account:Management Fees","account:Management Fees - Non-Contract"]}],"defaultSelection":["group:On-site personnel","group:Repairs & maintenance","group:Maintenance contracts","group:Electricity","group:Water & sewer"],"categoryOrder":["Electricity","Gas","Water & sewer","On-site personnel","Management fees","Maintenance contracts","Repairs & maintenance","Reserve contributions","Loan / financing"],"reservesYearly":[{"year":"2021","contribution_actual":128948.16,"contribution_budget":178484.24,"contribution_shortfall":49536.08,"contribution_vs_budget_pct":72.2,"transfer_from_reserves_actual":58824.56},{"year":"2022","contribution_actual":198970.79,"contribution_budget":257516.08,"contribution_shortfall":58545.29,"contribution_vs_budget_pct":77.3,"transfer_from_reserves_actual":207601.04},{"year":"2023","contribution_actual":186022.87,"contribution_budget":265432.65,"contribution_shortfall":79409.78,"contribution_vs_budget_pct":70.1,"transfer_from_reserves_actual":222478.37},{"year":"2024","contribution_actual":149891.62,"contribution_budget":227730.9,"contribution_shortfall":77839.28,"contribution_vs_budget_pct":65.8,"transfer_from_reserves_actual":213775.0},{"year":"2025","contribution_actual":134823.27,"contribution_budget":311689.83,"contribution_shortfall":176866.56,"contribution_vs_budget_pct":43.3,"transfer_from_reserves_actual":120207.58},{"year":"2026","contribution_actual":0.0,"contribution_budget":199862.47,"contribution_shortfall":199862.47,"contribution_vs_budget_pct":0.0,"transfer_from_reserves_actual":-84.06}],"incompleteYears":["2023","2026"],"utilities":{"Electricity":{"yearly":[{"year":"2021","actual":220277.27,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":238017.31,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":8.1,"dc_benchmark_yoy_pct":11.2,"vs_dc_pp":-3.1},{"year":"2023","actual":217770.79,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":1.9,"dc_benchmark_yoy_pct":9.3,"vs_dc_pp":-7.4},{"year":"2024","actual":234246.24,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":-4.9,"dc_benchmark_yoy_pct":2.4,"vs_dc_pp":-7.3},{"year":"2025","actual":312836.53,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":33.6,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2026","actual":247177.79,"months":7,"complete":false,"compare_basis":"same_months","months_compared":7,"condo_yoy_pct":58.1,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2025"],"rise_count":1},"Gas":{"yearly":[{"year":"2021","actual":51399.13,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":61575.4,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":19.8,"dc_benchmark_yoy_pct":21.0,"vs_dc_pp":-1.2},{"year":"2023","actual":63984.96,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":9.3,"dc_benchmark_yoy_pct":-13.1,"vs_dc_pp":22.4},{"year":"2024","actual":81120.51,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":26.8,"dc_benchmark_yoy_pct":-3.8,"vs_dc_pp":30.6},{"year":"2025","actual":123382.47,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":52.1,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2026","actual":192582.35,"months":7,"complete":false,"compare_basis":"same_months","months_compared":7,"condo_yoy_pct":248.2,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2022","2024","2025"],"rise_count":3},"Water & sewer":{"yearly":[{"year":"2021","actual":213409.77,"months":12,"complete":true,"compare_basis":"full_year","months_compared":null,"condo_yoy_pct":null,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null},{"year":"2022","actual":258374.41,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":21.1,"dc_benchmark_yoy_pct":7.8,"vs_dc_pp":13.3},{"year":"2023","actual":167650.84,"months":11,"complete":false,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":-28.7,"dc_benchmark_yoy_pct":9.5,"vs_dc_pp":-38.2},{"year":"2024","actual":343649.61,"months":12,"complete":true,"compare_basis":"same_months","months_compared":11,"condo_yoy_pct":86.6,"dc_benchmark_yoy_pct":3.25,"vs_dc_pp":83.3},{"year":"2025","actual":312770.82,"months":12,"complete":true,"compare_basis":"full_year","months_compared":12,"condo_yoy_pct":-9.0,"dc_benchmark_yoy_pct":8.0,"vs_dc_pp":-17.0},{"year":"2026","actual":172786.94,"months":7,"complete":false,"compare_basis":"same_months","months_compared":7,"condo_yoy_pct":3.7,"dc_benchmark_yoy_pct":null,"vs_dc_pp":null}],"rise_years":["2022","2024"],"rise_count":2}}}</script>
+<script>
+const DATA = JSON.parse(document.getElementById("report-data").textContent);
+const PALETTE = ["#0f766e","#1d4e89","#b45309","#0e7490","#a16207","#be123c","#3f6212","#334155"];
+const tick = { color:"#3a4f5a", font:{ family:"Figtree", size:11 } };
+const grid = { color:"rgba(13,27,34,0.08)" };
+const legend = {
+  position:"bottom",
+  labels:{ boxWidth:12, boxHeight:12, usePointStyle:true, pointStyle:"rectRounded",
+    font:{ family:"Figtree", size:12 }, color:"#3a4f5a" }
+};
+
+const yearLabels = DATA.yearly.map(r => r.complete === false ? r.year + "*" : r.year);
+const quarterlyValues = DATA.quarterlyTotals.map(v => Math.round((v/1000)*10)/10);
+
+new Chart(document.getElementById("quarterlyExpenseChart"), {
+  type:"bar",
+  data:{
+    labels: DATA.periods,
+    datasets:[
+      {
+        type:"bar",
+        label:"Total expenses ($k)",
+        data: quarterlyValues,
+        backgroundColor:"rgba(15,118,110,0.55)",
+        borderColor:"#0f766e",
+        borderWidth:1,
+        borderRadius:4,
+        order:2
+      },
+      {
+        type:"line",
+        label:"Trend",
+        data: quarterlyValues,
+        borderColor:"#0d1b22",
+        backgroundColor:"transparent",
+        pointBackgroundColor:"#0d1b22",
+        pointRadius:3,
+        borderWidth:2,
+        tension:0.25,
+        order:1
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend },
+    scales:{
+      x:{
+        ticks:{ ...tick, maxRotation:45, autoSkip:true, maxTicksLimit:12 },
+        grid:{ color:"rgba(13,27,34,0.06)" },
+        title:{ display:true, text:"Quarter", color:"#3a4f5a" }
+      },
+      y:{
+        ticks:tick,
+        grid,
+        beginAtZero:true,
+        title:{ display:true, text:"Expenses ($ thousands)", color:"#3a4f5a" }
+      }
+    }
+  }
+});
+
+new Chart(document.getElementById("incomeExpenseChart"), {
+  type:"bar",
+  data:{
+    labels: yearLabels,
+    datasets:[
+      { label:"Income reported ($k)", data:DATA.yearly.map(r => Math.round(r.income_actual/1000)), backgroundColor:"#1d4e89", borderRadius:4 },
+      { label:"Regular fees only ($k)", data:DATA.yearly.map(r => Math.round(r.income_recurring_actual/1000)), backgroundColor:"#0e7490", borderRadius:4 },
+      { label:"Expense ($k)", data:DATA.yearly.map(r => Math.round(r.expense_actual/1000)), backgroundColor:"#0f766e", borderRadius:4 }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend },
+    scales:{
+      x:{ ticks:tick, grid:{ color:"rgba(13,27,34,0.06)" }, title:{ display:true, text:"Year", color:"#3a4f5a" } },
+      y:{ ticks:tick, grid, title:{ display:true, text:"Amount ($ thousands)", color:"#3a4f5a" } }
+    }
+  }
+});
+
+new Chart(document.getElementById("categoryStackChart"), {
+  type:"bar",
+  data:{
+    labels: yearLabels,
+    datasets: DATA.categoryOrder.map((name, i) => ({
+      label:name,
+      data: DATA.yearly.map(r => Math.round(((r.expense_by_category[name] || 0)/1000)*10)/10),
+      backgroundColor: PALETTE[i % PALETTE.length],
+      stack:"expenses",
+      borderWidth:0
+    }))
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend },
+    scales:{
+      x:{ stacked:true, ticks:tick, grid:{ color:"rgba(13,27,34,0.06)" }, title:{ display:true, text:"Year", color:"#3a4f5a" } },
+      y:{ stacked:true, ticks:tick, grid, title:{ display:true, text:"Expenses ($ thousands)", color:"#3a4f5a" } }
+    }
+  }
+});
+
+const allSeries = [...(DATA.series || []), ...(DATA.accountSeries || [])];
+const seriesById = Object.fromEntries(allSeries.map(s => [s.id, s]));
+const selected = new Set(DATA.defaultSelection || (DATA.series || []).slice(0,5).map(s => s.id));
+const groups = DATA.groups || [];
+const groupById = Object.fromEntries(groups.map(g => [g.id, g]));
+let browseGroupId = (groups[0] && groups[0].id) || "";
+
+function moneyCompact(n) {
+  const v = Number(n) || 0;
+  if (Math.abs(v) >= 1e6) return "$" + (v/1e6).toFixed(1) + "M";
+  if (Math.abs(v) >= 1e3) return "$" + Math.round(v/1e3) + "k";
+  return "$" + Math.round(v);
+}
+
+function childSelectedCount(group) {
+  return (group.child_ids || []).filter(id => selected.has(id)).length;
+}
+
+function syncGroupChips() {
+  document.querySelectorAll("#seriesGroupChips .series-chip").forEach(btn => {
+    const group = groupById[btn.dataset.groupId];
+    if (!group) return;
+    const kids = childSelectedCount(group);
+    btn.classList.toggle("on", selected.has(group.id));
+    btn.classList.toggle("partial", !selected.has(group.id) && kids > 0);
+    btn.setAttribute("aria-pressed", selected.has(group.id) ? "true" : "false");
+    const base = group.name;
+    btn.textContent = (!selected.has(group.id) && kids > 0) ? (base + " (" + kids + ")") : base;
+  });
+}
+
+function renderSelectedChips() {
+  const root = document.getElementById("seriesSelected");
+  if (!root) return;
+  root.innerHTML = "";
+  const ids = [...selected].filter(id => seriesById[id]);
+  if (!ids.length) {
+    const empty = document.createElement("span");
+    empty.className = "series-selected-label";
+    empty.textContent = "Nothing selected — pick groups or accounts above.";
+    root.appendChild(empty);
+    return;
+  }
+  const label = document.createElement("span");
+  label.className = "series-selected-label";
+  label.textContent = "On chart";
+  root.appendChild(label);
+  ids.forEach(id => {
+    const s = seriesById[id];
+    const chip = document.createElement("span");
+    chip.className = "series-selected-chip";
+    chip.appendChild(document.createTextNode(s.name));
+    const x = document.createElement("button");
+    x.type = "button";
+    x.setAttribute("aria-label", "Remove " + s.name);
+    x.textContent = "×";
+    x.addEventListener("click", () => {
+      selected.delete(id);
+      syncPickerUI();
+      renderTrendChart();
+    });
+    chip.appendChild(x);
+    root.appendChild(chip);
+  });
+}
+
+function renderAccountList() {
+  const list = document.getElementById("seriesAccountList");
+  const searchEl = document.getElementById("seriesAccountSearch");
+  if (!list) return;
+  list.innerHTML = "";
+  const group = groupById[browseGroupId];
+  if (!group) {
+    list.innerHTML = '<div class="series-account-empty">No groups available.</div>';
+    return;
+  }
+  const q = ((searchEl && searchEl.value) || "").trim().toLowerCase();
+  const kids = (group.child_ids || [])
+    .map(id => seriesById[id])
+    .filter(Boolean)
+    .filter(s => !q || s.name.toLowerCase().includes(q));
+  if (!kids.length) {
+    list.innerHTML = '<div class="series-account-empty">No accounts match in this group.</div>';
+    return;
+  }
+  const groupOn = selected.has(group.id);
+  kids.forEach(series => {
+    const lab = document.createElement("label");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = selected.has(series.id) || groupOn;
+    cb.disabled = groupOn;
+    cb.addEventListener("change", () => {
+      if (cb.checked) {
+        selected.add(series.id);
+        selected.delete(group.id);
+      } else {
+        selected.delete(series.id);
+      }
+      syncPickerUI();
+      renderTrendChart();
+    });
+    const name = document.createElement("span");
+    name.className = "acct-name";
+    name.textContent = series.name;
+    const total = document.createElement("span");
+    total.className = "acct-total";
+    total.textContent = moneyCompact(series.total_actual);
+    lab.appendChild(cb);
+    lab.appendChild(name);
+    lab.appendChild(total);
+    list.appendChild(lab);
+  });
+  if (groupOn) {
+    const note = document.createElement("div");
+    note.className = "series-account-empty";
+    note.textContent = "Whole group is on the chart. Turn the group chip off to pick individual accounts.";
+    list.appendChild(note);
+  }
+}
+
+function buildSeriesPicker() {
+  const chips = document.getElementById("seriesGroupChips");
+  const groupSelect = document.getElementById("seriesAccountGroup");
+  if (!chips || !groupSelect) return;
+  chips.innerHTML = "";
+  groupSelect.innerHTML = "";
+  groups.forEach((group, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "series-chip";
+    btn.dataset.groupId = group.id;
+    btn.textContent = group.name;
+    btn.addEventListener("click", () => {
+      if (selected.has(group.id)) {
+        selected.delete(group.id);
+      } else {
+        selected.add(group.id);
+        (group.child_ids || []).forEach(id => selected.delete(id));
+      }
+      browseGroupId = group.id;
+      if (groupSelect) groupSelect.value = group.id;
+      syncPickerUI();
+      renderTrendChart();
+    });
+    chips.appendChild(btn);
+
+    const opt = document.createElement("option");
+    opt.value = group.id;
+    opt.textContent = group.name + " (" + (group.child_ids || []).length + ")";
+    if (i === 0) opt.selected = true;
+    groupSelect.appendChild(opt);
+  });
+  groupSelect.addEventListener("change", () => {
+    browseGroupId = groupSelect.value;
+    renderAccountList();
+  });
+  document.getElementById("seriesAccountSearch")?.addEventListener("input", renderAccountList);
+  syncPickerUI();
+}
+
+function syncPickerUI() {
+  syncGroupChips();
+  renderAccountList();
+  renderSelectedChips();
+}
+
+function selectedDatasets() {
+  const ids = [...selected].filter(id => seriesById[id]);
+  return ids.map((id, i) => {
+    const s = seriesById[id];
+    return {
+      label: s.name,
+      data: (s.data || []).map(v => Math.round((v/1000)*10)/10),
+      borderColor: PALETTE[i % PALETTE.length],
+      backgroundColor: PALETTE[i % PALETTE.length] + "22",
+      fill:true, tension:0.25, pointRadius:2, borderWidth:2
+    };
+  });
+}
+
+const trendChart = new Chart(document.getElementById("categoryTrendChart"), {
+  type:"line",
+  data:{
+    labels: DATA.periods,
+    datasets: selectedDatasets()
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend },
+    scales:{
+      x:{
+        ticks:{ ...tick, maxRotation:45, autoSkip:true, maxTicksLimit:12 },
+        grid:{ color:"rgba(13,27,34,0.06)" },
+        title:{ display:true, text:"Quarter", color:"#3a4f5a" }
+      },
+      y:{ ticks:tick, grid, title:{ display:true, text:"Expenses ($ thousands)", color:"#3a4f5a" } }
+    }
+  }
+});
+
+function renderTrendChart() {
+  trendChart.data.datasets = selectedDatasets();
+  trendChart.update();
+}
+
+function setSelection(ids) {
+  selected.clear();
+  ids.forEach(id => { if (seriesById[id]) selected.add(id); });
+  syncPickerUI();
+  renderTrendChart();
+}
+
+document.getElementById("selectDefaultGroups")?.addEventListener("click", () => {
+  setSelection(DATA.defaultSelection || (DATA.series || []).slice(0,5).map(s => s.id));
+});
+document.getElementById("selectUtilities")?.addEventListener("click", () => {
+  setSelection([
+    "group:Electricity",
+    "group:Gas",
+    "group:Water & sewer",
+  ]);
+});
+document.getElementById("clearSeries")?.addEventListener("click", () => setSelection([]));
+buildSeriesPicker();
+
+(function() {
+  const el = document.getElementById("utilityPatternChart");
+  if (!el || !DATA.utilities) return;
+  const names = ["Gas", "Electricity", "Water & sewer"];
+  const yearSet = new Set();
+  names.forEach(n => ((DATA.utilities[n] || {}).yearly || []).forEach(r => yearSet.add(r.year)));
+  const yearList = [...yearSet].sort();
+  const labels = yearList.map(y => {
+    const anyPartial = names.some(n => {
+      const row = ((DATA.utilities[n] || {}).yearly || []).find(r => r.year === y);
+      return row && !row.complete;
+    });
+    return anyPartial ? y + "*" : y;
+  });
+  const colors = { "Gas":"#0f766e", "Electricity":"#1d4e89", "Water & sewer":"#b45309" };
+  new Chart(el, {
+    type:"bar",
+    data:{
+      labels,
+      datasets: names.map(n => ({
+        label: n,
+        data: yearList.map(y => {
+          const row = ((DATA.utilities[n] || {}).yearly || []).find(r => r.year === y);
+          return row ? Math.round((row.actual/1000)*10)/10 : null;
+        }),
+        backgroundColor: colors[n],
+        borderRadius: 3
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend },
+      scales:{
+        x:{ ticks:tick, grid:{ color:"rgba(13,27,34,0.06)" }, title:{ display:true, text:"Year", color:"#3a4f5a" } },
+        y:{ ticks:tick, grid, title:{ display:true, text:"Bill total ($ thousands)", color:"#3a4f5a" } }
+      }
+    }
+  });
+})();
+
+
+if (DATA.reservesYearly && DATA.reservesYearly.length) {
+  const reserveLabels = DATA.reservesYearly.map(r => DATA.incompleteYears.includes(r.year) ? r.year + "*" : r.year);
+  new Chart(document.getElementById("reservesChart"), {
+    type:"bar",
+    data:{
+      labels: reserveLabels,
+      datasets:[
+        { label:"Contributions ($k)", data:DATA.reservesYearly.map(r => Math.round((r.contribution_actual||0)/1000)), backgroundColor:"#0f766e", borderRadius:4 },
+        { label:"Budgeted ($k)", data:DATA.reservesYearly.map(r => Math.round((r.contribution_budget||0)/1000)), backgroundColor:"#1d4e89", borderRadius:4 },
+        { label:"Transfers from reserves ($k)", data:DATA.reservesYearly.map(r => Math.round((r.transfer_from_reserves_actual||0)/1000)), backgroundColor:"#b45309", borderRadius:4 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend },
+      scales:{
+        x:{ ticks:tick, grid:{ color:"rgba(13,27,34,0.06)" }, title:{ display:true, text:"Year", color:"#3a4f5a" } },
+        y:{ ticks:tick, grid, title:{ display:true, text:"Amount ($ thousands)", color:"#3a4f5a" } }
+      }
+    }
+  });
+}
+
+</script>
+</body>
+</html>
