@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Financial Analysis 2027 | Kenyon Square</title>
+  <style>
+    :root {
+      --ink: #10202b;
+      --muted: #647789;
+      --paper: #f6f8f7;
+      --panel: rgba(255,255,255,.86);
+      --line: #dce5e4;
+      --teal: #087f73;
+      --teal-dark: #07574f;
+      --amber: #b86f16;
+      --red: #b33c45;
+      --blue: #315d9a;
+      --shadow: 0 20px 60px rgba(16,32,43,.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #dfe9e7; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { overflow: hidden; }
+    .deck { min-height: 100vh; position: relative; background: radial-gradient(circle at 10% 0%, #eff7f3 0, transparent 35%), linear-gradient(135deg, #e9f0ee, #d8e3e1); }
+    .slide { min-height: 100vh; padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 7vw, 8rem) 5.5rem; display: none; align-items: center; position: relative; overflow: auto; }
+    .slide.active { display: flex; }
+    .slide-inner { width: min(1180px, 100%); margin: auto; }
+    .kicker { color: var(--teal); font-size: .82rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 980px; margin: .7rem 0 1.1rem; font-size: clamp(2.7rem, 7vw, 6.7rem); line-height: .98; letter-spacing: -.065em; }
+    h2 { max-width: 970px; margin: .55rem 0 1.1rem; font-size: clamp(2.2rem, 5vw, 4.8rem); line-height: 1.02; letter-spacing: -.055em; }
+    h3 { font-size: 1.2rem; letter-spacing: -.02em; }
+    .lead { max-width: 850px; color: var(--muted); font-size: clamp(1.1rem, 2vw, 1.45rem); line-height: 1.45; }
+    .small { color: var(--muted); font-size: .92rem; line-height: 1.45; }
+    .hero-note { margin-top: 2rem; border-left: 5px solid var(--teal); padding: 1rem 1.2rem; max-width: 820px; background: rgba(255,255,255,.65); font-size: 1.15rem; line-height: 1.45; }
+    .grid { display: grid; gap: 1rem; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 1.1rem; padding: 1.25rem; box-shadow: var(--shadow); }
+    .metric { padding: 1.2rem; border-radius: 1rem; background: var(--panel); border: 1px solid var(--line); }
+    .metric .label { display: block; color: var(--muted); font-size: .85rem; }
+    .metric .value { display: block; margin: .25rem 0; font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -.06em; }
+    .metric.good .value { color: var(--teal); }
+    .metric.warn .value { color: var(--amber); }
+    .metric.bad .value { color: var(--red); }
+    .big-number { font-size: clamp(3.2rem, 8vw, 7rem); font-weight: 850; line-height: .9; letter-spacing: -.08em; }
+    .big-number.red { color: var(--red); }
+    .big-number.teal { color: var(--teal); }
+    .big-number.amber { color: var(--amber); }
+    .statline { display: flex; justify-content: space-between; gap: 1rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
+    .statline:last-child { border-bottom: 0; }
+    .statline strong { white-space: nowrap; }
+    .bar-list { display: grid; gap: .95rem; }
+    .bar-row { display: grid; grid-template-columns: 190px 1fr 110px; gap: .8rem; align-items: center; }
+    .bar-track { height: 1rem; background: #e4eceb; border-radius: 999px; overflow: hidden; }
+    .bar { display: block; height: 100%; border-radius: inherit; background: var(--teal); }
+    .bar.amber { background: var(--amber); }
+    .bar.blue { background: var(--blue); }
+    .bar.red { background: var(--red); }
+    .bar-value { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .callout { padding: 1rem 1.2rem; border-radius: .9rem; background: #e6f2ef; border: 1px solid #b7dcd4; color: var(--teal-dark); line-height: 1.45; }
+    .callout.warn { background: #fff3df; border-color: #efd19c; color: #75430a; }
+    .callout.red { background: #fbe9e9; border-color: #edbfc2; color: #7f2731; }
+    .tag { display: inline-flex; padding: .3rem .55rem; border-radius: 999px; background: #e2f1ee; color: var(--teal-dark); font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    ul { margin: .65rem 0 0; padding-left: 1.2rem; color: var(--muted); line-height: 1.6; }
+    li + li { margin-top: .35rem; }
+    .footer { position: absolute; left: clamp(1.25rem, 7vw, 8rem); right: clamp(1.25rem, 7vw, 8rem); bottom: 1.4rem; display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; }
+    .controls { position: fixed; z-index: 5; right: 1.1rem; bottom: 1rem; display: flex; align-items: center; gap: .4rem; padding: .35rem; border-radius: 999px; background: rgba(16,32,43,.88); box-shadow: var(--shadow); }
+    button { border: 0; background: transparent; color: white; cursor: pointer; padding: .6rem .8rem; border-radius: 999px; font: inherit; }
+    button:hover { background: rgba(255,255,255,.14); }
+    .progress { width: 90px; height: 4px; background: rgba(255,255,255,.25); border-radius: 99px; overflow: hidden; }
+    .progress span { display: block; height: 100%; width: 0; background: #8de0d2; }
+    .source { margin-top: 1.5rem; color: var(--muted); font-size: .78rem; }
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .slide { min-height: 100svh; padding-bottom: 5.5rem; }
+      .grid.two, .grid.three { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 125px 1fr 92px; gap: .45rem; font-size: .84rem; }
+      .footer { position: absolute; }
+    }
+    @media print {
+      body { overflow: visible; background: white; }
+      .slide, .slide.active { display: flex; min-height: 100vh; page-break-after: always; }
+      .controls { display: none; }
+      .card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Kenyon Square 2027 financial briefing">
+    <section class="slide active">
+      <div class="slide-inner">
+        <div class="kicker">Financial analysis | 2027 planning</div>
+        <h1>Financial analysis 2027</h1>
+        <p class="lead">A careful review of income, expenses, maintenance, and reserves to help the board plan responsibly for the year ahead.</p>
+        <div class="hero-note">Costs are trending upward while income is expected to remain broadly flat. A measured cost review, clearer maintenance planning, and an explicit reserve decision can help protect the building's long-term position.</div>
+        <p class="source">Prepared from the 2027 budget analysis, local financial statements, reserve study, and management task records.</p>
+      </div>
+      <div class="footer"><span>Kenyon Square Condominium</span><span>1 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">01 | The financial signal</div>
+        <h2>Careful planning is needed to keep the 2027 budget balanced.</h2>
+        <div class="grid three">
+          <div class="metric"><span class="label">Flat recurring income</span><span class="value">$2.464M</span><span class="label">2027 baseline</span></div>
+          <div class="metric warn"><span class="label">2027 trend expense case</span><span class="value">$2.476M</span><span class="label">Before new cost measures</span></div>
+          <div class="metric bad"><span class="label">Current reserve budget included</span><span class="value">$285K</span><span class="label">Estimated funding gap</span></div>
+        </div>
+        <div class="callout warn" style="margin-top: 1rem"><strong>This is a planning signal, not an alarm.</strong> The gap indicates that the board should review recurring costs and reserve funding together before finalizing the 2027 budget. At the Falcon 10% reserve target, the estimated gap is about $443K before new cost measures.</div>
+        <p class="source">These figures separate operating balance from total funding adequacy. They are planning estimates, not an approved 2027 budget.</p>
+      </div>
+      <div class="footer"><span>Flat income, rising obligations</span><span>2 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">02 | What changed</div>
+        <h2>Several major categories are materially higher than 2021.</h2>
+        <div class="card">
+          <div class="bar-list">
+            <div class="bar-row"><span>Electricity</span><span class="bar-track"><span class="bar" style="width:92%"></span></span><span class="bar-value">+$203K</span></div>
+            <div class="bar-row"><span>Repairs &amp; maintenance</span><span class="bar-track"><span class="bar red" style="width:90%"></span></span><span class="bar-value">+$199K</span></div>
+            <div class="bar-row"><span>Office + maintenance staff</span><span class="bar-track"><span class="bar blue" style="width:50%"></span></span><span class="bar-value">+$102K</span></div>
+            <div class="bar-row"><span>Water &amp; sewer</span><span class="bar-track"><span class="bar amber" style="width:38%"></span></span><span class="bar-value">+$83K</span></div>
+            <div class="bar-row"><span>Loan / financing</span><span class="bar-track"><span class="bar red" style="width:33%"></span></span><span class="bar-value">+$72K</span></div>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top: 1rem">
+          <div class="card"><h3>2021 baseline</h3><div class="big-number teal">$1.565M</div><p class="small">Operating-style expenses excluding insurance in the prior financial report.</p></div>
+          <div class="card"><h3>2026 annualized reference</h3><div class="big-number amber">$2.375M</div><p class="small">A simple partial-year reference, not a forecast. The direction is still clear: the cost base is under pressure.</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Expense growth is broader than gas</span><span>3 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">03 | The biggest categories</div>
+        <h2>Maintenance deserves focused review because its costs have grown substantially.</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>2026 annualized reference</h3>
+            <div class="statline"><span>Utilities, with normalized gas</span><strong>$788K</strong></div>
+            <div class="statline"><span>Repairs &amp; maintenance</span><strong>$369K</strong></div>
+            <div class="statline"><span>Maintenance contracts</span><strong>$294K</strong></div>
+            <div class="statline"><span>Front-desk personnel</span><strong>$262K</strong></div>
+            <div class="statline"><span>Office + maintenance personnel</span><strong>$196K</strong></div>
+          </div>
+          <div class="card">
+            <h3>What the board should ask</h3>
+            <ul>
+              <li>Which repairs are recurring because preventive work was missed?</li>
+              <li>Which vendor tasks can safely be performed in-house?</li>
+              <li>Which apartment repairs should be charged to owners?</li>
+              <li>Which contracts can be rebid, narrowed, or combined?</li>
+              <li>Which maintenance work needs a reserve or capital decision instead of an operating line?</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warn" style="margin-top: 1rem"><strong>How to read this:</strong> electricity is the largest dollar increase from 2021 to the 2026 annualized reference. Repairs and maintenance is a close second. Front-desk personnel is shown separately at approximately $262K. The remaining $196K personnel line consists of approximately $117K for office personnel and $79K for maintenance personnel.</div>
+      </div>
+      <div class="footer"><span>Prioritize the controllable cost base</span><span>4 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">04 | Maintenance action</div>
+        <h2>Better maintenance can support both building reliability and financial discipline.</h2>
+        <div class="grid three">
+          <div class="card"><span class="tag">Current condition</span><h3 style="margin-top: .8rem">Three heating units, one operating</h3><p class="small">The backup circulation pump is also reported out of service. Scope and quotes are still needed.</p></div>
+          <div class="card"><span class="tag">Work control</span><h3 style="margin-top: .8rem">Fans, cameras, pumps</h3><p class="small">Map condition, separate routine work from replacement, and document what staff can perform safely.</p></div>
+          <div class="card"><span class="tag">Owner responsibility</span><h3 style="margin-top: .8rem">Stop avoidable leakage</h3><p class="small">Use a written policy for apartment repairs, carpet damage, approvals, documentation, and chargebacks.</p></div>
+        </div>
+        <div class="card" style="margin-top: 1rem"><h3>90-day maintenance discipline</h3><div class="grid three"><div><strong>1. Inventory</strong><p class="small">List assets, condition, service history, and urgency.</p></div><div><strong>2. Classify</strong><p class="small">Operating, quoted repair, capital, or owner responsibility.</p></div><div><strong>3. Control</strong><p class="small">Set approval thresholds, work orders, photos, and closeout records.</p></div></div></div>
+      </div>
+      <div class="footer"><span>Reduce emergency work by improving planned work</span><span>5 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">05 | Measures to reduce expenses</div>
+        <h2>A front-desk review is one possible cost measure, not the whole plan.</h2>
+        <div class="grid two">
+          <div class="card"><div class="big-number red">$130,908</div><h3>Illustrative annual savings</h3><p class="small">Current annualized front-desk cost: $261,815. Suggested 2027 line at 50%: $130,908.</p></div>
+          <div class="card"><div class="big-number teal">$284,961</div><h3>Still to address</h3><p class="small">Remaining gap after the front-desk reduction if the current reserve budget is included.</p></div>
+        </div>
+        <div class="callout" style="margin-top: 1rem"><strong>Decision required:</strong> approve a coverage and service-level design before treating the 50% reduction as a budget commitment. Other measures should be evaluated alongside it, including maintenance planning, contract review, utility efficiency, in-house work, and owner chargebacks.</div>
+        <div class="grid three" style="margin-top: 1rem"><div class="metric"><span class="label">Front desk</span><span class="value">-50%</span><span class="label">First quantified action</span></div><div class="metric"><span class="label">Remaining gap</span><span class="value">$285K</span><span class="label">Current reserve budget</span></div><div class="metric"><span class="label">2027 income</span><span class="value">Flat</span><span class="label">No automatic fee growth assumed</span></div></div>
+      </div>
+      <div class="footer"><span>A target is useful only if ownership is clear</span><span>6 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">06 | Reserves in one view</div>
+        <h2>The current total reserve-bank balance is not stated in the production task.</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>Production task: reserve transfers</h3>
+            <div class="statline"><span>August contribution made</span><strong>$33,669</strong></div>
+            <div class="statline"><span>January-July contributions still owed</span><strong>$235,683</strong></div>
+            <div class="statline"><span>Additional transfer approved</span><strong>$125,654</strong></div>
+            <p class="small">The task records transfer activity and a funding shortfall. It does not state the combined residential, common, and commercial bank balance.</p>
+          </div>
+          <div class="card">
+            <h3>Commercial reserve task</h3>
+            <div class="big-number amber">$26,065</div>
+            <p class="small">Remaining commercial reserve reported September 8, 2026 and authorized for the canopy project.</p>
+            <div class="statline"><span>Current residential balance</span><strong>Not stated</strong></div>
+            <div class="statline"><span>Current common balance</span><strong>Not stated</strong></div>
+            <div class="statline"><span>Current commercial balance after payment</span><strong>Not stated</strong></div>
+          </div>
+        </div>
+        <div class="callout warn" style="margin-top: 1rem"><strong>Board takeaway:</strong> the production records establish that reserve contributions are behind schedule, but they do not establish the current combined cash held in reserve bank accounts. A dated balance for each bank account is still needed before presenting a total.</div>
+      </div>
+      <div class="footer"><span>Reserve choice must be explicit</span><span>7 / 8</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="kicker">07 | Board decisions</div>
+        <h2>Adopt a cost-reduction program, not another passive forecast.</h2>
+        <div class="grid two">
+          <div class="card"><h3>Decide now</h3><ul><li>Use the adjusted trend case as the 2027 planning baseline.</li><li>Set a 50% front-desk cost target subject to service-level approval.</li><li>Set the maximum acceptable all-in gap and reserve funding level.</li><li>Require a monthly cost and reserve transfer dashboard.</li></ul></div>
+          <div class="card"><h3>Deliver within 90 days</h3><ul><li>Rebid or narrow maintenance contracts.</li><li>Complete the asset and preventive-maintenance inventory.</li><li>Adopt an owner-responsibility and carpet-chargeback policy.</li><li>Obtain solar feasibility and utility-use proposals.</li><li>Document in-house work boundaries and approvals.</li></ul></div>
+        </div>
+        <div class="hero-note"><strong>Recommended planning approach:</strong> assign owners, set measurable reduction targets, strengthen maintenance controls, and review progress monthly.</div>
+        <p class="source">This presentation is a condensed decision brief. The underlying report contains the detailed calculations, source records, assumptions, and verification items.</p>
+      </div>
+      <div class="footer"><span>Kenyon Square Condominium | 2027 planning</span><span>8 / 8</span></div>
+    </section>
+  </main>
+  <div class="controls" aria-label="Presentation controls">
+    <button type="button" id="prev" aria-label="Previous slide">←</button>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <button type="button" id="next" aria-label="Next slide">→</button>
+  </div>
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const progress = document.querySelector('#progress');
+    let current = 0;
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+      history.replaceState(null, '', `#${current + 1}`);
+    }
+    function move(delta) { show(current + delta); }
+    document.querySelector('#prev').addEventListener('click', () => move(-1));
+    document.querySelector('#next').addEventListener('click', () => move(1));
+    document.addEventListener('keydown', event => {
+      if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); move(1); }
+      if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); move(-1); }
+      if (event.key === 'Home') show(0);
+      if (event.key === 'End') show(slides.length - 1);
+    });
+    const initial = Number(location.hash.slice(1));
+    show(Number.isInteger(initial) && initial > 0 ? initial - 1 : 0);
+  </script>
+</body>
+</html>
