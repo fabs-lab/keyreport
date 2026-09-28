@@ -51,7 +51,7 @@
     .statline:last-child { border-bottom: 0; }
     .statline strong { white-space: nowrap; }
     .bar-list { display: grid; gap: .95rem; }
-    .bar-row { display: grid; grid-template-columns: 190px 1fr 110px; gap: .8rem; align-items: center; }
+    .bar-row { display: grid; grid-template-columns: 190px 1fr 150px; gap: .8rem; align-items: center; }
     .bar-track { height: 1rem; background: #e4eceb; border-radius: 999px; overflow: hidden; }
     .bar { display: block; height: 100%; border-radius: inherit; background: var(--teal); }
     .bar.amber { background: var(--amber); }
@@ -75,7 +75,7 @@
       body { overflow: auto; }
       .slide { min-height: 100svh; padding-bottom: 5.5rem; }
       .grid.two, .grid.three { grid-template-columns: 1fr; }
-      .bar-row { grid-template-columns: 125px 1fr 92px; gap: .45rem; font-size: .84rem; }
+      .bar-row { grid-template-columns: 125px 1fr 120px; gap: .45rem; font-size: .84rem; }
       .footer { position: absolute; }
     }
     @media print {
@@ -146,11 +146,11 @@
         <h2>Several major categories are materially higher than 2021.</h2>
         <div class="card">
           <div class="bar-list">
-            <div class="bar-row"><span>Electricity</span><span class="bar-track"><span class="bar" style="width:92%"></span></span><span class="bar-value">+$203K</span></div>
-            <div class="bar-row"><span>Repairs &amp; maintenance</span><span class="bar-track"><span class="bar red" style="width:90%"></span></span><span class="bar-value">+$199K</span></div>
-            <div class="bar-row"><span>Office + maintenance staff</span><span class="bar-track"><span class="bar blue" style="width:50%"></span></span><span class="bar-value">+$102K</span></div>
-            <div class="bar-row"><span>Water &amp; sewer</span><span class="bar-track"><span class="bar amber" style="width:38%"></span></span><span class="bar-value">+$83K</span></div>
-            <div class="bar-row"><span>Loan / financing</span><span class="bar-track"><span class="bar red" style="width:33%"></span></span><span class="bar-value">+$72K</span></div>
+            <div class="bar-row"><span>Electricity</span><span class="bar-track"><span class="bar" style="width:92%"></span></span><span class="bar-value">+$203K / +92%</span></div>
+            <div class="bar-row"><span>Repairs &amp; maintenance</span><span class="bar-track"><span class="bar red" style="width:90%"></span></span><span class="bar-value">+$199K / +117%</span></div>
+            <div class="bar-row"><span>Office + maintenance staff</span><span class="bar-track"><span class="bar blue" style="width:50%"></span></span><span class="bar-value">+$102K / +108%</span></div>
+            <div class="bar-row"><span>Water &amp; sewer</span><span class="bar-track"><span class="bar amber" style="width:38%"></span></span><span class="bar-value">+$83K / +39%</span></div>
+            <div class="bar-row"><span>Loan / financing</span><span class="bar-track"><span class="bar red" style="width:33%"></span></span><span class="bar-value">+$72K / +672%</span></div>
           </div>
         </div>
         <div class="grid two" style="margin-top: 1rem">
