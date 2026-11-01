@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Front desk hours proposal · Kenyon Square</title>
+<style>
+:root {
+  --ink: #151515;
+  --muted: #50515b;
+  --line: #e5e5e9;
+  --accent: #6e7fb5;
+  --navy: #35446f;
+  --soft: #f3f5fb;
+  --paper: #fafafa;
+  --green: #377054;
+  --amber: #936342;
+  --amber-soft: #fbf2e9;
+  --green-soft: #eef5f0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 980px; margin: auto; padding: 0 32px; }
+.topbar {
+  border-bottom: 1px solid var(--line);
+  background: #fffffff2;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.topbar-inner {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+}
+.mark { width: 24px; height: 24px; }
+.meta { font-size: 13px; color: var(--muted); text-align: right; }
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  font-weight: 650;
+  color: var(--muted);
+}
+h1 {
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+  font-weight: 650;
+  margin: 14px 0 12px;
+}
+h1 span { color: var(--accent); }
+.lede {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 620px;
+  margin: 0;
+}
+.hero { padding: 48px 0 36px; }
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--navy);
+  background: var(--soft);
+  border-radius: 99px;
+  padding: 5px 10px;
+  font-weight: 600;
+}
+.status:before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.schedule {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 32px 0 8px;
+}
+.card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 22px 20px;
+  background: #fff;
+}
+.card.emphasis {
+  border-color: #aab6d5;
+  background: #f8f9fd;
+}
+.card .label {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--navy);
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+.card .hours {
+  font-size: 32px;
+  letter-spacing: -1.2px;
+  font-weight: 650;
+  margin: 0 0 6px;
+}
+.card .hours small {
+  font-size: 16px;
+  letter-spacing: 0;
+  color: var(--muted);
+  font-weight: 500;
+}
+.card p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 28px 0;
+}
+.scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.metric {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 16px;
+  background: var(--paper);
+}
+.metric b {
+  display: block;
+  font-size: 28px;
+  letter-spacing: -1px;
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+.metric span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.section {
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+}
+h2 {
+  font-size: 28px;
+  letter-spacing: -0.9px;
+  font-weight: 600;
+  margin: 10px 0 10px;
+  line-height: 1.2;
+}
+.intro {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 640px;
+  margin: 0 0 24px;
+}
+.finding {
+  background: var(--soft);
+  border-left: 2px solid var(--accent);
+  padding: 14px 16px;
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+.finding strong {
+  display: block;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.finding p { margin: 0; color: #525a71; }
+.chart-block {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+  background: #fff;
+}
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.chart-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+}
+.chart-head .cov {
+  font-size: 13px;
+  color: var(--muted);
+}
+.bars {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
+  align-items: end;
+  height: 140px;
+}
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 0;
+}
+.bar {
+  border-radius: 3px 3px 0 0;
+  background: #c5cddf;
+  width: 100%;
+  min-height: 2px;
+}
+.bar.in {
+  background: var(--accent);
+}
+.bar.peak {
+  background: var(--navy);
+}
+.axis {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 3px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+}
+.window {
+  margin-top: 12px;
+  height: 8px;
+  border-radius: 99px;
+  background: #eceef4;
+  position: relative;
+  overflow: hidden;
+}
+.window .open {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: #c8d3ef;
+  border-radius: 99px;
+}
+.window-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+.row:last-child { border-bottom: 0; }
+.row small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 3px;
+}
+.pill {
+  font-size: 12px;
+  border-radius: 99px;
+  padding: 4px 8px;
+  white-space: nowrap;
+  align-self: start;
+  font-weight: 600;
+}
+.pill.ok { color: var(--green); background: var(--green-soft); }
+.pill.warn { color: var(--amber); background: var(--amber-soft); }
+.tradeoffs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.trade {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+.trade h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 650;
+}
+.trade p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.sources {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+footer {
+  border-top: 1px solid var(--line);
+  padding: 24px 0 40px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .wrap { padding: 0 20px; }
+  .schedule, .metrics, .compare, .tradeoffs, .scenarios { grid-template-columns: 1fr; }
+  .schedule { grid-template-columns: 1fr; }
+  .bars { height: 110px; gap: 2px; }
+  .axis { font-size: 8px; }
+  h1 { font-size: 34px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#">
+      <svg class="mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+        <rect width="24" height="24" rx="5" ry="5" fill="#fff"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2.75C6.89137 2.75 2.75 6.89137 2.75 12 2.75 12.122 2.75236 12.2435 2.75703 12.3643 3.16036 12.2892 3.57594 12.25 4.00015 12.25c3.72792 0 6.75005 3.0221 6.75005 6.75C10.7502 19.7377 10.6315 20.4487 10.4121 21.1143 10.9276 21.2035 11.4581 21.25 12 21.25c4.2686 0 7.8632-2.8921 8.9288-6.8239C18.2142 13.5516 16.25 11.006 16.25 8.00008c0-1.31973.3794-2.55232 1.0347-3.59289C15.7866 3.36236 13.9656 2.75 12 2.75zm6.4534 2.623C18.0059 6.1455 17.75 7.04232 17.75 8.00008c0 2.26792 1.4386 4.20112 3.4534 4.93472C21.2342 12.6275 21.25 12.3157 21.25 12c0-2.59823-1.0705-4.94594-2.7966-6.627zM9.18679 22.378c-4.13232-1.1177-7.27736-4.6359-7.84513-8.9686C1.28117 12.9479 1.25 12.4774 1.25 12 1.25 6.06294 6.06294 1.25 12 1.25c2.5751 0 4.9406.90639 6.7918 2.41686C21.2062 5.6369 22.75 8.63846 22.75 12 22.75 12.6916 22.6846 13.3686 22.5594 14.025 21.6118 18.994 17.2453 22.75 12 22.75 11.0276 22.75 10.0843 22.6207 9.18679 22.378zM8.95587 20.7376C9.14638 20.1943 9.25015 19.6098 9.25015 19c0-2.8995-2.3505-5.25-5.25-5.25C3.63524 13.75 3.27953 13.7871 2.93646 13.8576c.65458 3.2115 2.97484 5.8194 6.01941 6.88zM10.5 6.75c-.9665 0-1.75.7835-1.75 1.75s.7835 1.75 1.75 1.75 1.75-.7835 1.75-1.75-.7835-1.75-1.75-1.75zM7.25 8.5c0-1.79493 1.45507-3.25 3.25-3.25 1.7949 0 3.25 1.45507 3.25 3.25 0 1.7949-1.4551 3.25-3.25 3.25-1.79493 0-3.25-1.4551-3.25-3.25zM15 15.75c-.1381 0-.25.1119-.25.25s.1119.25.25.25S15.25 16.1381 15.25 16c0-.1381-.1119-.25-.25-.25zM13.25 16c0-.9665.7835-1.75 1.75-1.75s1.75.7835 1.75 1.75-.7835 1.75-1.75 1.75-1.75-.7835-1.75-1.75z" fill="#1C274C"/>
+      </svg>
+      dimori
+    </a>
+    <div class="meta">
+      Kenyon Square · Decision brief<br>
+      Front desk hours · Nov 2026
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="status">Proposal for board review</span>
+      <h1>Reduce front desk hours.<br><span>Keep package coverage strong.</span></h1>
+      <p class="lede">
+        Proposed schedule: Monday–Friday 7am–10pm, Saturday 9am–8pm, Sunday 7am–7pm.
+        Validated against BuildingLink package claim times (when packages were released to residents).
+      </p>
+
+      <div class="schedule">
+        <div class="card emphasis">
+          <div class="label">Monday – Friday</div>
+          <div class="hours">7am – 10pm <small>· 15 h</small></div>
+          <p>Weekday afternoon and evening peak.</p>
+        </div>
+        <div class="card">
+          <div class="label">Saturday</div>
+          <div class="hours">9am – 8pm <small>· 11 h</small></div>
+          <p>Later open; covers the 2pm Saturday peak.</p>
+        </div>
+        <div class="card">
+          <div class="label">Sunday</div>
+          <div class="hours">7am – 7pm <small>· 12 h</small></div>
+          <p>Daytime Sunday claims; lighter late evening.</p>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <b>98</b>
+          <span>Desk hours / week<br>(from 128 today · −23%)</span>
+        </div>
+        <div class="metric">
+          <b>23%</b>
+          <span>ABC hours-only savings<br>~$40.5k / year at $25.95</span>
+        </div>
+        <div class="metric">
+          <b>81.2%</b>
+          <span>Package claims inside<br>proposed hours</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Evidence from BuildingLink</div>
+      <h2>When residents actually claim packages</h2>
+      <p class="intro">
+        Closed-event timestamps from the front desk event log (Amazon, UPS, FedEx, USPS, Package, LaserShip/OnTrac, DHL, Envelope). Times are Eastern.
+      </p>
+
+      <div class="finding">
+        <strong>Weekdays need evening coverage; weekends peak earlier.</strong>
+        <p>
+          Weekday median claim is 5:44pm, with a real late-night tail.
+          Saturday peaks around 2pm - a 9am–8pm window covers <b>80.9%</b> of Saturday claims.
+          Sunday 7am–7pm covers <b>73.1%</b>. Combined weekend coverage under this mix: <b>77.0%</b>.
+        </p>
+      </div>
+
+      <div class="chart-block">
+        <div class="chart-head">
+          <h3>Weekday claim volume by hour</h3>
+          <div class="cov">Proposed open window · 7am–10pm · covers <b>82.8%</b> of weekday claims</div>
+        </div>
+        <div class="bars" id="wd-bars" aria-hidden="true"></div>
+        <div class="axis" id="wd-axis"></div>
+        <div class="window"><div class="open" style="left:29.17%; width:62.5%"></div></div>
+        <div class="window-label"><span>12am</span><span>7am open</span><span>10pm close</span><span>12am</span></div>
+      </div>
+
+      <div class="chart-block">
+        <div class="chart-head">
+          <h3>Saturday claim volume by hour</h3>
+          <div class="cov">Proposed open window · 9am–8pm · covers <b>80.9%</b> of Saturday claims</div>
+        </div>
+        <div class="bars" id="sat-bars" aria-hidden="true"></div>
+        <div class="axis" id="sat-axis"></div>
+        <div class="window"><div class="open" style="left:37.5%; width:45.83%"></div></div>
+        <div class="window-label"><span>12am</span><span>9am open</span><span>8pm close</span><span>12am</span></div>
+      </div>
+
+      <div class="chart-block">
+        <div class="chart-head">
+          <h3>Sunday claim volume by hour</h3>
+          <div class="cov">Proposed open window · 7am–7pm · covers <b>73.1%</b> of Sunday claims</div>
+        </div>
+        <div class="bars" id="sun-bars" aria-hidden="true"></div>
+        <div class="axis" id="sun-axis"></div>
+        <div class="window"><div class="open" style="left:29.17%; width:50%"></div></div>
+        <div class="window-label"><span>12am</span><span>7am open</span><span>7pm close</span><span>12am</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Coverage under the proposal</div>
+      <h2>What the schedule catches</h2>
+      <div class="compare">
+        <div class="card">
+          <div class="label">Weekdays · 7am–10pm</div>
+          <div class="row">
+            <div><b>Inside hours</b><small>2,864 of 3,458 claims</small></div>
+            <span class="pill ok">82.8%</span>
+          </div>
+          <div class="row">
+            <div><b>Before 7am</b><small>Overnight / early morning</small></div>
+            <span class="pill warn">4.1%</span>
+          </div>
+          <div class="row">
+            <div><b>At or after 10pm</b><small>Mostly 11pm–midnight weeknights</small></div>
+            <span class="pill warn">13.1%</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="label">Weekends · Sat 9am–8pm · Sun 7am–7pm</div>
+          <div class="row">
+            <div><b>Inside hours</b><small>986 of 1,281 claims</small></div>
+            <span class="pill ok">77.0%</span>
+          </div>
+          <div class="row">
+            <div><b>Saturday 9am–8pm</b><small>512 of 633 · median 2:48pm</small></div>
+            <span class="pill ok">80.9%</span>
+          </div>
+          <div class="row">
+            <div><b>Sunday 7am–7pm</b><small>474 of 648 · median 3:48pm</small></div>
+            <span class="pill warn">73.1%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Cost · ABC contract vs Jennifer</div>
+      <h2>Current cost, and what this saves</h2>
+      <p class="intro">
+        Front desk labor is two different cost lines. ABC bills concierge hours.
+        Jennifer Marshall is Assistant GM on salary (passthrough) - not an ABC hourly rate.
+        Cutting desk hours saves ABC dollars; it does not by itself change Jennifer’s salary.
+      </p>
+
+      <div class="finding">
+        <strong>Jennifer is not ABC.</strong>
+        <p>
+          Current base <b>$52,000</b> (2026). Carlton all-in passthrough at that base ≈ <b>$66,701</b>
+          (salary + health + payroll taxes + workers’ comp + 401k).
+          Board path for 2027 is about <b>$55,000</b> base (≈ <b>$70k</b> all-in estimated).
+          That line already covers paying her during PTO; it does not cover ABC desk replacement while she is out.
+          It continues whether the lobby is staffed evenings or not, unless her role changes separately.
+        </p>
+      </div>
+
+      <div class="compare">
+        <div class="card emphasis">
+          <div class="label">ABC concierge · current</div>
+          <div class="row">
+            <div><b>128 hours / week</b><small>Carlton 2027 ABC breakdown · Front Desk GL</small></div>
+            <span class="pill ok">Today</span>
+          </div>
+          <div class="row">
+            <div><b>$25.95 / hour</b><small>2027 ABC proposed concierge rate</small></div>
+            <span class="pill ok">Budget rate</span>
+          </div>
+          <div class="row">
+            <div><b>$172,723 / year</b><small>128 × $25.95 × 52</small></div>
+            <span class="pill warn">Current run-rate</span>
+          </div>
+          <div class="row">
+            <div><b>2026 YE ≈ $161,233</b><small>Carlton · ~$24.22/hr implied on 128 hrs</small></div>
+            <span class="pill ok">Actual</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="label">ABC concierge · proposed hours</div>
+          <div class="row">
+            <div><b>98 hours / week</b><small>Mon–Fri 15h + Sat 11h + Sun 12h</small></div>
+            <span class="pill ok">−30 hrs</span>
+          </div>
+          <div class="row">
+            <div><b>$132,241 / year</b><small>98 × $25.95 × 52</small></div>
+            <span class="pill ok">Proposed</span>
+          </div>
+          <div class="row">
+            <div><b>Save $40,482 / year</b><small><b>23.4%</b> of ABC concierge line</small></div>
+            <span class="pill ok">−23.4%</span>
+          </div>
+          <div class="row">
+            <div><b>Contract allows it</b><small>Exhibit A §4.3 · hours up/down by written consent</small></div>
+            <span class="pill ok">ABC 2024</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-block" style="margin-top:14px">
+        <div class="chart-head">
+          <h3>Annual ABC concierge cost (hours only)</h3>
+          <div class="cov">ABC hours = full proposed open window · 2027 rate $25.95 · Jennifer excluded</div>
+        </div>
+        <div class="row">
+          <div><b>Current · 128 hrs/week</b><small>$172,723 / year</small></div>
+          <div style="flex:1;max-width:420px;height:12px;background:#eceef4;border-radius:99px;align-self:center;overflow:hidden"><div style="width:100%;height:100%;background:var(--navy);border-radius:99px"></div></div>
+        </div>
+        <div class="row">
+          <div><b>Proposed · 98 hrs/week</b><small>$132,241 / year</small></div>
+          <div style="flex:1;max-width:420px;height:12px;background:#eceef4;border-radius:99px;align-self:center;overflow:hidden"><div style="width:76.6%;height:100%;background:var(--accent);border-radius:99px"></div></div>
+        </div>
+        <div class="row">
+          <div><b>Saved</b><small>$40,482 / year · <b>23.4%</b> · ~$3,374 / month</small></div>
+          <span class="pill ok">−23.4%</span>
+        </div>
+      </div>
+
+      <div class="finding" style="margin-top:20px">
+        <strong>Three scenarios · same proposed open hours</strong>
+        <p>
+          Desk window: Mon–Fri 7am–10pm, Sat 9am–8pm, Sun 7am–7pm (98 hrs/week).
+          Jennifer at the <b>$55k</b> path (~<b>$70,066</b> all-in = salary + payroll taxes / workers’ comp / 401k / health path + FSR HR fee).
+          That <b>$70k already pays her through PTO</b> (salary keeps running when she is out).
+          It does <b>not</b> pay whoever sits the desk in her place - that is a separate ABC hourly cost.
+          ABC at <b>$25.95/hr</b>. Scenario 2 adds that desk backfill for her 120 PTO hrs.
+        </p>
+      </div>
+
+      <div class="scenarios">
+        <div class="card">
+          <div class="label">Scenario 1 · Current</div>
+          <div class="hours" style="font-size:26px">$242,789 <small>0% reduction</small></div>
+          <div class="row">
+            <div><b>Jennifer AGM all-in</b><small>$55k path · includes pay during her PTO · not desk replacement</small></div>
+            <span class="pill warn">$70,066</span>
+          </div>
+          <div class="row">
+            <div><b>ABC concierge</b><small>128 hrs/week @ $25.95</small></div>
+            <span class="pill warn">$172,723</span>
+          </div>
+          <div class="row">
+            <div><b>Saved vs today</b><small>Baseline</small></div>
+            <span class="pill warn">0%</span>
+          </div>
+        </div>
+        <div class="card emphasis">
+          <div class="label">Scenario 2 · Keep Jennifer + ABC</div>
+          <div class="hours" style="font-size:26px">$151,445 <small>−37.6%</small></div>
+          <div class="row">
+            <div><b>Jennifer daytime desk</b><small>~40 hrs/week Mon–Fri 8–4 · $70k all-in (PTO pay included)</small></div>
+            <span class="pill ok">$70,066</span>
+          </div>
+          <div class="row">
+            <div><b>ABC evenings + weekends</b><small>~58 hrs/week @ $25.95</small></div>
+            <span class="pill ok">$78,265</span>
+          </div>
+          <div class="row">
+            <div><b>ABC covers desk on her PTO</b><small>Extra hours · not in the $70k · 120 hrs × $25.95</small></div>
+            <span class="pill warn">+$3,114</span>
+          </div>
+          <div class="row">
+            <div><b>Saved vs today</b><small>$91,344 / year</small></div>
+            <span class="pill ok">−37.6% reduction</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="label">Scenario 3 · ABC only</div>
+          <div class="hours" style="font-size:26px">$132,241 <small>−45.5%</small></div>
+          <div class="row">
+            <div><b>No Jennifer AGM</b><small>No $70k line · no Jennifer PTO desk backfill</small></div>
+            <span class="pill warn">$0</span>
+          </div>
+          <div class="row">
+            <div><b>ABC covers all open hours</b><small>98 hrs/week @ $25.95</small></div>
+            <span class="pill ok">$132,241</span>
+          </div>
+          <div class="row">
+            <div><b>Saved vs today</b><small>$110,548 / year</small></div>
+            <span class="pill ok">−45.5% reduction</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-block" style="margin-top:14px">
+        <div class="chart-head">
+          <h3>Total desk-related cost by scenario</h3>
+          <div class="cov">Scenario 2 includes 120 hrs ABC PTO backfill · Scenario 3 is $19,204 / year · 12.7% cheaper than Scenario 2</div>
+        </div>
+        <div class="row">
+          <div><b>1 · Current</b><small>$242,789 · 0%</small></div>
+          <div style="flex:1;max-width:420px;height:12px;background:#eceef4;border-radius:99px;align-self:center;overflow:hidden"><div style="width:100%;height:100%;background:var(--navy);border-radius:99px"></div></div>
+        </div>
+        <div class="row">
+          <div><b>2 · Keep Jennifer + ABC</b><small>$151,445 · −37.6%</small></div>
+          <div style="flex:1;max-width:420px;height:12px;background:#eceef4;border-radius:99px;align-self:center;overflow:hidden"><div style="width:62.4%;height:100%;background:var(--accent);border-radius:99px"></div></div>
+        </div>
+        <div class="row">
+          <div><b>3 · ABC only</b><small>$132,241 · −45.5%</small></div>
+          <div style="flex:1;max-width:420px;height:12px;background:#eceef4;border-radius:99px;align-self:center;overflow:hidden"><div style="width:54.5%;height:100%;background:var(--green);border-radius:99px"></div></div>
+        </div>
+      </div>
+
+      <div class="finding" style="margin-top:14px">
+        <strong>What the ~$70k does and does not cover</strong>
+        <p>
+          <b>In ~$70,066:</b> Jennifer’s employment cost for the year - salary, labor burden / benefits path, FSR HR fee.
+          When she takes PTO, that pay continues inside this line (no second Jennifer paycheck).
+          <b>Not in ~$70,066:</b> someone else at the desk while she is out. That is ABC (or other) hourly,
+          stacked on top in Scenario 2. She has <b>120 PTO hours</b> this year (board/FSR retention).
+          At $25.95, desk backfill = <b>$3,114/year</b> (already in Scenario 2). If PTO rises (e.g. 160 hrs),
+          add ~$1,038 more. Board/FSR terms are <b>120 hours total PTO with no separate sick bank</b>.
+          Scenario 3 has no Jennifer leave backfill line.
+        </p>
+      </div>
+
+      <div class="tradeoffs" style="margin-top:14px">
+        <div class="trade">
+          <h3>Scenario 2 · Keep Jennifer</h3>
+          <p>
+            Pay Jennifer ~$70k all-in (PTO pay included). Staff evenings/weekends with ABC (~58 hrs),
+            <b>plus</b> ABC daytime when she is on PTO (not inside the $70k).
+            Save <b>37.6%</b> vs today with 120 PTO hrs. Keeps AGM capacity in the building.
+          </p>
+        </div>
+        <div class="trade">
+          <h3>Scenario 3 · ABC only</h3>
+          <p>
+            Drop the ~$70k Jennifer line and her PTO desk-backfill invoice.
+            All 98 open hours at ABC rates. Cheapest cash cost (<b>−45.5%</b> vs today)
+            <b>only if her AGM role is not retained</b>. If she stays as AGM off-desk, add ~$70k back
+            (~$202k total) - still without a Jennifer desk-backfill line if she is not on desk.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding" style="margin-top:16px">
+        <strong>Rate note for the board</strong>
+        <p>
+          Use <b>$25.95/hr</b> (Carlton’s 2027 ABC table) as the budget baseline.
+          An unsigned “ABC Proposed time Change 2026” workbook used $29.95 and a different 84-hour schedule
+          (save ~$68.5k in that sheet) - treat that as a vendor draft, not the signed rate.
+          Confirm final rate and hours in writing with ABC before budgeting the savings.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Tradeoffs</div>
+      <h2>What changes for residents</h2>
+      <div class="tradeoffs">
+        <div class="trade">
+          <h3>Covered well</h3>
+          <p>
+            Afternoon and early-evening package pickup on weekdays, and daytime weekend claims.
+            About 4 in 5 package releases fall inside the proposed desk hours.
+          </p>
+        </div>
+        <div class="trade">
+          <h3>Falls outside</h3>
+          <p>
+            About 19% of claims (889 of 4,739) happen outside the proposed windows -
+            mainly weeknights after 10pm, plus Sunday evenings after 7pm and early Saturday mornings before 9am.
+            Those pickups would wait until the next open shift unless another option is offered.
+          </p>
+        </div>
+      </div>
+
+      <div class="finding" style="margin-top:20px">
+        <strong>Board decision</strong>
+        <p>
+          Adopt Mon–Fri 7am–10pm, Saturday 9am–8pm, and Sunday 7am–7pm; ask ABC for a written hour change under Exhibit A §4.3
+          at $25.95. Pick a staffing scenario:
+          <b>1 Current</b> $243k ·
+          <b>2 Keep Jennifer + ABC</b> $151k (−37.6%), including 120 hrs ABC PTO backfill ·
+          <b>3 ABC only</b> $132k (−45.5%; ~$19k cheaper than #2, if AGM role is not retained).
+          Pair with an after-hours package plan.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="eyebrow">Sources</div>
+      <h2>How this was measured</h2>
+      <p class="sources">
+        BuildingLink staff event log · closed package events Aug 1–Nov 1, 2026 (Eastern close times).<br>
+        ABC Services of Maryland · Concierge &amp; Porter Agreement (Jul 1, 2024) + Exhibit A ($20,966.40/mo; hours adjustable §4.3)
+        + Porter addendum (40 hrs/week @ $30.20, OT $40.20).<br>
+        Carlton Ashton budget note · 2027 ABC table: concierge 128 hrs/week @ $25.95 = $172,723.20; 2026 YE Front Desk ≈ $161,233.<br>
+        Jennifer Marshall · AGM salary from Carlton (base $52,000 → $55k path; all-in ≈ $70,066); 120 hrs PTO total / no separate sick bank (retention terms); ABC daytime backfill at $25.95 while she is out on PTO.<br>
+        Vantaca file “ABC Proposed time Change 2026.xlsx” · draft schedule/rate $29.95 (not used as primary).<br>
+        Prepared in Dimori for Kenyon Square board review · November 2026.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    dimori · Kenyon Square · Front desk hours proposal · Not a contract change until board and vendor agree
+  </div>
+</footer>
+
+<script>
+const wd = [107,16,2,0,0,3,13,51,15,52,41,42,95,151,234,329,333,400,388,325,246,162,97,356];
+const sat = [37,3,0,2,0,0,4,3,6,20,35,33,48,48,89,47,52,71,43,26,13,27,17,9];
+const sun = [5,0,0,0,0,0,0,0,7,21,49,30,71,49,50,47,35,62,53,58,57,32,11,11];
+
+function renderBars(elId, axisId, data, openStart, openEnd) {
+  const root = document.getElementById(elId);
+  const axis = document.getElementById(axisId);
+  const max = Math.max(...data);
+  const peak = data.indexOf(max);
+  root.innerHTML = '';
+  axis.innerHTML = '';
+  data.forEach((count, hour) => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    if (hour >= openStart && hour < openEnd) bar.classList.add('in');
+    if (hour === peak) bar.classList.add('peak');
+    bar.style.height = Math.max(2, (count / max) * 100) + '%';
+    bar.title = hour + ':00 · ' + count + ' claims';
+    col.appendChild(bar);
+    root.appendChild(col);
+
+    const tick = document.createElement('div');
+    tick.textContent = (hour % 3 === 0) ? String(hour) : '';
+    axis.appendChild(tick);
+  });
+}
+
+renderBars('wd-bars', 'wd-axis', wd, 7, 22);
+renderBars('sat-bars', 'sat-axis', sat, 9, 20);
+renderBars('sun-bars', 'sun-axis', sun, 7, 19);
+</script>
+</body>
+</html>
